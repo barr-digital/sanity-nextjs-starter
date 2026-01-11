@@ -222,10 +222,25 @@ Example of adding a color:
 
 ### Deploy Studio to Sanity
 
+Deploy your Sanity Studio to a hosted `*.sanity.studio` URL:
+
 ```bash
-cd studio
-npx sanity deploy
+npm run deploy --workspace=studio
 ```
+
+**On first deploy:**
+
+- You'll be prompted to choose a unique hostname (e.g., `my-project.sanity.studio`)
+- Studio hostnames are **globally unique** across all Sanity projects, so choose a specific name
+- Good examples: `yourcompany-projectname`, `client-website`, `your-org-cms`
+- After deploy, you'll receive an `appId` - add it manually to `studio/sanity.cli.ts` (see [DEVELOPMENT.md](DEVELOPMENT.md#studio-deployment) for details)
+
+**On subsequent deploys:**
+
+- Once the `appId` is configured, the CLI will use it automatically
+- Your studio will be updated at the same URL without prompts
+
+> **Note:** If you get "hostname already taken", someone else is using that name. Try adding your company/project name to make it unique.
 
 ### Deploy Frontend to Vercel
 
@@ -261,4 +276,4 @@ MIT © [Barr Digital](https://github.com/barr-digital)
 
 ---
 
-**Built with ❤️ by [Luca Gennaro - Barr Digital](https://github.com/barr-digital)**
+**Built with ❤️ by [Luca Gennaro - Barr Digital](https://github.com/luca-gennaro)**
