@@ -1,0 +1,28 @@
+{
+  "version": 2,
+  "title": "Next.js + Sanity Starter with i18n & PageBuilder",
+  "description": "A production-ready starter template with Next.js 16, Sanity v5, internationalization (next-intl), PageBuilder system, Tailwind v4, and Visual Editing. Perfect for building multi-language content-driven websites.",
+  "previewMedia": {
+    "type": "image",
+    "src": "sanity-next-preview.png",
+    "alt": "Screenshot of Sanity Studio using Presentation Tool for Visual Editing"
+  },
+  "deployments": [
+    {
+      "id": "vercel",
+      "type": "web",
+      "title": "Next.js Frontend",
+      "description": "Deploy the Next.js frontend to Vercel",
+      "dir": "./frontend",
+      "provider": "vercel"
+    },
+    {
+      "id": "studio",
+      "type": "studio",
+      "title": "Sanity Studio",
+      "description": "Deploy the Sanity Studio",
+      "dir": "./studio",
+      "provider": "sanity"
+    }
+  ]
+}

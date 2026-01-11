@@ -1,0 +1,13 @@
+@import 'tailwindcss';
+@import './styles/typography.css';
+@import './styles/colors.css';
+
+@plugin "@tailwindcss/typography";
+
+@layer base {
+  body {
+    font-family: var(--font-inter);
+    background-color: var(--color-white);
+    color: var(--color-black);
+  }
+}

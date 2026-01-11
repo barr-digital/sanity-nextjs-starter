@@ -1,0 +1,64 @@
+/* Design Tokens - Typography */
+
+@theme inline {
+  /* ============================================
+     FONT FAMILIES
+     Add custom fonts here if needed
+     ============================================ */
+  /* --font-primary: var(--font-custom-font); */
+  /* --font-mono: var(--font-custom-mono); */
+
+  /* ============================================
+     RESPONSIVE TEXT SIZE UTILITIES (Example)
+     Uncomment and customize as needed for your project
+
+     Pattern for responsive typography:
+     1. Define mobile size and properties with --text-[name]-mobile
+     2. Define tablet size with --text-[name]-tablet
+     3. Define desktop size with --text-[name]-desktop
+     4. Create utility with @utility that applies responsive sizes
+
+     Example for H1:
+     ============================================ */
+  /* --text-h1-mobile: 40px; */
+  /* --text-h1-mobile--line-height: 1; */
+  /* --text-h1-mobile--letter-spacing: -2px; */
+  /* --text-h1-mobile--font-weight: 600; */
+  /* --text-h1-tablet: 70px; */
+  /* --text-h1-desktop: 80px; */
+}
+
+/* ============================================
+   TYPOGRAPHY UTILITIES (Example)
+   Uncomment and customize as needed
+
+   These utilities automatically apply responsive sizes
+   based on the tokens defined above.
+
+   Usage: <h1 class="t-h1">Heading</h1>
+   ============================================ */
+
+/* @utility t-h1 {
+  @apply text-h1-mobile md:text-h1-tablet lg:text-h1-desktop;
+} */
+
+/* @utility t-h2 {
+  @apply text-h2-mobile md:text-h2-tablet lg:text-h2-desktop;
+} */
+
+/* @utility t-p {
+  @apply text-p-mobile md:text-p-tablet lg:text-p-desktop;
+} */
+
+/* ============================================
+   FIXED-SIZE UTILITIES (Example)
+   For non-responsive, fixed typography sizes
+   ============================================ */
+
+/* @utility t-24 {
+  @apply text-[24px] leading-[1.3];
+} */
+
+/* @utility t-16 {
+  @apply text-[16px] leading-[1.4];
+} */

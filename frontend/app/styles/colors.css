@@ -1,0 +1,54 @@
+/* Design Tokens - Colors */
+
+@theme {
+  /* ============================================
+     BASE COLORS
+     Add your brand colors here as needed
+     ============================================ */
+  --color-black: #010101;
+  --color-white: #ffffff;
+
+  /* ============================================
+     BRAND COLOR SCALE (Example)
+     Uncomment and customize with your brand colors
+     Recommended: Create a full scale (10-100) for each brand color
+     ============================================ */
+  /* --color-primary-10: #e6f0ff; */
+  /* --color-primary-20: #cce0ff; */
+  /* --color-primary-30: #99c2ff; */
+  /* --color-primary-40: #66a3ff; */
+  /* --color-primary-50: #3385ff; */
+  /* --color-primary: #0066ff; */ /* BASE */
+  /* --color-primary-60: #0052cc; */
+  /* --color-primary-70: #003d99; */
+  /* --color-primary-80: #002966; */
+  /* --color-primary-90: #001a33; */
+  /* --color-primary-100: #000d1a; */
+
+  /* ============================================
+     GRAY SCALE (Example)
+     Uncomment and customize as needed
+     ============================================ */
+  /* --color-gray-10: #eaeaea; */
+  /* --color-gray-20: #dcdcdc; */
+  /* --color-gray-30: #cbc8cb; */
+  /* --color-gray-40: #babab8; */
+  /* --color-gray-50: #a8a8a8; */
+  /* --color-gray: #979797; */ /* BASE */
+  /* --color-gray-60: #7e7e7e; */
+  /* --color-gray-70: #656565; */
+  /* --color-gray-80: #4c4c4c; */
+  /* --color-gray-90: #323232; */
+  /* --color-gray-100: #1e1e1e; */
+
+  /* ============================================
+     USAGE EXAMPLE
+     After defining colors above, use them in your CSS:
+
+     background-color: var(--color-primary);
+     color: var(--color-gray-60);
+
+     Or with Tailwind utilities:
+     <div class="bg-primary text-gray-60">Content</div>
+     ============================================ */
+}
