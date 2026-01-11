@@ -20,10 +20,10 @@ Follow these steps to add a new page type (e.g., "About Page"):
 
 ### 1. Create the Schema (Studio)
 
-Create a new file in `studio/src/schemaTypes/documents/`:
+Create a new file in `studio/src/schemaTypes/documents/singletons/`:
 
 ```typescript
-// studio/src/schemaTypes/documents/aboutPage.ts
+// studio/src/schemaTypes/documents/singletons/aboutPage.ts
 import {defineType} from 'sanity'
 import {basePage} from './basePage'
 
