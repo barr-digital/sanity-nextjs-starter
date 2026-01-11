@@ -718,6 +718,139 @@ type AllBlocks = PageBuilderBlock
 
 ---
 
+## Deployment
+
+### Studio Deployment
+
+Deploy your Sanity Studio to a hosted `*.sanity.studio` URL for production use.
+
+#### First Time Deployment
+
+1. **Build and deploy the studio:**
+
+   ```bash
+   npm run deploy --workspace=studio
+   ```
+
+2. **Choose a hostname:**
+
+   When prompted, enter a unique hostname for your studio (e.g., `my-project`).
+
+   Your studio will be available at: `https://my-project.sanity.studio`
+
+   **Important notes about hostnames:**
+
+   - Studio hostnames are **globally unique** across all Sanity projects worldwide
+   - They are NOT scoped to your account or organization
+   - Similar to domain names - if someone else is using it, you can't use it
+   - Choose specific names: `yourcompany-project`, `client-cms`, `brandname-studio`
+   - Generic names like `test`, `demo`, `project` are likely taken
+
+3. **Save the appId:**
+
+   After successful deployment, Sanity will display an `appId`. Add it to `studio/sanity.cli.ts`:
+
+   ```typescript
+   export default defineCliConfig({
+     api: {
+       projectId,
+       dataset,
+     },
+     deployment: {
+       appId: 'YOUR_APP_ID_HERE', // From deploy output
+       autoUpdates: true,
+     },
+   })
+   ```
+
+   This prevents the CLI from prompting for the application ID on future deploys.
+
+#### Subsequent Deployments
+
+Once the `appId` is configured, simply run:
+
+```bash
+npm run deploy --workspace=studio
+```
+
+The CLI will use the saved `appId` and deploy to the same hostname automatically.
+
+#### Troubleshooting
+
+**Error: "Hostname already taken"**
+
+- The hostname is globally unique and someone else is using it
+- Try adding your company/project name: `barr-digital-projectname`
+- Or use a more specific identifier
+
+**Error: "Cannot read properties of undefined (reading 'length')"**
+
+- This happens when `studioHost` is set to an empty string `''` in `sanity.cli.ts`
+- Either remove the `studioHost` field or set it to a proper value
+- Use the `--hostname` flag: `npx sanity deploy --hostname your-name`
+
+### Frontend Deployment (Vercel)
+
+1. **Push to GitHub:**
+
+   ```bash
+   git push origin main
+   ```
+
+2. **Import in Vercel:**
+
+   - Go to [vercel.com](https://vercel.com)
+   - Click "Add New Project"
+   - Import your repository
+   - Set **Root Directory** to `frontend`
+
+3. **Configure Environment Variables:**
+
+   Add these in Vercel's project settings:
+
+   ```env
+   NEXT_PUBLIC_SANITY_PROJECT_ID=your-project-id
+   NEXT_PUBLIC_SANITY_DATASET=production
+   SANITY_API_READ_TOKEN=your-read-token
+   NEXT_PUBLIC_SITE_URL=https://yourdomain.com
+   ```
+
+   **How to get the read token:**
+
+   ```bash
+   cd studio
+   npx sanity manage
+   ```
+
+   Then go to **API** → **Tokens** → **Add API token** with "Read" permissions.
+
+4. **Deploy:**
+   Vercel will automatically deploy on push to your main branch.
+
+### Environment-Specific Deployments
+
+For staging/production environments, use environment variables in `studio/sanity.cli.ts`:
+
+```typescript
+export default defineCliConfig({
+  api: {
+    projectId: process.env.SANITY_STUDIO_PROJECT_ID,
+    dataset: process.env.SANITY_STUDIO_DATASET,
+  },
+  ...(process.env.SANITY_STUDIO_HOSTNAME && {
+    studioHost: process.env.SANITY_STUDIO_HOSTNAME,
+  }),
+})
+```
+
+Then deploy with:
+
+```bash
+SANITY_STUDIO_HOSTNAME=staging npm run deploy --workspace=studio
+```
+
+---
+
 ## Best Practices & Coding Standards
 
 ### 📁 File Organization
