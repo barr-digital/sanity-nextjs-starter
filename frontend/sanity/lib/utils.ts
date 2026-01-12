@@ -92,6 +92,14 @@ export function linkResolver(link: Link | DereferencedLink | undefined) {
       // Examples: "about" → "/about", "contact" → "/contact"
       return `/${pageSlug}`
 
+    case 'anchor':
+      // Anchor links (e.g., #chi-siamo)
+      const anchorId = (link as any).anchor
+      if (!anchorId || typeof anchorId !== 'string') {
+        return null
+      }
+      return `#${anchorId}`
+
     default:
       return null
   }

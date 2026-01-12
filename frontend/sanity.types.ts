@@ -45,8 +45,11 @@ export type Img = {
 
 export type Link = {
   _type: 'link'
-  linkType?: 'href'
+  label?: string
+  linkType?: 'href' | 'custom' | 'anchor'
   href?: string
+  custom?: string
+  anchor?: string
   openInNewTab?: boolean
 }
 

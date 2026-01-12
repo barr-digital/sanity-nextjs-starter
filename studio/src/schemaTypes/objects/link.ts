@@ -16,7 +16,12 @@ export const link = defineType({
   type: 'object',
   icon: LinkIcon,
   fields: [
-    defineField({
+    {
+      name: 'label',
+      title: 'Label',
+      type: 'string',
+    },
+    {
       name: 'linkType',
       title: 'Link Type',
       type: 'string',
@@ -24,13 +29,15 @@ export const link = defineType({
       options: {
         list: [
           {title: 'URL', value: 'href'},
+          {title: 'Custom', value: 'custom'},
+          {title: 'Anchor', value: 'anchor'},
           // TODO: Add page type when you create a page document
           // {title: 'Page', value: 'page'},
         ],
         layout: 'radio',
       },
-    }),
-    defineField({
+    },
+    {
       name: 'href',
       title: 'URL',
       type: 'url',
@@ -43,7 +50,46 @@ export const link = defineType({
           }
           return true
         }),
+    },
+    defineField({
+      name: 'custom',
+      title: 'Custom',
+      type: 'string',
+      hidden: ({parent}) => parent?.linkType !== 'custom',
+      validation: (Rule) =>
+        Rule.custom((value, context: any) => {
+          if (context.parent?.linkType === 'custom' && !value) return "L'URL è obbligatorio"
+
+          const allowedSchemes = ['mailto:', 'tel:']
+          const isValid = allowedSchemes.some(
+            (scheme) => value?.startsWith(scheme) || context.parent?.linkType !== 'custom',
+          )
+
+          return isValid || `L'URL deve iniziare con "mailto:" o "tel:"`
+        }),
     }),
+    defineField({
+      name: 'anchor',
+      title: 'Anchor ID',
+      type: 'string',
+      hidden: ({parent}) => parent?.linkType !== 'anchor',
+      validation: (Rule) =>
+        Rule.custom((value, context: any) => {
+          if (context.parent?.linkType === 'anchor' && !value) {
+            return 'Anchor ID is required when Link Type is Anchor'
+          }
+          // Validate that the anchor doesn't start with #
+          if (value?.startsWith('#')) {
+            return 'Non inserire il simbolo #, verrà aggiunto automaticamente'
+          }
+          // Validate format (only alphanumeric, hyphens, underscores)
+          if (value && !/^[a-zA-Z0-9_-]+$/.test(value)) {
+            return "L'anchor ID può contenere solo lettere, numeri, trattini e underscore"
+          }
+          return true
+        }),
+    }),
+
     // TODO: Add page reference field when you create a page document type
     // defineField({
     //   name: 'page',
@@ -59,11 +105,11 @@ export const link = defineType({
     //       return true
     //     }),
     // }),
-    defineField({
+    {
       name: 'openInNewTab',
       title: 'Open in new tab',
       type: 'boolean',
       initialValue: false,
-    }),
+    },
   ],
 })

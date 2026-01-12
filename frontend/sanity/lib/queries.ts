@@ -20,10 +20,10 @@ const linkFragment = /* groq */ `{
   linkType,
   href,
   custom,
+  anchor,
   "pageSlug": page->slug.current,
   "pageType": page->_type,
   openInNewTab,
-  tooltip
 }`
 
 // PortableText fragment with link annotations

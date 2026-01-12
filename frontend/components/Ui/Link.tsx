@@ -32,8 +32,11 @@ export const Link = ({link, children, className = '', onMouseEnter, onMouseLeave
   // Check if it's an external URL (starts with http:// or https://)
   const isExternal = resolvedLink.startsWith('http://') || resolvedLink.startsWith('https://')
 
+  // Check if it's an anchor link (starts with #)
+  const isAnchor = resolvedLink.startsWith('#')
+
   // For external URLs, use a regular <a> tag
-  if (isExternal) {
+  if (isExternal || isAnchor) {
     return (
       <a
         href={resolvedLink}
