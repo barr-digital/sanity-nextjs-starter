@@ -1144,8 +1144,6 @@ For the best development experience:
 - **ESLint** - Code linting
 - **Prettier** - Code formatting
 - **Tailwind CSS IntelliSense** - Tailwind class autocomplete
-- **TypeScript Vue Plugin (Volar)** - Better TypeScript support
-
 ---
 
 ## Need Help?
