@@ -1,5 +1,5 @@
-import {defineField, defineType} from 'sanity'
-import {LinkIcon} from '@sanity/icons'
+import { defineField, defineType } from 'sanity'
+import { LinkIcon } from '@sanity/icons'
 
 /**
  * Link schema object. This link object lets the user first select the type of link and then
@@ -28,9 +28,9 @@ export const link = defineType({
       initialValue: 'href',
       options: {
         list: [
-          {title: 'URL', value: 'href'},
-          {title: 'Custom', value: 'custom'},
-          {title: 'Anchor', value: 'anchor'},
+          { title: 'URL', value: 'href' },
+          { title: 'Custom', value: 'custom' },
+          { title: 'Anchor', value: 'anchor' },
           // TODO: Add page type when you create a page document
           // {title: 'Page', value: 'page'},
         ],
@@ -41,7 +41,7 @@ export const link = defineType({
       name: 'href',
       title: 'URL',
       type: 'url',
-      hidden: ({parent}) => parent?.linkType !== 'href',
+      hidden: ({ parent }) => parent?.linkType !== 'href',
       validation: (Rule) =>
         // Custom validation to ensure URL is provided if the link type is 'href'
         Rule.custom((value, context: any) => {
@@ -55,7 +55,7 @@ export const link = defineType({
       name: 'custom',
       title: 'Custom',
       type: 'string',
-      hidden: ({parent}) => parent?.linkType !== 'custom',
+      hidden: ({ parent }) => parent?.linkType !== 'custom',
       validation: (Rule) =>
         Rule.custom((value, context: any) => {
           if (context.parent?.linkType === 'custom' && !value) return "L'URL è obbligatorio"
@@ -72,7 +72,7 @@ export const link = defineType({
       name: 'anchor',
       title: 'Anchor ID',
       type: 'string',
-      hidden: ({parent}) => parent?.linkType !== 'anchor',
+      hidden: ({ parent }) => parent?.linkType !== 'anchor',
       validation: (Rule) =>
         Rule.custom((value, context: any) => {
           if (context.parent?.linkType === 'anchor' && !value) {

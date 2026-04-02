@@ -1,11 +1,11 @@
-import React, {useState, useMemo} from 'react'
-import {useClient} from 'sanity'
-import {Stack, Card, Text, Select, Box, Flex, Button} from '@sanity/ui'
-import {EditIcon, AddIcon} from '@sanity/icons'
-import {useRouter} from 'sanity/router'
-import {useStructureContext} from '../contexts/StructureContext'
-import {StructureWrapper} from './StructureWrapper'
-import {SINGLETON_TYPES} from '../schemaTypes'
+import React, { useState, useMemo } from 'react'
+import { useClient } from 'sanity'
+import { Stack, Card, Text, Select, Box, Flex, Button } from '@sanity/ui'
+import { EditIcon, AddIcon } from '@sanity/icons'
+import { useRouter } from 'sanity/router'
+import { useStructureContext } from '../contexts/StructureContext'
+import { StructureWrapper } from './StructureWrapper'
+import { SINGLETON_TYPES } from '../schemaTypes'
 
 interface Document {
   _id: string
@@ -20,8 +20,8 @@ interface Document {
  * Language-filtered list component for Studio
  * Displays documents grouped by language with filtering capability
  */
-export function LanguageFilteredList(props: {filter?: string}) {
-  const {documentType, title} = useStructureContext()
+export function LanguageFilteredList(props: { filter?: string }) {
+  const { documentType, title } = useStructureContext()
   const client = useClient()
   const router = useRouter()
   const [selectedLanguage, setSelectedLanguage] = useState<string>('it')
@@ -82,7 +82,7 @@ export function LanguageFilteredList(props: {filter?: string}) {
 
   const handleDocumentClick = (docId: string) => {
     if (!documentType) return
-    router.navigateIntent('edit', {id: docId, type: documentType})
+    router.navigateIntent('edit', { id: docId, type: documentType })
   }
 
   const getLanguageLabel = (language: string) => {
@@ -139,7 +139,7 @@ export function LanguageFilteredList(props: {filter?: string}) {
       })
     } else {
       // For all other documents, pass the language
-      router.navigateIntent('create', {type: documentType, language})
+      router.navigateIntent('create', { type: documentType, language })
     }
   }
 
@@ -160,7 +160,7 @@ export function LanguageFilteredList(props: {filter?: string}) {
           <Select
             value={selectedLanguage}
             onChange={(event) => setSelectedLanguage(event.currentTarget.value)}
-            style={{minWidth: '150px'}}
+            style={{ minWidth: '150px' }}
           >
             <option value="all">🌐 All Languages</option>
             <option value="it">🇮🇹 Italiano</option>
@@ -195,7 +195,7 @@ export function LanguageFilteredList(props: {filter?: string}) {
               padding={3}
               radius={2}
               shadow={1}
-              style={{cursor: 'pointer'}}
+              style={{ cursor: 'pointer' }}
               onClick={() => handleDocumentClick(doc._id)}
             >
               <Flex align="center" gap={3}>
@@ -212,11 +212,11 @@ export function LanguageFilteredList(props: {filter?: string}) {
                         •
                       </Text>
                       {isDraft(doc._id) ? (
-                        <Text size={1} style={{color: '#f59e0b'}}>
+                        <Text size={1} style={{ color: '#f59e0b' }}>
                           Draft
                         </Text>
                       ) : (
-                        <Text size={1} style={{color: '#10b981'}}>
+                        <Text size={1} style={{ color: '#10b981' }}>
                           Published
                         </Text>
                       )}

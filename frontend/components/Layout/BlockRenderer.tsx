@@ -1,5 +1,5 @@
 import React from 'react'
-import {ExampleBlock} from '@/components/Blocks/ExampleBlock'
+import { ExampleBlock } from '@/components/Blocks/ExampleBlock'
 
 type BlockType = {
   _type: string
@@ -41,7 +41,7 @@ const getBlocks = () => ({
 
 type BlocksMap = ReturnType<typeof getBlocks>
 
-export const BlockRenderer = ({block, index, pageId, pageType}: BlockProps) => {
+export const BlockRenderer = ({ block, index, pageId, pageType }: BlockProps) => {
   const Blocks = getBlocks()
 
   // Check if a component exists for this block type
@@ -62,12 +62,12 @@ export const BlockRenderer = ({block, index, pageId, pageType}: BlockProps) => {
   return (
     <div
       key={block._key}
-      className="w-full bg-gray-100 text-center text-gray-600 p-10 my-4 rounded border-2 border-dashed border-gray-300"
+      className="my-4 w-full rounded border-2 border-dashed border-gray-300 bg-gray-100 p-10 text-center text-gray-600"
     >
       <p className="font-mono text-sm">
         Block type &ldquo;{block._type}&rdquo; has not been implemented yet.
       </p>
-      <p className="text-xs mt-2 text-gray-500">
+      <p className="mt-2 text-xs text-gray-500">
         Create a component in /components/Blocks/{block._type}.tsx and register it in
         BlockRenderer.tsx
       </p>

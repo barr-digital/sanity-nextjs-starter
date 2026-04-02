@@ -1,4 +1,4 @@
-import {defineType} from 'sanity'
+import { defineType } from 'sanity'
 
 export const image = defineType({
   name: 'img',
@@ -29,7 +29,7 @@ export const image = defineType({
       fileName: 'asset.originalFilename',
       alt: 'alt',
     },
-    prepare({asset, fileName, alt}) {
+    prepare({ asset, fileName, alt }) {
       return {
         title: fileName || 'No filename',
         subtitle: alt || 'No alt text',

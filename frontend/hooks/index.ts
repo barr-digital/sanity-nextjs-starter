@@ -1,1 +1,1 @@
-export {useLanguageChange} from './useLanguageChange'
+export { useLanguageChange } from './useLanguageChange'

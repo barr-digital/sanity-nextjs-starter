@@ -1,12 +1,12 @@
-import {Link} from '@/sanity.types'
-import {dataset, projectId} from '@/sanity/lib/api'
-import {createImageUrlBuilder, type SanityImageSource} from '@sanity/image-url'
-import {DereferencedLink} from '@/sanity/lib/types'
-import {getImageDimensions} from '@sanity/asset-utils'
+import { Link } from '@/sanity.types'
+import { dataset, projectId } from '@/sanity/lib/api'
+import { createImageUrlBuilder, type SanityImageSource } from '@sanity/image-url'
+import { DereferencedLink } from '@/sanity/lib/types'
+import { getImageDimensions } from '@sanity/asset-utils'
 
 type SanityImageWithCrop = {
-  asset?: {_ref?: string; _type?: string} | null
-  crop?: {left: number; right: number; top: number; bottom: number} | null
+  asset?: { _ref?: string; _type?: string } | null
+  crop?: { left: number; right: number; top: number; bottom: number } | null
 }
 
 const builder = createImageUrlBuilder({
@@ -27,7 +27,7 @@ export function urlForImage(source: SanityImageWithCrop) {
   const crop = source.crop
 
   // Get the image's original dimensions
-  const {width, height} = getImageDimensions(imageRef)
+  const { width, height } = getImageDimensions(imageRef)
 
   if (crop) {
     const croppedWidth = Math.floor(width * (1 - (crop.right + crop.left)))
@@ -42,14 +42,14 @@ export function urlForImage(source: SanityImageWithCrop) {
 }
 
 export function resolveOpenGraphImage(
-  image?: (SanityImageWithCrop & {alt?: string | null}) | null,
+  image?: (SanityImageWithCrop & { alt?: string | null }) | null,
   width = 1200,
   height = 627,
 ) {
   if (!image) return
   const url = urlForImage(image)?.width(1200).height(627).fit('crop').url()
   if (!url) return
-  return {url, alt: image.alt || '', width, height}
+  return { url, alt: image.alt || '', width, height }
 }
 
 /**

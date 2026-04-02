@@ -1,5 +1,5 @@
-import {defineType} from 'sanity'
-import {validateUniqueLanguage} from '../../validation/uniqueLanguage'
+import { defineType } from 'sanity'
+import { validateUniqueLanguage } from '../../validation/uniqueLanguage'
 
 /**
  * Footer Singleton
@@ -33,7 +33,7 @@ export const footer = defineType({
       title: 'title',
       language: 'language',
     },
-    prepare({title, language}) {
+    prepare({ title, language }) {
       return {
         title: title || 'Footer',
         subtitle: language ? `Language: ${language.toUpperCase()}` : 'No language set',

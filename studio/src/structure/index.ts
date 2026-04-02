@@ -1,5 +1,5 @@
-import {CogIcon, HomeIcon, EarthGlobeIcon, ArrowUpIcon, ArrowDownIcon} from '@sanity/icons'
-import type {StructureBuilder, StructureResolver} from 'sanity/structure'
+import { CogIcon, HomeIcon, EarthGlobeIcon, ArrowUpIcon, ArrowDownIcon } from '@sanity/icons'
+import type { StructureBuilder, StructureResolver } from 'sanity/structure'
 import {
   HomepageList,
   HeaderList,

@@ -1,4 +1,4 @@
-import {createContext, useContext} from 'react'
+import { createContext, useContext } from 'react'
 
 interface StructureContextType {
   documentType: string | null
@@ -16,4 +16,4 @@ export function useStructureContext() {
   return context
 }
 
-export {StructureContext}
+export { StructureContext }

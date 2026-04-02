@@ -1,7 +1,7 @@
-import {HomeIcon} from '@sanity/icons'
-import {defineType} from 'sanity'
-import {basePage} from '../basePage'
-import {pageBuilderBlocks, pageBuilderFieldOptions} from '../../blocks'
+import { HomeIcon } from '@sanity/icons'
+import { defineType } from 'sanity'
+import { basePage } from '../basePage'
+import { pageBuilderBlocks, pageBuilderFieldOptions } from '../../blocks'
 
 /**
  * Homepage Singleton
@@ -33,7 +33,7 @@ export const homepage = defineType({
     select: {
       title: 'title',
     },
-    prepare({title}) {
+    prepare({ title }) {
       return {
         title: title || 'Homepage',
       }

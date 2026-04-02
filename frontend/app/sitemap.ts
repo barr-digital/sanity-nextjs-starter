@@ -1,8 +1,8 @@
-import {MetadataRoute} from 'next'
-import {sanityFetch} from '@/sanity/lib/live'
-import {sitemapDataQuery} from '@/sanity/lib/queries'
-import {routing} from '@/i18n/routing'
-import {getMetadataBase, buildCanonicalPath, generateAllStaticParams} from '@/lib/helpers.server'
+import { MetadataRoute } from 'next'
+import { sanityFetch } from '@/sanity/lib/live'
+import { sitemapDataQuery } from '@/sanity/lib/queries'
+import { routing } from '@/i18n/routing'
+import { getMetadataBase, buildCanonicalPath, generateAllStaticParams } from '@/lib/helpers.server'
 
 /**
  * This file creates a sitemap (sitemap.xml) for the application.
@@ -28,9 +28,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Get lastModified dates for documents with slugs
   const lastModifiedMap = new Map<string, Date>()
   for (const locale of routing.locales) {
-    const {data} = await sanityFetch({
+    const { data } = await sanityFetch({
       query: sitemapDataQuery,
-      params: {lang: locale},
+      params: { lang: locale },
     })
     if (data) {
       for (const item of data) {
@@ -45,7 +45,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const seenUrls = new Set<string>()
 
   for (const param of allParams) {
-    const {locale, slug} = param
+    const { locale, slug } = param
     const path = buildCanonicalPath(locale, slug, routing.defaultLocale)
     const url = `${baseUrl}${path}`
 

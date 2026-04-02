@@ -15,11 +15,11 @@ interface TextProps extends React.HTMLAttributes<HTMLElement> {
  * <Text tag="h1" className="text-4xl font-bold">Heading</Text>
  * <Text tag="p" className="text-base">Paragraph</Text>
  */
-export function Text({tag = 'p', children, className = '', style, ...props}: TextProps) {
+export function Text({ tag = 'p', children, className = '', style, ...props }: TextProps) {
   const Tag = tag as React.ElementType
 
   return (
-    <Tag className={className} style={{...style}} {...props}>
+    <Tag className={className} style={{ ...style }} {...props}>
       {children}
     </Tag>
   )

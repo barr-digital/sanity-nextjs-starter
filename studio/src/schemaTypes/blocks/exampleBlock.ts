@@ -1,4 +1,4 @@
-import {defineType} from 'sanity'
+import { defineType } from 'sanity'
 
 /**
  * Example Block
@@ -40,7 +40,7 @@ export const exampleBlock = defineType({
       title: 'title',
       text: 'text',
     },
-    prepare({title, text}) {
+    prepare({ title, text }) {
       return {
         title: title || 'Example Block',
         subtitle: text ? text.substring(0, 60) + '...' : 'No text provided',

@@ -1,6 +1,6 @@
-import {CogIcon} from '@sanity/icons'
-import {defineField, defineType} from 'sanity'
-import {validateUniqueLanguage} from '../../validation/uniqueLanguage'
+import { CogIcon } from '@sanity/icons'
+import { defineField, defineType } from 'sanity'
+import { validateUniqueLanguage } from '../../validation/uniqueLanguage'
 
 /**
  * Settings schema Singleton.  Singletons are single documents that are displayed not in a collection, handy for things like site settings and other global configurations.
@@ -42,7 +42,7 @@ export const settings = defineType({
     select: {
       language: 'language',
     },
-    prepare({language}) {
+    prepare({ language }) {
       return {
         title: 'Settings',
         subtitle: language ? `Language: ${language.toUpperCase()}` : 'No language set',

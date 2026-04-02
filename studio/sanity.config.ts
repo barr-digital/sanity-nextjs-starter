@@ -3,15 +3,15 @@
  * Learn more: https://www.sanity.io/docs/configuration
  */
 
-import {defineConfig} from 'sanity'
-import {structureTool} from 'sanity/structure'
-import {visionTool} from '@sanity/vision'
-import {schemaTypes} from './src/schemaTypes'
-import {structure} from './src/structure'
-import {languageTemplates, resolveInitialValue} from './src/templates'
-import {documentInternationalization} from '@sanity/document-internationalization'
-import {languageFilter} from '@sanity/language-filter'
-import {media} from 'sanity-plugin-media'
+import { defineConfig } from 'sanity'
+import { structureTool } from 'sanity/structure'
+import { visionTool } from '@sanity/vision'
+import { schemaTypes } from './src/schemaTypes'
+import { structure } from './src/structure'
+import { languageTemplates, resolveInitialValue } from './src/templates'
+import { documentInternationalization } from '@sanity/document-internationalization'
+import { languageFilter } from '@sanity/language-filter'
+import { media } from 'sanity-plugin-media'
 
 // Environment variables for project configuration
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'your-projectID'
@@ -32,7 +32,7 @@ export default defineConfig({
     // Document internationalization plugin
     documentInternationalization({
       supportedLanguages: [
-        {id: 'it', title: 'Italian'},
+        { id: 'it', title: 'Italian' },
         // TODO: Add more languages as needed
         // { id: "en", title: "English" },
         // { id: "es", title: "Spanish" },
@@ -43,7 +43,7 @@ export default defineConfig({
     // Language filter plugin for the Studio UI
     languageFilter({
       supportedLanguages: [
-        {id: 'it', title: 'Italian'},
+        { id: 'it', title: 'Italian' },
         // TODO: Add more languages as needed
       ],
       defaultLanguages: ['it'],
@@ -63,7 +63,7 @@ export default defineConfig({
 
   // Document initial value configuration
   document: {
-    newDocumentOptions: (prev, {creationContext}) => {
+    newDocumentOptions: (prev, { creationContext }) => {
       if (creationContext.type === 'global') {
         return prev
       }

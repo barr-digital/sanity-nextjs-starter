@@ -1,16 +1,16 @@
-import {notFound} from 'next/navigation'
-import type {Metadata} from 'next'
-import {sanityFetch} from '@/sanity/lib/live'
-import {homepageQuery} from '@/sanity/lib/queries'
-import {PageBuilder} from '@/components/Layout'
-import {HomePage} from '@/app/_pages'
-import {resolveOpenGraphImage} from '@/sanity/lib/utils'
+import { notFound } from 'next/navigation'
+import type { Metadata } from 'next'
+import { sanityFetch } from '@/sanity/lib/live'
+import { homepageQuery } from '@/sanity/lib/queries'
+import { PageBuilder } from '@/components/Layout'
+import { HomePage } from '@/app/_pages'
+import { resolveOpenGraphImage } from '@/sanity/lib/utils'
 import {
   getMetadataBase,
   buildCanonicalPath,
   generateStaticParamsForLocale,
 } from '@/lib/helpers.server'
-import {routing} from '@/i18n/routing'
+import { routing } from '@/i18n/routing'
 
 type Props = {
   params: Promise<{
@@ -60,17 +60,17 @@ type Props = {
  * Generate metadata for the page.
  * Learn more: https://nextjs.org/docs/app/api-reference/functions/generate-metadata#generatemetadata-function
  */
-export async function generateMetadata({params}: Props): Promise<Metadata> {
-  const {locale, slug} = await params
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale, slug } = await params
 
   const metadataBase = await getMetadataBase()
   const canonicalPath = buildCanonicalPath(locale, slug, routing.defaultLocale)
 
   // 1. Homepage (no slug)
   if (!slug || slug.length === 0) {
-    const {data: homepage} = await sanityFetch({
+    const { data: homepage } = await sanityFetch({
       query: homepageQuery,
-      params: {lang: locale},
+      params: { lang: locale },
     })
 
     if (!homepage) {
@@ -86,7 +86,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 
     return {
       metadataBase,
-      ...(homepage?.seo?.seoTitle && {title: homepage.seo.seoTitle}),
+      ...(homepage?.seo?.seoTitle && { title: homepage.seo.seoTitle }),
       ...(homepage?.seo?.seoDescription && {
         description: homepage.seo.seoDescription,
       }),
@@ -177,14 +177,14 @@ function renderPageComponent(content: any, items?: any) {
   }
 }
 
-export default async function Page({params}: Props) {
-  const {locale, slug} = await params
+export default async function Page({ params }: Props) {
+  const { locale, slug } = await params
 
   // 1. Homepage (no slug)
   if (!slug || slug.length === 0) {
-    const {data: homepage} = await sanityFetch({
+    const { data: homepage } = await sanityFetch({
       query: homepageQuery,
-      params: {lang: locale},
+      params: { lang: locale },
     })
 
     if (!homepage) {
@@ -221,10 +221,10 @@ export default async function Page({params}: Props) {
 export async function generateStaticParams({
   params,
 }: {
-  params: {locale: string}
-}): Promise<{slug?: string[]}[]> {
-  const {locale} = params
+  params: { locale: string }
+}): Promise<{ slug?: string[] }[]> {
+  const { locale } = params
   const allParams = await generateStaticParamsForLocale(locale)
   // Return only the slug part (locale is already in the route)
-  return allParams.map((param) => ({slug: param.slug}))
+  return allParams.map((param) => ({ slug: param.slug }))
 }

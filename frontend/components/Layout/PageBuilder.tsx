@@ -1,8 +1,8 @@
 'use client'
 
-import {SanityDocument} from 'next-sanity'
-import {useOptimistic} from 'next-sanity/hooks'
-import {BlockRenderer} from '@/components/Layout/BlockRenderer'
+import { SanityDocument } from 'next-sanity'
+import { useOptimistic } from 'next-sanity/hooks'
+import { BlockRenderer } from '@/components/Layout/BlockRenderer'
 
 type PageBuilderBlock = {
   _key: string
@@ -31,7 +31,7 @@ type PageBuilderProps = {
  * 3. Create corresponding React components for each block type
  * 4. Register your block components in BlockRenderer.tsx
  */
-export const PageBuilder = ({page}: PageBuilderProps) => {
+export const PageBuilder = ({ page }: PageBuilderProps) => {
   const pageBuilderBlocks = useOptimistic<PageBuilderBlock[] | undefined, SanityDocument<PageData>>(
     page?.pageBuilder || [],
     (currentBlocks, action) => {

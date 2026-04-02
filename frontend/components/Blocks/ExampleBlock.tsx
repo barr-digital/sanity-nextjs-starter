@@ -27,19 +27,19 @@ type ExampleBlockProps = {
   index: number
 }
 
-export const ExampleBlock = ({block, index}: ExampleBlockProps) => {
+export const ExampleBlock = ({ block, index }: ExampleBlockProps) => {
   return (
-    <section className="py-16 px-4">
-      <div className="max-w-4xl mx-auto">
-        <div className="bg-gray-100 border-l-4 border-black-500 p-6 rounded">
-          <h2 className="text-2xl font-bold text-gray-900 mb-4">
+    <section className="px-4 py-16">
+      <div className="mx-auto max-w-4xl">
+        <div className="border-black-500 rounded border-l-4 bg-gray-100 p-6">
+          <h2 className="mb-4 text-2xl font-bold text-gray-900">
             {block.title || 'Example Block'}
           </h2>
           <p className="text-gray-800">
             {block.text ||
               'This is an example block. Replace this component with your own designs.'}
           </p>
-          <p className="text-sm text-gray-800 mt-4 font-mono">
+          <p className="mt-4 font-mono text-sm text-gray-800">
             Block type: {block._type} | Index: {index}
           </p>
         </div>

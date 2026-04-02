@@ -1,4 +1,4 @@
-import {ValidationContext} from 'sanity'
+import { ValidationContext } from 'sanity'
 
 /**
  * Validation rule to ensure only one document exists per language for singleton types
@@ -12,14 +12,14 @@ export async function validateUniqueLanguage(
 ): Promise<true | string> {
   if (!value) return true
 
-  const {document, getClient} = context
+  const { document, getClient } = context
   if (!document?._type || !document?._id) return true
 
   // Exclude validation for collection types (insert your collection types here)
   const excludedTypes = ['']
   if (excludedTypes.includes(document._type)) return true
 
-  const client = getClient({apiVersion: process.env.SANITY_API_VERSION || '2025-09-25'})
+  const client = getClient({ apiVersion: process.env.SANITY_API_VERSION || '2025-09-25' })
 
   // Get the base ID without drafts prefix
   const baseId = document._id.replace('drafts.', '')

@@ -1,9 +1,9 @@
 'use client'
 
 import Image from 'next/image'
-import {useState} from 'react'
-import {urlForImage} from '@/sanity/lib/utils'
-import type {SanityImageCrop, SanityImageHotspot} from '@/sanity.types'
+import { useState } from 'react'
+import { urlForImage } from '@/sanity/lib/utils'
+import type { SanityImageCrop, SanityImageHotspot } from '@/sanity.types'
 
 type SanityImage = {
   asset: {

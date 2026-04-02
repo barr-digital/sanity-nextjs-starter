@@ -1,5 +1,5 @@
-import {defineField, defineType} from 'sanity'
-import {validateUniqueLanguage} from '../validation/uniqueLanguage'
+import { defineField, defineType } from 'sanity'
+import { validateUniqueLanguage } from '../validation/uniqueLanguage'
 
 /**
  * Base page schema with common fields that can be extended by other document types
@@ -29,7 +29,7 @@ export const basePage = defineType({
         // Custom isUnique function following Sanity's official documentation pattern
         // https://www.sanity.io/docs/slug-type
         isUnique: async (slug, context) => {
-          const {document, getClient} = context
+          const { document, getClient } = context
           const client = getClient({
             apiVersion: process.env.NEXT_PUBLIC_SANITY_API_VERSION || '2025-09-25',
           })

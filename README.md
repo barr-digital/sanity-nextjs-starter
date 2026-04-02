@@ -150,8 +150,8 @@ If you prefer to set up manually:
    ```typescript
    documentInternationalization({
      supportedLanguages: [
-       {id: 'it', title: 'Italian'},
-       {id: 'en', title: 'English'}, // Add your language
+       { id: 'it', title: 'Italian' },
+       { id: 'en', title: 'English' }, // Add your language
      ],
      // ...
    })

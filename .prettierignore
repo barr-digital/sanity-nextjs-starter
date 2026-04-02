@@ -1,22 +1,10 @@
-.github/**
-
-# Generated files
-package-lock.json
-**/package-lock.json
-yarn.lock
-pnpm-lock.yaml
-
-# Build outputs
-dist/
-build/
-out/
-.next/
-.sanity/
-
-# Generated types
-frontend/sanity.types.ts
-studio/schema.json
-
-# Other generated files
+node_modules
+.next
+out
+dist
+build
 *.min.js
-*.min.css
+pnpm-lock.yaml
+package-lock.json
+sanity.types.ts
+database.types.ts

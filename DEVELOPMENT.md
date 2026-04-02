@@ -24,8 +24,8 @@ Create a new file in `studio/src/schemaTypes/documents/singletons/`:
 
 ```typescript
 // studio/src/schemaTypes/documents/singletons/aboutPage.ts
-import {defineType} from 'sanity'
-import {basePage} from './basePage'
+import { defineType } from 'sanity'
+import { basePage } from './basePage'
 
 export const aboutPage = defineType({
   name: 'aboutPage',
@@ -47,7 +47,7 @@ export const aboutPage = defineType({
 **Register the schema** in `studio/src/schemaTypes/index.ts`:
 
 ```typescript
-import {aboutPage} from './documents/aboutPage'
+import { aboutPage } from './documents/aboutPage'
 
 export const schemaTypes = [
   // ... existing types
@@ -109,9 +109,9 @@ Update `frontend/app/[locale]/[[...slug]]/page.tsx`:
 const slugPath = slug.join('/')
 
 if (slugPath === 'about') {
-  const {data: aboutPage} = await sanityFetch({
+  const { data: aboutPage } = await sanityFetch({
     query: aboutPageQuery,
-    params: {lang: locale},
+    params: { lang: locale },
   })
 
   // Return metadata (see existing homepage example)
@@ -123,9 +123,9 @@ if (slugPath === 'about') {
 ```typescript
 // Add page fetching logic
 if (slugPath === 'about') {
-  const {data: aboutPage} = await sanityFetch({
+  const { data: aboutPage } = await sanityFetch({
     query: aboutPageQuery,
-    params: {lang: locale},
+    params: { lang: locale },
   })
 
   if (!aboutPage) notFound()
@@ -156,16 +156,16 @@ export async function generateStaticParamsForLocale(locale: string) {
   const result: StaticParam[] = []
 
   // Homepage
-  result.push({locale, slug: undefined})
+  result.push({ locale, slug: undefined })
 
   // About page
   const aboutPage = await client.fetch(
     `*[_type == "aboutPage" && language == $lang][0]{ "slug": slug.current }`,
-    {lang: locale},
+    { lang: locale },
   )
 
   if (aboutPage?.slug) {
-    result.push({locale, slug: [aboutPage.slug]})
+    result.push({ locale, slug: [aboutPage.slug] })
   }
 
   return result
@@ -182,7 +182,7 @@ Create a block schema in `studio/src/schemaTypes/blocks/`:
 
 ```typescript
 // studio/src/schemaTypes/blocks/heroBlock.ts
-import {defineType} from 'sanity'
+import { defineType } from 'sanity'
 
 export const heroBlock = defineType({
   name: 'heroBlock',
@@ -205,7 +205,7 @@ export const heroBlock = defineType({
       name: 'image',
       title: 'Background Image',
       type: 'image',
-      options: {hotspot: true},
+      options: { hotspot: true },
       fields: [
         {
           name: 'alt',
@@ -236,15 +236,15 @@ Update `studio/src/schemaTypes/blocks/config.ts`:
 
 ```typescript
 export const pageBuilderBlocks = [
-  {type: 'exampleBlock'},
-  {type: 'heroBlock'}, // Add your block
+  { type: 'exampleBlock' },
+  { type: 'heroBlock' }, // Add your block
 ]
 ```
 
 Also export it from `studio/src/schemaTypes/blocks/index.ts`:
 
 ```typescript
-export {heroBlock} from './heroBlock'
+export { heroBlock } from './heroBlock'
 ```
 
 ### 3. Add to Query Fragment (Frontend)
@@ -318,7 +318,7 @@ export function HeroBlock({ block }: HeroBlockProps) {
 Update `frontend/components/Layout/BlockRenderer.tsx`:
 
 ```typescript
-import {HeroBlock} from '@/components/Blocks/HeroBlock'
+import { HeroBlock } from '@/components/Blocks/HeroBlock'
 
 const getBlocks = () => ({
   exampleBlock: ExampleBlock,
@@ -336,7 +336,7 @@ Example: Creating a blog with posts listing and detail pages.
 
 ```typescript
 // studio/src/schemaTypes/documents/post.ts
-import {defineType} from 'sanity'
+import { defineType } from 'sanity'
 
 export const post = defineType({
   name: 'post',
@@ -353,7 +353,7 @@ export const post = defineType({
       name: 'slug',
       title: 'Slug',
       type: 'slug',
-      options: {source: 'title'},
+      options: { source: 'title' },
       validation: (Rule) => Rule.required(),
     },
     {
@@ -361,7 +361,7 @@ export const post = defineType({
       title: 'Language',
       type: 'string',
       options: {
-        list: [{title: 'Italian', value: 'it'}],
+        list: [{ title: 'Italian', value: 'it' }],
       },
     },
     {
@@ -374,14 +374,14 @@ export const post = defineType({
       name: 'featuredImage',
       title: 'Featured Image',
       type: 'image',
-      options: {hotspot: true},
-      fields: [{name: 'alt', type: 'string'}],
+      options: { hotspot: true },
+      fields: [{ name: 'alt', type: 'string' }],
     },
     {
       name: 'content',
       title: 'Content',
       type: 'array',
-      of: [{type: 'block'}],
+      of: [{ type: 'block' }],
     },
   ],
 })
@@ -391,8 +391,8 @@ export const post = defineType({
 
 ```typescript
 // studio/src/schemaTypes/documents/singletons/blogListing.ts
-import {defineType} from 'sanity'
-import {basePage} from '../basePage'
+import { defineType } from 'sanity'
+import { basePage } from '../basePage'
 
 export const blogListing = defineType({
   name: 'blogListing',
@@ -446,8 +446,8 @@ export const blogListingQuery = defineQuery(`
 
 ```typescript
 // In page.tsx
-export default async function Page({params}: Props) {
-  const {locale, slug} = await params
+export default async function Page({ params }: Props) {
+  const { locale, slug } = await params
 
   // Homepage
   if (!slug || slug.length === 0) {
@@ -458,14 +458,14 @@ export default async function Page({params}: Props) {
 
   // Blog listing
   if (slugPath === 'blog') {
-    const {data: blogPage} = await sanityFetch({
+    const { data: blogPage } = await sanityFetch({
       query: blogListingQuery,
-      params: {lang: locale},
+      params: { lang: locale },
     })
 
-    const {data: posts} = await sanityFetch({
+    const { data: posts } = await sanityFetch({
       query: allPostsQuery,
-      params: {lang: locale},
+      params: { lang: locale },
     })
 
     if (!blogPage) notFound()
@@ -475,9 +475,9 @@ export default async function Page({params}: Props) {
   // Blog post detail
   if (slug.length === 2 && slug[0] === 'blog') {
     const postSlug = slug[1]
-    const {data: post} = await sanityFetch({
+    const { data: post } = await sanityFetch({
       query: postBySlugQuery,
-      params: {lang: locale, slug: postSlug},
+      params: { lang: locale, slug: postSlug },
     })
 
     if (!post) notFound()
@@ -494,22 +494,22 @@ export default async function Page({params}: Props) {
 // In lib/helpers/sitemap.ts
 const blogPage = await client.fetch(
   `*[_type == "blogListing" && language == $lang][0]{ "slug": slug.current }`,
-  {lang: locale},
+  { lang: locale },
 )
 
 if (blogPage?.slug) {
   // Add blog listing page
-  result.push({locale, slug: [blogPage.slug]})
+  result.push({ locale, slug: [blogPage.slug] })
 
   // Add all blog posts
   const posts = await client.fetch(
     `*[_type == "post" && language == $lang]{ "slug": slug.current }`,
-    {lang: locale},
+    { lang: locale },
   )
 
-  posts?.forEach((post: {slug: string}) => {
+  posts?.forEach((post: { slug: string }) => {
     if (post.slug) {
-      result.push({locale, slug: [blogPage.slug, post.slug]})
+      result.push({ locale, slug: [blogPage.slug, post.slug] })
     }
   })
 }
@@ -538,15 +538,15 @@ Located in `frontend/lib/helpers/metadata.ts`:
 The `generateMetadata` function in `page.tsx` shows the pattern:
 
 ```typescript
-export async function generateMetadata({params}: Props): Promise<Metadata> {
-  const {locale, slug} = await params
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { locale, slug } = await params
   const metadataBase = await getMetadataBase()
   const canonicalPath = buildCanonicalPath(locale, slug, routing.defaultLocale)
 
   // Fetch your page data
-  const {data: page} = await sanityFetch({
+  const { data: page } = await sanityFetch({
     query: yourPageQuery,
-    params: {lang: locale},
+    params: { lang: locale },
   })
 
   // Generate Open Graph image
@@ -554,7 +554,7 @@ export async function generateMetadata({params}: Props): Promise<Metadata> {
 
   return {
     metadataBase,
-    ...(page?.seo?.seoTitle && {title: page.seo.seoTitle}),
+    ...(page?.seo?.seoTitle && { title: page.seo.seoTitle }),
     ...(page?.seo?.seoDescription && {
       description: page.seo.seoDescription,
     }),
@@ -611,7 +611,7 @@ import { Picture } from "@/components/Ui/Picture";
 The `urlForImage` utility automatically handles crop and hotspot:
 
 ```typescript
-import {urlForImage} from '@/sanity/lib/utils'
+import { urlForImage } from '@/sanity/lib/utils'
 
 const imageUrl = urlForImage(sanityImageObject)?.width(1200).height(630).url()
 ```
@@ -619,7 +619,7 @@ const imageUrl = urlForImage(sanityImageObject)?.width(1200).height(630).url()
 ### Open Graph Images
 
 ```typescript
-import {resolveOpenGraphImage} from '@/sanity/lib/utils'
+import { resolveOpenGraphImage } from '@/sanity/lib/utils'
 
 const ogImage = resolveOpenGraphImage(sanityImageObject)
 // Returns: { url, alt, width, height }
@@ -645,15 +645,15 @@ export const routing = defineRouting({
 ```typescript
 ;(documentInternationalization({
   supportedLanguages: [
-    {id: 'it', title: 'Italian'},
-    {id: 'en', title: 'English'}, // Add language
+    { id: 'it', title: 'Italian' },
+    { id: 'en', title: 'English' }, // Add language
   ],
   schemaTypes: ['homepage', 'header', 'footer', 'settings'],
 }),
   languageFilter({
     supportedLanguages: [
-      {id: 'it', title: 'Italian'},
-      {id: 'en', title: 'English'}, // Add language
+      { id: 'it', title: 'Italian' },
+      { id: 'en', title: 'English' }, // Add language
     ],
     defaultLanguages: ['it'],
     documentTypes: ['homepage', 'header', 'footer', 'settings'],
@@ -697,9 +697,9 @@ This creates `frontend/sanity.types.ts` with all your schema types.
 ### Using Generated Types
 
 ```typescript
-import {HomepageQueryResult} from '@/sanity.types'
+import { HomepageQueryResult } from '@/sanity.types'
 
-function HomePage({page}: {page: HomepageQueryResult}) {
+function HomePage({ page }: { page: HomepageQueryResult }) {
   // page is fully typed
 }
 ```
@@ -739,7 +739,6 @@ Deploy your Sanity Studio to a hosted `*.sanity.studio` URL for production use.
    Your studio will be available at: `https://my-project.sanity.studio`
 
    **Important notes about hostnames:**
-
    - Studio hostnames are **globally unique** across all Sanity projects worldwide
    - They are NOT scoped to your account or organization
    - Similar to domain names - if someone else is using it, you can't use it
@@ -798,7 +797,6 @@ The CLI will use the saved `appId` and deploy to the same hostname automatically
    ```
 
 2. **Import in Vercel:**
-
    - Go to [vercel.com](https://vercel.com)
    - Click "Add New Project"
    - Import your repository
@@ -977,7 +975,7 @@ npm run typegen --workspace=frontend
 
 ```typescript
 // ✅ Use generated types
-import {HomepageQueryResult} from '@/sanity.types'
+import { HomepageQueryResult } from '@/sanity.types'
 
 // ✅ Extract specific block types
 type HeroBlockType = ExtractPageBuilderType<'heroBlock'>
@@ -993,10 +991,10 @@ interface HeroBlockProps {
 
 ```typescript
 // ❌ Use 'any' types
-function MyComponent({block}: {block: any}) {}
+function MyComponent({ block }: { block: any }) {}
 
 // ❌ Skip type annotations
-function MyComponent({block}) {}
+function MyComponent({ block }) {}
 ```
 
 #### GROQ Queries
@@ -1144,6 +1142,7 @@ For the best development experience:
 - **ESLint** - Code linting
 - **Prettier** - Code formatting
 - **Tailwind CSS IntelliSense** - Tailwind class autocomplete
+
 ---
 
 ## Need Help?

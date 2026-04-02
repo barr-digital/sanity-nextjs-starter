@@ -1,19 +1,19 @@
 // Singletons
-import {settings} from './documents/singletons/settings'
-import {homepage} from './documents/singletons/homepage'
-import {header} from './documents/singletons/header'
-import {footer} from './documents/singletons/footer'
+import { settings } from './documents/singletons/settings'
+import { homepage } from './documents/singletons/homepage'
+import { header } from './documents/singletons/header'
+import { footer } from './documents/singletons/footer'
 
 // Objects
-import {link} from './objects/link'
-import {image} from './objects/image'
-import {seo} from './objects/seo'
+import { link } from './objects/link'
+import { image } from './objects/image'
+import { seo } from './objects/seo'
 
 // Base Documents
-import {basePage} from './documents/basePage'
+import { basePage } from './documents/basePage'
 
 // Blocks (PageBuilder)
-import {exampleBlock} from './blocks/exampleBlock'
+import { exampleBlock } from './blocks/exampleBlock'
 
 /**
  * Schema Types

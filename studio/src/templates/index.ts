@@ -1,5 +1,5 @@
-import {Template} from 'sanity'
-import {SINGLETON_TYPES} from '../schemaTypes'
+import { Template } from 'sanity'
+import { SINGLETON_TYPES } from '../schemaTypes'
 
 /**
  * Initial value templates for singleton documents with language support.
@@ -17,8 +17,8 @@ export const languageTemplates: Template[] = SINGLETON_TYPES.map((schemaType) =>
   id: `${schemaType}-with-language`,
   title: `${schemaType} (with language)`,
   schemaType: schemaType as string,
-  parameters: [{name: 'language', type: 'string'}],
-  value: (params: {language?: string}) => ({
+  parameters: [{ name: 'language', type: 'string' }],
+  value: (params: { language?: string }) => ({
     language: params.language || 'it',
   }),
 }))
@@ -28,7 +28,7 @@ export const languageTemplates: Template[] = SINGLETON_TYPES.map((schemaType) =>
  * This is called when documents are created via navigateIntent.
  */
 export function resolveInitialValue(context: any) {
-  const {schemaType} = context
+  const { schemaType } = context
 
   // Only apply to singleton types
   if (!SINGLETON_TYPES.includes(schemaType as any)) {

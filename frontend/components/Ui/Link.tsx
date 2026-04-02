@@ -1,5 +1,5 @@
-import {Link as I18nLink} from '@/i18n/routing'
-import {linkResolver} from '@/sanity/lib/utils'
+import { Link as I18nLink } from '@/i18n/routing'
+import { linkResolver } from '@/sanity/lib/utils'
 
 interface LinkProps {
   link: any
@@ -20,7 +20,7 @@ interface LinkProps {
  *   Click here
  * </Link>
  */
-export const Link = ({link, children, className = '', onMouseEnter, onMouseLeave}: LinkProps) => {
+export const Link = ({ link, children, className = '', onMouseEnter, onMouseLeave }: LinkProps) => {
   // Resolve the link URL
   const resolvedLink = linkResolver(link)
 

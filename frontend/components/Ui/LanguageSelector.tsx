@@ -1,10 +1,10 @@
 'use client'
 
-import {useLocale} from 'next-intl'
-import {routing} from '@/i18n/routing'
-import {useState, useRef, useEffect} from 'react'
-import {useLanguageChange} from '@/hooks/useLanguageChange'
-import {ChevronDownIcon} from 'lucide-react'
+import { useLocale } from 'next-intl'
+import { routing } from '@/i18n/routing'
+import { useState, useRef, useEffect } from 'react'
+import { useLanguageChange } from '@/hooks/useLanguageChange'
+import { ChevronDownIcon } from 'lucide-react'
 
 /**
  * Get display name for a locale
@@ -28,7 +28,7 @@ const getLanguageName = (locale: string) => locale.toUpperCase()
 export const LanguageSelector = () => {
   const locale = useLocale()
   const [isOpen, setIsOpen] = useState(false)
-  const {handleLanguageChange: changeLanguage} = useLanguageChange()
+  const { handleLanguageChange: changeLanguage } = useLanguageChange()
   const dropdownRef = useRef<HTMLDivElement>(null)
 
   // Close dropdown when clicking outside
@@ -54,16 +54,16 @@ export const LanguageSelector = () => {
     <div className="relative w-fit" ref={dropdownRef}>
       <button
         onClick={() => setIsOpen(!isOpen)}
-        className="flex items-center gap-2 cursor-pointer"
+        className="flex cursor-pointer items-center gap-2"
         aria-label="Select language"
         aria-expanded={isOpen}
       >
         <span>{getLanguageName(locale)}</span>
-        <ChevronDownIcon className="w-4 h-4" />
+        <ChevronDownIcon className="h-4 w-4" />
       </button>
 
       {isOpen && (
-        <div className="absolute top-full left-0 mt-2 bg-white border border-gray-300 rounded shadow-lg overflow-hidden z-50 min-w-[80px]">
+        <div className="absolute top-full left-0 z-50 mt-2 min-w-[80px] overflow-hidden rounded border border-gray-300 bg-white shadow-lg">
           {routing.locales.map((loc) => (
             <button
               key={loc}

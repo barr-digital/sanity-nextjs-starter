@@ -1,8 +1,8 @@
 'use client'
 
-import {PageBuilder} from '@/components/Layout'
-import {Text} from '@/components/Ui'
-import {HomepageQueryResult} from '@/sanity.types'
+import { PageBuilder } from '@/components/Layout'
+import { Text } from '@/components/Ui'
+import { HomepageQueryResult } from '@/sanity.types'
 
 type HomePageProps = {
   page: HomepageQueryResult | null
@@ -30,7 +30,7 @@ type HomePageProps = {
  *   );
  * };
  */
-export const HomePage = ({page}: HomePageProps) => {
+export const HomePage = ({ page }: HomePageProps) => {
   if (!page) {
     return null
   }

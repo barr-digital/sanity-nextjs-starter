@@ -1,7 +1,7 @@
-import {useState} from 'react'
-import {useLocale} from 'next-intl'
-import {usePathname, useRouter} from '@/i18n/routing'
-import {translateSlugAction} from '@/lib/actions/translate-slug'
+import { useState } from 'react'
+import { useLocale } from 'next-intl'
+import { usePathname, useRouter } from '@/i18n/routing'
+import { translateSlugAction } from '@/lib/actions/translate-slug'
 
 /**
  * Custom hook for handling language changes with slug translation.
@@ -33,15 +33,15 @@ export const useLanguageChange = () => {
 
       if (result.found && result.slug !== null) {
         // Navigate to the translated slug
-        router.push(`/${result.slug}`, {locale: newLocale})
+        router.push(`/${result.slug}`, { locale: newLocale })
       } else {
         // Fallback to home page if translation not found
-        router.push('/', {locale: newLocale})
+        router.push('/', { locale: newLocale })
       }
     } catch (error) {
       console.error('Error translating slug:', error)
       // Fallback to home page on error
-      router.push('/', {locale: newLocale})
+      router.push('/', { locale: newLocale })
     } finally {
       setIsTranslating(false)
     }

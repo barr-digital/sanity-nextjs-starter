@@ -1,17 +1,17 @@
 import '../globals.css'
 
-import type {Metadata} from 'next'
-import {toPlainText} from 'next-sanity'
-import {notFound} from 'next/navigation'
-import {setRequestLocale} from 'next-intl/server'
-import {Inter} from 'next/font/google'
+import type { Metadata } from 'next'
+import { toPlainText } from 'next-sanity'
+import { notFound } from 'next/navigation'
+import { setRequestLocale } from 'next-intl/server'
+import { Inter } from 'next/font/google'
 
-import {sanityFetch, SanityLive} from '@/sanity/lib/live'
-import {settingsQuery} from '@/sanity/lib/queries'
-import {resolveOpenGraphImage} from '@/sanity/lib/utils'
-import {routing} from '@/i18n/routing'
-import {handleError} from '@/sanity/lib/live-error'
-import {NextIntlClientProvider} from 'next-intl'
+import { sanityFetch, SanityLive } from '@/sanity/lib/live'
+import { settingsQuery } from '@/sanity/lib/queries'
+import { resolveOpenGraphImage } from '@/sanity/lib/utils'
+import { routing } from '@/i18n/routing'
+import { handleError } from '@/sanity/lib/live-error'
+import { NextIntlClientProvider } from 'next-intl'
 
 const inter = Inter({
   variable: '--font-inter',
@@ -21,12 +21,12 @@ const inter = Inter({
 
 type Props = {
   children: React.ReactNode
-  params: Promise<{locale: string}>
+  params: Promise<{ locale: string }>
 }
 
 // Generate static params for all supported locales
 export async function generateStaticParams() {
-  return routing.locales.map((locale) => ({locale}))
+  return routing.locales.map((locale) => ({ locale }))
 }
 
 /**
@@ -36,13 +36,13 @@ export async function generateStaticParams() {
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{locale: string}>
+  params: Promise<{ locale: string }>
 }): Promise<Metadata> {
-  const {locale} = await params
+  const { locale } = await params
 
-  const {data: settings} = await sanityFetch({
+  const { data: settings } = await sanityFetch({
     query: settingsQuery,
-    params: {lang: locale},
+    params: { lang: locale },
     // Metadata should never contain stega
     stega: false,
   })
@@ -64,8 +64,8 @@ export async function generateMetadata({
   }
 }
 
-export default async function LocaleLayout({children, params}: Props) {
-  const {locale} = await params
+export default async function LocaleLayout({ children, params }: Props) {
+  const { locale } = await params
 
   // Ensure that the incoming `locale` is valid
   if (!routing.locales.includes(locale as any)) {

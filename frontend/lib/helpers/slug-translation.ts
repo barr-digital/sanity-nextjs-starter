@@ -1,4 +1,4 @@
-import {client} from '@/sanity/lib/client'
+import { client } from '@/sanity/lib/client'
 
 /**
  * Result of slug translation lookup
@@ -38,7 +38,7 @@ export async function translateSlug(
 ): Promise<SlugTranslationResult> {
   // Handle home page - always exists in all languages
   if (!currentSlug || currentSlug.length === 0) {
-    return {slug: '', found: true}
+    return { slug: '', found: true }
   }
 
   // Convert to string if array
@@ -46,7 +46,7 @@ export async function translateSlug(
 
   // Handle empty string
   if (!slugPath || slugPath.trim() === '') {
-    return {slug: '', found: true}
+    return { slug: '', found: true }
   }
 
   // Split slug into parts for collection items
@@ -73,7 +73,7 @@ export async function translateSlug(
 
     // If we found a translation through the document-internationalization plugin
     if (currentPage?.translatedDoc?.slug) {
-      return {slug: currentPage.translatedDoc.slug, found: true}
+      return { slug: currentPage.translatedDoc.slug, found: true }
     }
 
     // Case 2: Collection item (e.g., "projects/project-name")
@@ -123,9 +123,9 @@ export async function translateSlug(
     // }
 
     // Not found - return null to trigger fallback to homepage
-    return {slug: null, found: false}
+    return { slug: null, found: false }
   } catch (error) {
     console.error('Error translating slug:', error)
-    return {slug: null, found: false}
+    return { slug: null, found: false }
   }
 }

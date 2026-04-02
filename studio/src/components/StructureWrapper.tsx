@@ -1,6 +1,6 @@
 import React from 'react'
-import {LanguageFilteredList} from './LanguageFilteredList'
-import {StructureContext} from '../contexts/StructureContext'
+import { LanguageFilteredList } from './LanguageFilteredList'
+import { StructureContext } from '../contexts/StructureContext'
 
 interface StructureWrapperProps {
   documentType: string
@@ -21,7 +21,7 @@ export function StructureWrapper({
   filter,
   children,
 }: StructureWrapperProps) {
-  const contextValue = {documentType, title, schemaType}
+  const contextValue = { documentType, title, schemaType }
 
   return (
     <StructureContext.Provider value={contextValue}>

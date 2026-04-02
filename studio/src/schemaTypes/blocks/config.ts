@@ -19,7 +19,7 @@
  * Example blocks (uncomment and customize as needed):
  */
 export const pageBuilderBlocks = [
-  {type: 'exampleBlock'},
+  { type: 'exampleBlock' },
   // { type: "heroBlock" },
   // { type: "textBlock" },
   // { type: "imageGallery" },
