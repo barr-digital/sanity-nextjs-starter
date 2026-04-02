@@ -25,12 +25,17 @@
     "dev:studio": "npm run dev --workspace=studio",
     "format": "prettier --cache --write .",
     "lint": "npm run lint --workspace=frontend",
-    "type-check": "npm run type-check --workspaces"
+    "type-check": "npm run type-check --workspaces",
+    "prepare": "husky"
   },
-  "prettier": "@sanity/prettier-config",
   "devDependencies": {
-    "@sanity/prettier-config": "^2.0.2",
+    "husky": "^9.0.0",
+    "lint-staged": "^15.0.0",
     "npm-run-all2": "^5.0.2",
-    "prettier": "^3.7.3"
+    "prettier": "^3.7.3",
+    "prettier-plugin-tailwindcss": "^0.6.0"
+  },
+  "lint-staged": {
+    "*.{js,jsx,ts,tsx,json,css,md,mjs,cjs}": "prettier --write"
   }
 }
