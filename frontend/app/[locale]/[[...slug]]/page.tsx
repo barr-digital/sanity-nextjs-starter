@@ -2,7 +2,7 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { sanityFetch } from '@/sanity/lib/live'
 import { homepageQuery } from '@/sanity/lib/queries'
-import { PageBuilder } from '@/components/Layout'
+import { PageBuilder } from '@/components/layout'
 import { HomePage } from '@/app/_pages'
 import { resolveOpenGraphImage } from '@/sanity/lib/utils'
 import {

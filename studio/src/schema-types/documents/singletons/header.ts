@@ -1,17 +1,17 @@
 import { defineType } from 'sanity'
-import { validateUniqueLanguage } from '../../validation/uniqueLanguage'
+import { validateUniqueLanguage } from '../../validation/unique-language'
 
 /**
- * Footer Singleton
+ * Header Singleton
  *
- * Global footer configuration for the site.
+ * Global header configuration for the site.
  * Only one instance per language is allowed.
  *
- * TODO: Add your footer fields here (links, social media, copyright, etc.)
+ * TODO: Add your header fields here (navigation, logo, etc.)
  */
-export const footer = defineType({
-  name: 'footer',
-  title: 'Footer',
+export const header = defineType({
+  name: 'header',
+  title: 'Header',
   type: 'document',
   fields: [
     {
@@ -20,12 +20,13 @@ export const footer = defineType({
       hidden: true,
       validation: (Rule) => Rule.required().custom(validateUniqueLanguage),
     },
-    // TODO: Add your footer fields here
-    // Example copyright field:
+    // TODO: Add your header fields here
+    // Example navigation field:
     // {
-    //   name: "copyright",
-    //   title: "Copyright Text",
-    //   type: "string",
+    //   name: "navigation",
+    //   title: "Navigation",
+    //   type: "array",
+    //   of: [{ type: "link" }],
     // },
   ],
   preview: {
@@ -35,7 +36,7 @@ export const footer = defineType({
     },
     prepare({ title, language }) {
       return {
-        title: title || 'Footer',
+        title: title || 'Header',
         subtitle: language ? `Language: ${language.toUpperCase()}` : 'No language set',
       }
     },

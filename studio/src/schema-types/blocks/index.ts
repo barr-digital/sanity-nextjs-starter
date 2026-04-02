@@ -1,4 +1,4 @@
-export { exampleBlock } from './exampleBlock'
+export { exampleBlock } from './example-block'
 export { pageBuilderBlocks, pageBuilderFieldOptions } from './config'
 
 // TODO: Export your custom block types here

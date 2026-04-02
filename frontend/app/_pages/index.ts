@@ -5,7 +5,7 @@
  * Add new page components here as you create them.
  */
 
-export * from './HomePage'
+export * from './home-page'
 
 // TODO: Add more page components as you create them
 // export * from "./AboutPage";

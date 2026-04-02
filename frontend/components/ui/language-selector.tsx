@@ -3,7 +3,7 @@
 import { useLocale } from 'next-intl'
 import { routing } from '@/i18n/routing'
 import { useState, useRef, useEffect } from 'react'
-import { useLanguageChange } from '@/hooks/useLanguageChange'
+import { useLanguageChange } from '@/hooks/use-language-change'
 import { ChevronDownIcon } from 'lucide-react'
 
 /**

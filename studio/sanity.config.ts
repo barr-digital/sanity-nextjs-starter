@@ -6,7 +6,7 @@
 import { defineConfig } from 'sanity'
 import { structureTool } from 'sanity/structure'
 import { visionTool } from '@sanity/vision'
-import { schemaTypes } from './src/schemaTypes'
+import { schemaTypes } from './src/schema-types'
 import { structure } from './src/structure'
 import { languageTemplates, resolveInitialValue } from './src/templates'
 import { documentInternationalization } from '@sanity/document-internationalization'

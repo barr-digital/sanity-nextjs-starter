@@ -1,5 +1,5 @@
 import { defineField, defineType } from 'sanity'
-import { validateUniqueLanguage } from '../validation/uniqueLanguage'
+import { validateUniqueLanguage } from '../validation/unique-language'
 
 /**
  * Base page schema with common fields that can be extended by other document types

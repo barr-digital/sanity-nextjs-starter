@@ -5,7 +5,7 @@ import {
   HeaderList,
   FooterList,
   SettingsList,
-} from '../components/LanguageFilteredList'
+} from '../components/language-filtered-list'
 
 /**
  * Custom Studio structure with organized sections

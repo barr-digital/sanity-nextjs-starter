@@ -3,9 +3,9 @@ import { useClient } from 'sanity'
 import { Stack, Card, Text, Select, Box, Flex, Button } from '@sanity/ui'
 import { EditIcon, AddIcon } from '@sanity/icons'
 import { useRouter } from 'sanity/router'
-import { useStructureContext } from '../contexts/StructureContext'
-import { StructureWrapper } from './StructureWrapper'
-import { SINGLETON_TYPES } from '../schemaTypes'
+import { useStructureContext } from '../contexts/structure-context'
+import { StructureWrapper } from './structure-wrapper'
+import { SINGLETON_TYPES } from '../schema-types'
 
 interface Document {
   _id: string

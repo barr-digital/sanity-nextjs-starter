@@ -1,6 +1,6 @@
 import { CogIcon } from '@sanity/icons'
 import { defineField, defineType } from 'sanity'
-import { validateUniqueLanguage } from '../../validation/uniqueLanguage'
+import { validateUniqueLanguage } from '../../validation/unique-language'
 
 /**
  * Settings schema Singleton.  Singletons are single documents that are displayed not in a collection, handy for things like site settings and other global configurations.

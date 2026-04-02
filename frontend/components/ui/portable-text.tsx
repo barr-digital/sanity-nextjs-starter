@@ -1,5 +1,5 @@
 import { PortableText as SanityPortableText, PortableTextComponents } from 'next-sanity'
-import { Link } from './Link'
+import { Link } from './link'
 
 /**
  * Custom components for rendering Portable Text

@@ -1,6 +1,6 @@
 import { HomeIcon } from '@sanity/icons'
 import { defineType } from 'sanity'
-import { basePage } from '../basePage'
+import { basePage } from '../base-page'
 import { pageBuilderBlocks, pageBuilderFieldOptions } from '../../blocks'
 
 /**

@@ -10,10 +10,10 @@ import { image } from './objects/image'
 import { seo } from './objects/seo'
 
 // Base Documents
-import { basePage } from './documents/basePage'
+import { basePage } from './documents/base-page'
 
 // Blocks (PageBuilder)
-import { exampleBlock } from './blocks/exampleBlock'
+import { exampleBlock } from './blocks/example-block'
 
 /**
  * Schema Types

@@ -1,5 +1,5 @@
 import { Template } from 'sanity'
-import { SINGLETON_TYPES } from '../schemaTypes'
+import { SINGLETON_TYPES } from '../schema-types'
 
 /**
  * Initial value templates for singleton documents with language support.

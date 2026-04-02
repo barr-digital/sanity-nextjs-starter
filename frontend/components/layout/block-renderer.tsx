@@ -1,5 +1,5 @@
 import React from 'react'
-import { ExampleBlock } from '@/components/Blocks/ExampleBlock'
+import { ExampleBlock } from '@/components/blocks/example-block'
 
 type BlockType = {
   _type: string

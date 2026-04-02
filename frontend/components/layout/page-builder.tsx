@@ -2,7 +2,7 @@
 
 import { SanityDocument } from 'next-sanity'
 import { useOptimistic } from 'next-sanity/hooks'
-import { BlockRenderer } from '@/components/Layout/BlockRenderer'
+import { BlockRenderer } from '@/components/layout/block-renderer'
 
 type PageBuilderBlock = {
   _key: string

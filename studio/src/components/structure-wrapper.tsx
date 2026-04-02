@@ -1,6 +1,6 @@
 import React from 'react'
-import { LanguageFilteredList } from './LanguageFilteredList'
-import { StructureContext } from '../contexts/StructureContext'
+import { LanguageFilteredList } from './language-filtered-list'
+import { StructureContext } from '../contexts/structure-context'
 
 interface StructureWrapperProps {
   documentType: string
