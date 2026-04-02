@@ -1,7 +1,7 @@
 import { Link } from '@/sanity.types'
 import { dataset, projectId } from '@/sanity/lib/api'
 import { createImageUrlBuilder, type SanityImageSource } from '@sanity/image-url'
-import { DereferencedLink } from '@/sanity/lib/types'
+import { DereferencedLink } from '@/types/sanity'
 import { getImageDimensions } from '@sanity/asset-utils'
 
 type SanityImageWithCrop = {

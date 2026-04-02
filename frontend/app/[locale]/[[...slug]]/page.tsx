@@ -5,11 +5,8 @@ import { homepageQuery } from '@/sanity/lib/queries'
 import { PageBuilder } from '@/components/layout/page-builder'
 import { HomePage } from '@/app/_pages/home-page'
 import { resolveOpenGraphImage } from '@/sanity/lib/utils'
-import {
-  getMetadataBase,
-  buildCanonicalPath,
-  generateStaticParamsForLocale,
-} from '@/lib/helpers.server'
+import { getMetadataBase, buildCanonicalPath } from '@/lib/helpers/metadata'
+import { generateStaticParamsForLocale } from '@/lib/helpers/sitemap'
 import { routing } from '@/i18n/routing'
 
 type Props = {
