@@ -1,7 +1,7 @@
 'use client'
 
-import { PageBuilder } from '@/components/layout'
-import { Text } from '@/components/ui'
+import { PageBuilder } from '@/components/layout/page-builder'
+import { Text } from '@/components/ui/text'
 import { HomepageQueryResult } from '@/sanity.types'
 
 type HomePageProps = {

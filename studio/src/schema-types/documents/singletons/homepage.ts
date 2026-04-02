@@ -1,7 +1,7 @@
 import { HomeIcon } from '@sanity/icons'
 import { defineType } from 'sanity'
 import { basePage } from '../base-page'
-import { pageBuilderBlocks, pageBuilderFieldOptions } from '../../blocks'
+import { pageBuilderBlocks, pageBuilderFieldOptions } from '../../blocks/config'
 
 /**
  * Homepage Singleton

@@ -2,8 +2,8 @@ import { notFound } from 'next/navigation'
 import type { Metadata } from 'next'
 import { sanityFetch } from '@/sanity/lib/live'
 import { homepageQuery } from '@/sanity/lib/queries'
-import { PageBuilder } from '@/components/layout'
-import { HomePage } from '@/app/_pages'
+import { PageBuilder } from '@/components/layout/page-builder'
+import { HomePage } from '@/app/_pages/home-page'
 import { resolveOpenGraphImage } from '@/sanity/lib/utils'
 import {
   getMetadataBase,
