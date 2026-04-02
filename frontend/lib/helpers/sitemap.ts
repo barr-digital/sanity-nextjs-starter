@@ -1,7 +1,7 @@
 import { client } from '@/sanity/lib/client'
 import { routing } from '@/i18n/routing'
 
-export interface StaticParam {
+export type StaticParam = {
   locale: string
   slug?: string[]
 }

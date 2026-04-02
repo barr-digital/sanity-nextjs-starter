@@ -8,6 +8,7 @@ import { resolveOpenGraphImage } from '@/sanity/lib/utils'
 import { getMetadataBase, buildCanonicalPath } from '@/lib/helpers/metadata'
 import { generateStaticParamsForLocale } from '@/lib/helpers/sitemap'
 import { routing } from '@/i18n/routing'
+import type { HomepageQueryResult } from '@/sanity.types'
 
 type Props = {
   params: Promise<{
@@ -17,40 +18,13 @@ type Props = {
 }
 
 /**
- * Main page component that handles all routes through the catch-all pattern.
- * It receives the locale and optional slug segments from the URL.
+ * Catch-all page component. Handles all routes via [locale]/[[...slug]].
  *
- * Examples of routes handled:
- * - / or /it → homepage (locale: "it", slug: undefined)
- * - /en/about → about page (locale: "en", slug: ["about"])
- * - /it/projects/project-name → project detail (locale: "it", slug: ["projects", "project-name"])
- *
- * HOW TO ADD NEW PAGE TYPES:
- *
- * 1. Create the page schema in studio/src/schemaTypes/documents/
- *    Example: aboutPage.ts with fields like title, slug, pageBuilder, etc.
- *
- * 2. Add the GROQ query in frontend/sanity/lib/queries.ts
- *    Example:
- *    export const aboutPageQuery = defineQuery(`
- *      *[_type == "aboutPage" && slug.current == $slug && language == $lang][0]{
- *        _id,
- *        _type,
- *        title,
- *        pageBuilder[]{ ... },
- *      }
- *    `)
- *
- * 3. Create a page component in frontend/app/_pages/
- *    Example: AboutPage.tsx that renders the content using PageBuilder
- *
- * 4. Update this file:
- *    - Add logic to fetch the page by slug
- *    - Add a case in renderPageComponent() to render your page component
- *
- * For collection pages (like projects listing):
- * - Follow the same steps but fetch all items in the collection
- * - Pass them as props to your listing page component
+ * To add a new page type:
+ * 1. Create schema in studio/src/schema-types/documents/
+ * 2. Add GROQ query in frontend/sanity/lib/queries.ts
+ * 3. Create page component in frontend/app/_pages/
+ * 4. Add fetch logic + case in renderPageComponent() below
  */
 
 /**
@@ -98,43 +72,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
   }
 
-  // 2. TODO: Add metadata for other page types when you create them
-  // Example for other pages:
-  // const slugPath = slug.join("/");
-  // const { data: content } = await sanityFetch({
-  //   query: pageBySlugQuery,
-  //   params: { lang: locale, slug: slugPath },
-  // });
-  //
-  // if (!content) {
-  //   return {
-  //     metadataBase,
-  //     alternates: {
-  //       canonical: canonicalPath,
-  //     },
-  //   };
-  // }
-  //
-  // const seo = "seo" in content ? content.seo : null;
-  // const title = "title" in content ? content.title : null;
-  // const ogImage = resolveOpenGraphImage(seo?.seoImage);
-  // const pageTitle = seo?.seoTitle || (title ? String(title) : undefined);
-  //
-  // return {
-  //   metadataBase,
-  //   ...(pageTitle && { title: pageTitle }),
-  //   ...(seo?.seoDescription && { description: seo.seoDescription }),
-  //   ...(ogImage && {
-  //     openGraph: {
-  //       images: [ogImage],
-  //     },
-  //   }),
-  //   alternates: {
-  //     canonical: canonicalPath,
-  //   },
-  // };
-
-  // For now, return basic metadata for non-homepage routes
+  // TODO: Add metadata for other page types (fetch by slug, extract seo fields)
   return {
     metadataBase,
     alternates: {
@@ -155,21 +93,15 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  * case "projectsListing":
  *   return <ProjectsListingPage page={content} items={items} />;
  */
-function renderPageComponent(content: any, items?: any) {
+// Add new page query result types to this union as you create them
+type PageContent = NonNullable<HomepageQueryResult>
+
+function renderPageComponent(content: PageContent) {
   switch (content._type) {
     case 'homepage':
       return <HomePage page={content} />
     // TODO: Add more page types as you create them
-    // case "aboutPage":
-    //   return <AboutPage page={content} />;
-    // case "contactPage":
-    //   return <ContactPage page={content} />;
-    // case "projectsListing":
-    //   return <ProjectsListingPage page={content} items={items} />;
-    // case "projectDetail":
-    //   return <ProjectDetailPage page={content} />;
     default:
-      // Fallback to PageBuilder for any document with a pageBuilder field
       return <PageBuilder page={content} />
   }
 }
@@ -191,22 +123,7 @@ export default async function Page({ params }: Props) {
     return renderPageComponent(homepage)
   }
 
-  // 2. TODO: Add logic for other pages
-  // For now, return 404 for any non-homepage routes
-  // When you add more pages, fetch them here based on the slug
-  //
-  // Example for single pages:
-  // const slugPath = slug.join("/");
-  // const { data: content } = await sanityFetch({
-  //   query: pageBySlugQuery,
-  //   params: { lang: locale, slug: slugPath },
-  // });
-  //
-  // Example for collection items (2-part slugs like /projects/project-name):
-  // if (slug.length === 2) {
-  //   const [collectionSlug, itemSlug] = slug;
-  //   // Fetch collection item by slug
-  // }
+  // TODO: Add logic for other page types (fetch by slug, render via renderPageComponent)
 
   notFound()
 }

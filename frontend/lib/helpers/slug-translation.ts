@@ -3,7 +3,7 @@ import { client } from '@/sanity/lib/client'
 /**
  * Result of slug translation lookup
  */
-export interface SlugTranslationResult {
+export type SlugTranslationResult = {
   /** The translated slug path (without locale prefix) */
   slug: string | null
   /** Whether the translation was found */

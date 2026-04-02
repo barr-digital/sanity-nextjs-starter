@@ -12,7 +12,7 @@ type PageBuilderBlock = {
 type PageData = {
   _id: string
   _type: string
-  pageBuilder?: PageBuilderBlock[]
+  pageBuilder?: PageBuilderBlock[] | null
 }
 
 type PageBuilderProps = {
@@ -63,7 +63,7 @@ export const PageBuilder = ({ page }: PageBuilderProps) => {
 
   return (
     <div>
-      {pageBuilderBlocks.map((block: any, index: number) => (
+      {pageBuilderBlocks.map((block: PageBuilderBlock, index: number) => (
         <BlockRenderer
           key={block._key}
           index={index}
