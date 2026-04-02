@@ -1,11 +1,10 @@
 import {Link} from '@/sanity.types'
 import {dataset, projectId} from '@/sanity/lib/api'
-import imageUrlBuilder from '@sanity/image-url'
-import type {SanityImageSource} from '@sanity/image-url/lib/types/types'
+import {createImageUrlBuilder, type SanityImageSource} from '@sanity/image-url'
 import {DereferencedLink} from '@/sanity/lib/types'
 import {getImageDimensions} from '@sanity/asset-utils'
 
-const builder = imageUrlBuilder({
+const builder = createImageUrlBuilder({
   projectId: projectId || '',
   dataset: dataset || '',
 })
