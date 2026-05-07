@@ -62,14 +62,17 @@ This starts both:
 │   │   ├── [locale]/[[...slug]]/ # Catch-all localized routes
 │   │   ├── _pages/               # Page components (home-page.tsx, ...)
 │   │   └── styles/               # Tailwind CSS modules
+│   ├── actions/                  # Server Actions ("use server"), top-level
 │   ├── components/
 │   │   ├── blocks/               # PageBuilder block components
+│   │   ├── forms/                # Form components (contact-form, ...)
 │   │   ├── layout/               # Layout components (page-builder, block-renderer)
 │   │   └── ui/                   # UI components (link, picture, text, ...)
 │   ├── hooks/                    # Custom React hooks
 │   ├── lib/
-│   │   ├── actions/              # Server actions
-│   │   └── helpers/              # Server-side helpers (metadata, sitemap, ...)
+│   │   ├── data/                 # RSC-only reads (`import 'server-only'`)
+│   │   └── helpers/              # Pipeline helpers (metadata, sitemap)
+│   ├── schema/                   # Shared zod schemas (RHF + Server Actions)
 │   ├── types/                    # Shared TypeScript types
 │   ├── utils/                    # Utility functions (cn, ...)
 │   ├── sanity/
@@ -150,6 +153,16 @@ Five steps:
 4. **Create the component** in `frontend/components/blocks/my-block.tsx`.
 
 5. **Register it** in `frontend/components/layout/block-renderer.tsx` and extend `pageBuilderFragment` in `frontend/sanity/lib/queries.ts` if the block has dereferenced fields.
+
+## Data fetching and forms
+
+Three top-level folders hold the read/write boundary:
+
+- **`frontend/lib/data/<domain>.ts`** — RSC-only reads. The first line is `import 'server-only'` (the bundler fails the build if a Client Component imports the file). Use this when the function is called only from Server Components — no `"use server"`, no RPC endpoint exposed to the client.
+- **`frontend/actions/<domain>.ts`** — Server Actions (`"use server"` first line). Use this when the function is also called from Client Components (filters, load more, form submissions). Always validate input with zod as the first line: `const parsed = schema.safeParse(input)`. Return `{ success, error? }` — never throw toward the client.
+- **`frontend/schema/<domain>.ts`** — shared zod schemas (singular folder). Imported by both client forms (`react-hook-form` + `@hookform/resolvers/zod`) and the matching Server Action, so client UX and server validation stay in sync.
+
+The form stack is wired up: `zod`, `react-hook-form`, `@hookform/resolvers`, `class-variance-authority`. The reference contact form lives at `frontend/components/forms/contact-form.tsx` (drop it into a page or wrap it in a PageBuilder block).
 
 ## Environment Variables
 
