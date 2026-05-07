@@ -1,5 +1,8 @@
 # Next.js + Sanity Starter with i18n & PageBuilder
 
+[![Version](https://img.shields.io/github/v/tag/barr-digital/sanity-nextjs-starter?label=version&sort=semver)](https://github.com/barr-digital/sanity-nextjs-starter/releases)
+[![Changelog](https://img.shields.io/badge/changelog-keep--a--changelog-orange)](./CHANGELOG.md)
+
 A production-ready starter template combining **Next.js 16**, **Sanity v5**, **internationalization** (next-intl), a flexible **PageBuilder system**, **Tailwind CSS v4**, and **Sanity Live Content API**. Perfect for building scalable, multi-language content-driven websites.
 
 ## Stack
@@ -7,7 +10,7 @@ A production-ready starter template combining **Next.js 16**, **Sanity v5**, **i
 - **Next.js 16** (App Router, React Server Components)
 - **Sanity v5** (headless CMS with real-time collaboration)
 - **TypeScript** (full type safety across frontend and studio)
-- **Tailwind CSS v4** (CSS-first approach)
+- **Tailwind CSS v4** (CSS-first approach, with `tailwind-merge` + `tw-animate-css`)
 - **next-intl** (document-level i18n, Italian default)
 - **Monorepo** (npm workspaces: `frontend/` + `studio/`)
 
@@ -151,9 +154,16 @@ First deploy prompts for a unique hostname (e.g., `my-project.sanity.studio`).
 ## Documentation
 
 - **[DEVELOPMENT.md](DEVELOPMENT.md)** - Detailed development guide
+- **[CHANGELOG.md](CHANGELOG.md)** - Release notes (Keep a Changelog)
 - **[Sanity Documentation](https://www.sanity.io/docs)**
 - **[Next.js Documentation](https://nextjs.org/docs)**
 - **[next-intl Documentation](https://next-intl-docs.vercel.app/)**
+
+## Versioning
+
+This starter follows [Semantic Versioning](https://semver.org/). Releases are documented in [CHANGELOG.md](CHANGELOG.md) (Keep a Changelog format) and tagged in git as `vX.Y.Z`.
+
+The current minor cadence (`v0.x.y`) is deliberate: the API will stabilize at `v1.0.0` after the starter has been used as the base for a second BARR project (round-trip validation). Until then, every minor bump is shippable but may include intentional breaking changes — read the CHANGELOG before pulling updates into a derived project.
 
 ## License
 
