@@ -2,7 +2,7 @@ import { MetadataRoute } from 'next'
 import { sanityFetch } from '@/sanity/lib/live'
 import { sitemapDataQuery } from '@/sanity/lib/queries'
 import { routing } from '@/i18n/routing'
-import { getMetadataBase, buildCanonicalPath } from '@/lib/helpers/metadata'
+import { getMetadataBase, buildCanonicalPath } from '@/lib/data/metadata'
 import { generateAllStaticParams } from '@/lib/helpers/sitemap'
 
 /**
