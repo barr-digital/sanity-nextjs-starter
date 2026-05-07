@@ -49,6 +49,8 @@ If you cloned the starter before v0.4.0, the import paths below have moved. Run 
 - `frontend/lib/helpers/` survives — `metadata.ts` and `sitemap.ts` are pipeline helpers (not domain reads), they keep their location.
 - The `page` reference in `link` schema still defaults to `[{ type: 'homepage' }]` only (extend with your own document types).
 
+## [0.3.0] - 2026-05-07
+
 Studio custom inputs (Ondata 2 of the BARR preset). Object inputs collapse into card previews when not focused; SEO and Settings get rich inline social previews + character counters; the live `useSettingsFallback` hook keeps page-level SEO defaults synced.
 
 ### Added
