@@ -34,6 +34,8 @@ Studio foundations: editor-driven icons + universal block previews + bug fix on 
 
 - **Bug: singleton creation ignored selected language in `LanguageFilteredList`** — the previous code used `router.navigateIntent('create', { template, language })`, but the `documentInternationalization` plugin overrode the `language` parameter with the configured default (always `it`). Replaced with `client.create({ _type, language })` direct + `navigateIntent('edit')` to bypass the template system. The bug affected every singleton created from the custom list.
 
+## [0.1.0] - 2026-05-07
+
 Baseline release dello starter come fonte versionata. Niente nuove feature: setup di versionamento + igienizzazioni minimali dello stack.
 
 ### Added
