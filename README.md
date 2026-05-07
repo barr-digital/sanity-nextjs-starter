@@ -88,6 +88,7 @@ This starts both:
         ├── components/           # Custom Studio components
         ├── contexts/             # React contexts for Studio
         ├── icons/                # Editor-driven icon system (Lucide picker)
+        ├── inputs/               # Custom inputs (link, img, seo, settings) + helpers
         ├── previews/             # Universal block preview system + mocks
         ├── structure/            # Studio structure (sidebar navigation)
         └── templates/            # Document templates for i18n
@@ -124,6 +125,17 @@ export const myBlock = defineType({
 ```
 
 Do **not** add `preview.prepare()` on a block — it conflicts with `components.preview`. The `example-block` in `studio/src/schema-types/blocks/` is the reference template.
+
+### Custom inputs for reusable objects
+
+The `link`, `img`, `seo`, and `settings` schemas wire into custom inputs that share a common UX pattern:
+
+- **`CollapsibleCardInput`** primitive — every reusable object collapses into a card preview when not focused; click expands the form inline.
+- **`LinkInput`** — auto-detects URL vs `mailto:`/`tel:` as you type, swaps `linkType` accordingly, strips stale fields.
+- **`SeoInput`** — collapsible SEO with SERP + Open Graph card previews and 50–60 / 150–160 character counters; resolves empty `seoTitle`/`seoDescription`/`seoImage` from the live `settings` singleton ("Using Settings defaults" hint).
+- **`SettingsInput`** — the `settings` singleton renders SERP + OG previews above its form fields. The `useSettingsFallback(language)` hook subscribes to live changes and powers the SEO fallback above.
+
+When you add a new reusable object that benefits from card-collapse UX, build it on top of `CollapsibleCardInput` — see `link-input.tsx` and `img-input.tsx` as references.
 
 ## Adding a New PageBuilder Block
 
