@@ -30,6 +30,8 @@ Studio custom inputs (Ondata 2 of the BARR preset). Object inputs collapse into 
 - **`seo.ts`** — `components: { input: SeoInput }`, per-field `components: { input: SeoTitleInput | SeoDescriptionInput }`. Removed `options.collapsible` (the `CollapsibleCardInput` handles collapse).
 - **`settings.ts`** — `components: { input: SettingsInput }`. Field descriptions rewritten to clarify their fallback role.
 
+## [0.2.0] - 2026-05-07
+
 Studio foundations: editor-driven icons + universal block previews + bug fix on singleton creation + `basePage` schema split. First substantial preset BARR import from the labochem pilot.
 
 ### Added
