@@ -164,6 +164,18 @@ Three top-level folders hold the read/write boundary:
 
 The form stack is wired up: `zod`, `react-hook-form`, `@hookform/resolvers`, `class-variance-authority`. The reference contact form lives at `frontend/components/forms/contact-form.tsx` (drop it into a page or wrap it in a PageBuilder block).
 
+## SEO
+
+Production-grade SEO out of the box. Three pieces, all in `frontend/lib/data/`:
+
+- **`getMetadataBase()`** — Vercel-first resolution: `VERCEL_PROJECT_PRODUCTION_URL` → request `headers()` → `NEXT_PUBLIC_SITE_URL`. Preview deploys never leak into canonical / OG image URLs.
+- **`buildAlternateLanguages({ currentSlug, currentLocale })`** — resolves translated slugs via Sanity's `translation.metadata`, omits locales without a translation (Google prefers a missing hreflang over a wrong one), duplicates the default locale entry as `x-default`. Pass it directly to `alternates.languages` in `generateMetadata`.
+- **`buildOrganizationJsonLd(data, baseUrl)`** + **`buildBreadcrumbJsonLd(items, baseUrl)`** in `lib/data/json-ld.ts` — schema.org structured data helpers. Embed the returned object via `<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />`. Helpers only — no UI component shipped (visual representation varies per design).
+
+`app/robots.ts` is wired up with the sitemap reference and a commented `disallow` template — uncomment when you add an admin area or auth-walled routes.
+
+Validate JSON-LD with [Google Rich Results Test](https://search.google.com/test/rich-results) and [Schema.org Validator](https://validator.schema.org/).
+
 ## Environment Variables
 
 ### Frontend (`frontend/.env.local`)
