@@ -87,23 +87,57 @@ This starts both:
         │   └── validation/       # Custom validation rules
         ├── components/           # Custom Studio components
         ├── contexts/             # React contexts for Studio
+        ├── icons/                # Editor-driven icon system (Lucide picker)
+        ├── previews/             # Universal block preview system + mocks
         ├── structure/            # Studio structure (sidebar navigation)
         └── templates/            # Document templates for i18n
 ```
 
+## Studio architecture
+
+The Studio ships with two reusable systems out-of-the-box. Both are conventions for any new project derived from this starter — see `convenzioni.md` in the BARR vault for the full rules.
+
+### Editor-driven icons
+
+Every document type, singleton, sidebar folder, and PageBuilder block uses `iconForSlot('mySlot')` instead of importing from `@sanity/icons`. Editors customize icons via right-click anywhere in the Studio (Lucide picker). Icons live in the `studioIcons` singleton (hidden from sidebar, edited via the right-click menu).
+
+Add a new slot in `studio/src/icons/slots.ts` whenever you introduce a new type or folder. Default icon is `HelpCircle` ("?") — it invites editors to personalize.
+
+### Universal block previews
+
+Every PageBuilder block gets a rich, automatic preview in both the list view and the "Add item" menu via `SmartBlockPreview` + Sanity type introspection. Convention for every new block:
+
+```ts
+import { SmartBlockPreview, autoSelect } from '../../previews/smart-block-preview'
+import { makeBlockAddItemPreview } from '../../previews/block-add-item-preview'
+
+export const myBlock = defineType({
+  name: 'myBlock',
+  type: 'object',
+  icon: makeBlockAddItemPreview('myBlock'),
+  components: { preview: SmartBlockPreview },
+  preview: autoSelect(['title', 'image', 'cta' /* ...all field names */]),
+  fields: [
+    /* ... */
+  ],
+})
+```
+
+Do **not** add `preview.prepare()` on a block — it conflicts with `components.preview`. The `example-block` in `studio/src/schema-types/blocks/` is the reference template.
+
 ## Adding a New PageBuilder Block
 
-Three steps:
+Five steps:
 
-1. **Create the schema** in `studio/src/schema-types/blocks/my-block.ts`
-   - Define the block with `defineType({ type: 'object', ... })`
-   - Register it in `studio/src/schema-types/index.ts`
-   - Add `{ type: 'myBlock' }` to `pageBuilderBlocks` in `studio/src/schema-types/blocks/config.ts`
+1. **Create the schema** in `studio/src/schema-types/blocks/my-block.ts` — copy the convention from `example-block.ts` (`SmartBlockPreview` + `autoSelect` + `makeBlockAddItemPreview`).
 
-2. **Create the component** in `frontend/components/blocks/my-block.tsx`
+2. **Register it** in `studio/src/schema-types/index.ts` and add `{ type: 'myBlock' }` to `pageBuilderBlocks` in `studio/src/schema-types/blocks/config.ts`.
 
-3. **Register it** in `frontend/components/layout/block-renderer.tsx`
-   - Import the component and add it to the `getBlocks()` map
+3. **Add the icon slot** in `studio/src/icons/slots.ts` so editors can pick the icon via right-click.
+
+4. **Create the component** in `frontend/components/blocks/my-block.tsx`.
+
+5. **Register it** in `frontend/components/layout/block-renderer.tsx` and extend `pageBuilderFragment` in `frontend/sanity/lib/queries.ts` if the block has dereferenced fields.
 
 ## Environment Variables
 
