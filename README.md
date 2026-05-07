@@ -60,6 +60,10 @@ This starts both:
 ├── frontend/                     # Next.js application
 │   ├── app/
 │   │   ├── [locale]/[[...slug]]/ # Catch-all localized routes
+│   │   ├── [locale]/error.tsx    # Per-locale error boundary (with retry)
+│   │   ├── not-found.tsx         # Global 404 page
+│   │   ├── robots.ts             # /robots.txt generator
+│   │   ├── sitemap.ts            # /sitemap.xml generator
 │   │   ├── _pages/               # Page components (home-page.tsx, ...)
 │   │   └── styles/               # Tailwind CSS modules
 │   ├── actions/                  # Server Actions ("use server"), top-level
@@ -175,6 +179,24 @@ Production-grade SEO out of the box. Three pieces, all in `frontend/lib/data/`:
 `app/robots.ts` is wired up with the sitemap reference and a commented `disallow` template — uncomment when you add an admin area or auth-walled routes.
 
 Validate JSON-LD with [Google Rich Results Test](https://search.google.com/test/rich-results) and [Schema.org Validator](https://validator.schema.org/).
+
+## Error boundaries, skeleton, hooks
+
+- **`app/[locale]/error.tsx`** — per-locale error boundary with a retry button. Catches unhandled errors thrown during rendering of any descendant route segment.
+- **`app/not-found.tsx`** — global 404. Lives at the root (not under `[locale]/`) so it also catches routes outside any locale.
+- **No `loading.tsx` catch-all** — add a `loading.tsx` only per-route when a page benefits from a targeted skeleton. Generic skeletons shared across unrelated pages do more harm than good.
+- **`components/ui/skeleton.tsx`** — minimal placeholder primitive (`bg-neutral-100 animate-pulse rounded-md`). Override sizing via `className`.
+
+Six universal DOM/UI hooks live in `frontend/hooks/`, dependency-free:
+
+| Hook               | Use                                                                                |
+| ------------------ | ---------------------------------------------------------------------------------- |
+| `useClickOutside`  | Close popovers/dropdowns on outside click. Supports `ignoreSelector` for toggles.  |
+| `useEscapeClose`   | Close dialogs/sheets on `Escape`.                                                  |
+| `useFocusTrap`     | Tab-loop inside a container, restore previously-focused element on unmount.        |
+| `useInView`        | Native `IntersectionObserver`. Swap to `motion/react` if you adopt the motion lib. |
+| `useMediaQuery`    | `useSyncExternalStore` wrapper on `matchMedia`. Live updates on preference change. |
+| `useReducedMotion` | Boolean from `(prefers-reduced-motion: reduce)`. Honor in every animation.         |
 
 ## Environment Variables
 
