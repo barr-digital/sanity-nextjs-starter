@@ -1,6 +1,7 @@
 import { defineField, defineType } from 'sanity'
 import { validateUniqueLanguage } from '../../validation/unique-language'
 import { iconForSlot } from '../../../icons'
+import { SettingsInput } from '../../../inputs/settings-input'
 
 /**
  * Settings schema Singleton.  Singletons are single documents that are displayed not in a collection, handy for things like site settings and other global configurations.
@@ -12,6 +13,7 @@ export const settings = defineType({
   title: 'Settings',
   type: 'document',
   icon: iconForSlot('settings'),
+  components: { input: SettingsInput },
   fields: [
     {
       name: 'language',
@@ -23,19 +25,22 @@ export const settings = defineType({
       name: 'title',
       title: 'Site Title',
       type: 'string',
-      description: 'Title for this site',
+      description:
+        'Name of the site. Appended to page titles ("Page — Site Title") and used as default title on pages that don\'t set their own.',
     },
     {
       name: 'description',
       title: 'Site Description',
       type: 'text',
-      description: 'Description for this site',
+      description:
+        "Default description used on pages that don't set their own SEO description. Aim for 150–160 characters.",
     },
     {
       name: 'ogImage',
-      title: 'Open Graph Image',
+      title: 'Default Social Image',
       type: 'img',
-      description: 'Displayed on social cards and search engine results.',
+      description:
+        "Default social share image used on pages that don't set their own. Recommended 1200×630px.",
     },
   ],
   preview: {
