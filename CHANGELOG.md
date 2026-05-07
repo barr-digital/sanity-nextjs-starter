@@ -7,7 +7,31 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.5.0] - 2026-05-07
+## [0.6.0] - 2026-05-07
+
+Boundaries, skeleton primitive, six universal DOM/UI hooks. Last release before the `v1.0.0` stabilization tag (which lands after a second BARR project round-trip).
+
+### Added
+
+- **`app/[locale]/error.tsx`** — per-locale error boundary with `reset()` retry button. Catches unhandled errors during rendering of any descendant route segment. Strings inline in English; localize via `next-intl` messages when wired up (BARR namespace convention: `errors.unexpected.{title,description,retry}`).
+- **`app/not-found.tsx`** — global 404 (lives at the root, not under `[locale]/`) so it also catches requests outside any localized segment. Uses `next/link` directly (not the `i18n/routing` wrapper) because the user could land here from a route with no matching locale.
+- **`frontend/components/ui/skeleton.tsx`** — minimal placeholder primitive (`bg-neutral-100 animate-pulse rounded-md`) with `cn()` for size/shape overrides. Use in per-route `loading.tsx` files when a page benefits from a targeted skeleton.
+- **6 universal DOM/UI hooks** in `frontend/hooks/`, all dependency-free:
+  - `useClickOutside(ref, onOutside, { enabled?, ignoreSelector? })`
+  - `useEscapeClose(isOpen, onClose, enabled?)`
+  - `useFocusTrap<T>(isOpen)` — returns `{ ref, onKeyDown }`, restores previously-focused element on unmount
+  - `useInView(ref, { once?, amount?, rootMargin? })` — native `IntersectionObserver`, no `motion` dependency. Swap to `motion/react` `useInView` when the project adopts the optional animation system.
+  - `useMediaQuery(query)` — `useSyncExternalStore` wrapper on `matchMedia`
+  - `useReducedMotion()` — boolean from `(prefers-reduced-motion: reduce)`, built on `useMediaQuery`
+
+### Vault — convenzioni copiabili-on-demand
+
+`convenzioni.md` finalized with four "copy-on-demand" sections describing patterns the starter does **not** install but the labochem pilot has:
+
+- **Animation system** (`motion` + 5 primitives + tokens) — when the project wants rich motion, copy from labochem `development` and swap `useInView` to the `motion/react` variant.
+- **Listing transitions** (`useFilterParams` + `useListingTransition` + `<ListingFade>`) — three coordinated files for URL-driven lists. Includes the `noindex` rule for filter URLs (`?format=`, `?q=`, `?page=`).
+- **4 layout-shape hooks** (`use-mobile-menu`, `use-stuck-state`, `use-scroll-indicator`, `use-element-height`) — semi-patterns to copy when the project's layout has the matching shape.
+- **Favicon specs** — `app/icon.png` 512×512 + `app/apple-icon.png` 180×180, square, opaque background, ~10% padding. Next.js auto-detects file names — no code to write.
 
 SEO suite — every starter-derived site gets production-grade hreflang, robots.txt, JSON-LD helpers, and a Vercel-aware `metadataBase`.
 
@@ -145,7 +169,8 @@ Baseline release dello starter come fonte versionata. Niente nuove feature: setu
 
 - `sanity-image@^1.0.0` da `frontend/package.json` (legacy, nessun import nel codice).
 
-[Unreleased]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.5.0...HEAD
+[Unreleased]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.6.0...HEAD
+[0.6.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.2.0...v0.3.0
