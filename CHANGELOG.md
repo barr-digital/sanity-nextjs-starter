@@ -65,7 +65,7 @@ If you cloned the starter before v0.4.0, the import paths below have moved. Run 
 
 ### Documentation
 
-- **BARR Development Guideline updated** (`docs/barr-development-guideline.md` in the labochem repo, branch `development`) — see PR https://github.com/barr-digital/labochem-website/pull/49:
+- **BARR Development Guideline updated** in the BARR knowledge vault (`operativo/guideline.md` + `operativo/stack/nextjs-app-router.md`):
   1. "Base comune" lists `lib/data/` as the home for RSC-only reads.
   2. New section "Dove vive una lettura: `lib/data/` vs `actions/`" with the practical decisional rule.
   3. "Dove posizionare i file speciali" — reformulated the `loading.tsx` rule: only per-route, never catch-all (aligned with labochem ADR 2026-04-18 and the starter v0.6.0 boundary plan).
