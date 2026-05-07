@@ -1,5 +1,6 @@
 import { defineType } from 'sanity'
 import { validateUniqueLanguage } from '../../validation/unique-language'
+import { iconForSlot } from '../../../icons'
 
 /**
  * Footer Singleton
@@ -13,6 +14,7 @@ export const footer = defineType({
   name: 'footer',
   title: 'Footer',
   type: 'document',
+  icon: iconForSlot('footer'),
   fields: [
     {
       name: 'language',
@@ -29,14 +31,11 @@ export const footer = defineType({
     // },
   ],
   preview: {
-    select: {
-      title: 'title',
-      language: 'language',
-    },
-    prepare({ title, language }) {
+    select: { language: 'language' },
+    prepare({ language }) {
+      const lang = language === 'en' ? 'English' : language === 'it' ? 'Italian' : null
       return {
-        title: title || 'Footer',
-        subtitle: language ? `Language: ${language.toUpperCase()}` : 'No language set',
+        title: lang ? `Footer · ${lang}` : 'Footer',
       }
     },
   },

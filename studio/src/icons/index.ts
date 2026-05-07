@@ -1,0 +1,5 @@
+export { iconSlots, iconSlotNames, getSlotDefault } from './slots'
+export type { IconSlot, IconSlotName } from './slots'
+export { resolveIcon } from './icon-resolver'
+export { IconConfigProvider, useIconConfig } from './icon-config-provider'
+export { DynamicIcon, iconForSlot } from './dynamic-icon'

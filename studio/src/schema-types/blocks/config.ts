@@ -27,14 +27,15 @@ export const pageBuilderBlocks = [
 ]
 
 /**
- * Options for pageBuilder fields to enable grid view with thumbnails
- * Use this in all pageBuilder field definitions
+ * Options for pageBuilder fields. With SmartBlockPreview the "Add item" menu
+ * is already visually rich, so list view (single column with full preview)
+ * scrolls better than grid view. Override per-field if you need grid.
  */
 export const pageBuilderFieldOptions = {
   insertMenu: {
     views: [
       {
-        name: 'grid' as const,
+        name: 'list' as const,
       },
     ],
   },

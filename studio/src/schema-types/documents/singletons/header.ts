@@ -1,5 +1,6 @@
 import { defineType } from 'sanity'
 import { validateUniqueLanguage } from '../../validation/unique-language'
+import { iconForSlot } from '../../../icons'
 
 /**
  * Header Singleton
@@ -13,6 +14,7 @@ export const header = defineType({
   name: 'header',
   title: 'Header',
   type: 'document',
+  icon: iconForSlot('header'),
   fields: [
     {
       name: 'language',
@@ -30,14 +32,11 @@ export const header = defineType({
     // },
   ],
   preview: {
-    select: {
-      title: 'title',
-      language: 'language',
-    },
-    prepare({ title, language }) {
+    select: { language: 'language' },
+    prepare({ language }) {
+      const lang = language === 'en' ? 'English' : language === 'it' ? 'Italian' : null
       return {
-        title: title || 'Header',
-        subtitle: language ? `Language: ${language.toUpperCase()}` : 'No language set',
+        title: lang ? `Header · ${lang}` : 'Header',
       }
     },
   },

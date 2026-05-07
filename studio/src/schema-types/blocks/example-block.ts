@@ -1,25 +1,35 @@
 import { defineType } from 'sanity'
+import { SmartBlockPreview, autoSelect } from '../../previews/smart-block-preview'
+import { makeBlockAddItemPreview } from '../../previews/block-add-item-preview'
 
 /**
  * Example Block
  *
- * This is a reference block schema to demonstrate how to create PageBuilder blocks.
- * Use this as a template when creating your own block types.
+ * Reference block schema demonstrating the BARR PageBuilder block convention:
+ *
+ *   icon:       makeBlockAddItemPreview('<blockName>')   // rich preview in the "Add item" menu
+ *   components: { preview: SmartBlockPreview }           // rich preview in the PageBuilder list
+ *   preview:    autoSelect([...field names])             // auto-build preview.select
+ *
+ * Do NOT define `preview.prepare()` on a block — it conflicts with
+ * `components.preview` and overrides the SmartBlockPreview rendering.
  *
  * To create a new block:
  * 1. Copy this file and rename it (e.g., textBlock.ts)
- * 2. Update the name, title, and fields
- * 3. Export it in schemaTypes/blocks/index.ts
- * 4. Add the block type to pageBuilderBlocks in blocks/config.ts
- * 5. Register the block in schemaTypes/index.ts
- * 6. Create the corresponding React component in frontend/components/Blocks/
- * 7. Register it in frontend/components/Layout/BlockRenderer.tsx
+ * 2. Update the name, title, fields — keep the three preview hooks above
+ * 3. Add the block name to `studio/src/icons/slots.ts` so editors can pick its icon
+ * 4. Export it in schemaTypes/index.ts
+ * 5. Add the block type to pageBuilderBlocks in blocks/config.ts
+ * 6. Create the corresponding React component in frontend/components/blocks/
+ * 7. Register it in frontend/components/layout/block-renderer.tsx
  */
 
 export const exampleBlock = defineType({
   name: 'exampleBlock',
   title: 'Example Block',
   type: 'object',
+  icon: makeBlockAddItemPreview('exampleBlock'),
+  components: { preview: SmartBlockPreview },
   fields: [
     {
       name: 'title',
@@ -35,16 +45,5 @@ export const exampleBlock = defineType({
       rows: 3,
     },
   ],
-  preview: {
-    select: {
-      title: 'title',
-      text: 'text',
-    },
-    prepare({ title, text }) {
-      return {
-        title: title || 'Example Block',
-        subtitle: text ? text.substring(0, 60) + '...' : 'No text provided',
-      }
-    },
-  },
+  preview: autoSelect(['title', 'text']),
 })

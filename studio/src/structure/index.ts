@@ -1,4 +1,3 @@
-import { CogIcon, HomeIcon, EarthGlobeIcon, ArrowUpIcon, ArrowDownIcon } from '@sanity/icons'
 import type { StructureBuilder, StructureResolver } from 'sanity/structure'
 import {
   HomepageList,
@@ -6,6 +5,7 @@ import {
   FooterList,
   SettingsList,
 } from '../components/language-filtered-list'
+import { iconForSlot } from '../icons'
 
 /**
  * Custom Studio structure with organized sections
@@ -18,8 +18,17 @@ import {
  * Learn more: https://www.sanity.io/docs/structure-builder-introduction
  */
 
-// Document types that should not appear in the default list
-const EXCLUDED_TYPES = ['homepage', 'header', 'footer', 'settings', 'assist.instruction.context']
+// Document types that should not appear in the default list.
+// `studioIcons` is intentionally hidden — editors edit it via right-click on
+// any icon in the Studio (the IconConfigProvider keeps it live across the UI).
+const EXCLUDED_TYPES = [
+  'homepage',
+  'header',
+  'footer',
+  'settings',
+  'studioIcons',
+  'assist.instruction.context',
+]
 
 export const structure: StructureResolver = (S: StructureBuilder) =>
   S.list()
@@ -28,36 +37,36 @@ export const structure: StructureResolver = (S: StructureBuilder) =>
       // Pages Section
       S.listItem()
         .title('Homepage')
-        .icon(HomeIcon)
+        .icon(iconForSlot('homepage'))
         .child(S.component(HomepageList).id('homepage-list')),
 
       // TODO: Add more pages here as you create them
       // Example:
       // S.listItem()
       //   .title("About Page")
-      //   .icon(UserIcon)
+      //   .icon(iconForSlot("aboutPage"))
       //   .child(S.component(AboutPageList).id("about-page-list")),
 
       // Globals and Settings Section
 
       S.listItem()
         .title('Globals and Settings')
-        .icon(EarthGlobeIcon)
+        .icon(iconForSlot('globalsAndSettings'))
         .child(
           S.list()
             .title('Globals and Settings')
             .items([
               S.listItem()
                 .title('Header')
-                .icon(ArrowUpIcon)
+                .icon(iconForSlot('header'))
                 .child(S.component(HeaderList).id('header-list')),
               S.listItem()
                 .title('Footer')
-                .icon(ArrowDownIcon)
+                .icon(iconForSlot('footer'))
                 .child(S.component(FooterList).id('footer-list')),
               S.listItem()
                 .title('Settings')
-                .icon(CogIcon)
+                .icon(iconForSlot('settings'))
                 .child(S.component(SettingsList).id('settings-list')),
               ...S.documentTypeListItems().filter(
                 (listItem: any) => !EXCLUDED_TYPES.includes(listItem.getId()),
