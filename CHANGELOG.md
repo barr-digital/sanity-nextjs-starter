@@ -33,6 +33,8 @@ Boundaries, skeleton primitive, six universal DOM/UI hooks. Last release before 
 - **4 layout-shape hooks** (`use-mobile-menu`, `use-stuck-state`, `use-scroll-indicator`, `use-element-height`) — semi-patterns to copy when the project's layout has the matching shape.
 - **Favicon specs** — `app/icon.png` 512×512 + `app/apple-icon.png` 180×180, square, opaque background, ~10% padding. Next.js auto-detects file names — no code to write.
 
+## [0.5.0] - 2026-05-07
+
 SEO suite — every starter-derived site gets production-grade hreflang, robots.txt, JSON-LD helpers, and a Vercel-aware `metadataBase`.
 
 ### Added
