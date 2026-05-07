@@ -7,7 +7,47 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.3.0] - 2026-05-07
+## [0.4.0] - 2026-05-07
+
+**Breaking** — naming refactor of frontend folders + form stack landing + Guideline BARR aligned.
+
+If you cloned the starter before v0.4.0, the import paths below have moved. Run a search-and-replace across your project:
+
+| Old path                         | New path                             |
+| -------------------------------- | ------------------------------------ |
+| `@/lib/actions/translate-slug`   | `@/actions/translate-slug`           |
+| `@/lib/helpers/slug-translation` | `@/lib/data/translations`            |
+| (none — new folder)              | `@/lib/data/<domain>` (RSC-only)     |
+| (none — new folder)              | `@/actions/<domain>` (Server Action) |
+| (none — new folder)              | `@/schema/<domain>` (zod)            |
+
+### Added
+
+- **`frontend/actions/`** at the top level — all Server Actions (`"use server"`) live here, one file per domain. Replaces `frontend/lib/actions/`.
+- **`frontend/lib/data/`** — RSC-only reads with `import 'server-only'` as the first line (bundler enforcement: a Client Component that imports a `lib/data/` file fails the build). Domain-agnostic: Sanity reads, Supabase reads, external API reads, all live here when called only from Server Components.
+- **`frontend/schema/`** (singular) — shared zod schemas, imported by both client forms (RHF + zodResolver) and Server Actions. Starts with `contact.ts`.
+- **Form stack dependencies**: `zod@^4.4.3`, `react-hook-form@^7.75.0`, `@hookform/resolvers@^5.2.2`, `class-variance-authority@^0.7.1`.
+- **Example contact form** as the BARR pattern reference:
+  - `frontend/schema/contact.ts` — zod schema
+  - `frontend/actions/contact.ts` — Server Action with `safeParse(input)` as the first line, returns `{ success, error? }` (never throws toward the client)
+  - `frontend/components/forms/contact-form.tsx` — client component with React Hook Form + zodResolver, loading state, server error display, post-submit acknowledgment
+
+### Changed
+
+- **Moved**: `frontend/lib/actions/translate-slug.ts` → `frontend/actions/translate-slug.ts`. Updated the single consumer (`frontend/hooks/use-language-change.ts`).
+- **Moved + marker added**: `frontend/lib/helpers/slug-translation.ts` → `frontend/lib/data/translations.ts` with `import 'server-only'` as the first line. The Server Action wrapping it (`actions/translate-slug.ts`) now imports from `@/lib/data/translations`.
+
+### Documentation
+
+- **BARR Development Guideline updated** (`docs/barr-development-guideline.md` in the labochem repo, branch `development`) — see PR https://github.com/barr-digital/labochem-website/pull/49:
+  1. "Base comune" lists `lib/data/` as the home for RSC-only reads.
+  2. New section "Dove vive una lettura: `lib/data/` vs `actions/`" with the practical decisional rule.
+  3. "Dove posizionare i file speciali" — reformulated the `loading.tsx` rule: only per-route, never catch-all (aligned with labochem ADR 2026-04-18 and the starter v0.6.0 boundary plan).
+
+### Notes
+
+- `frontend/lib/helpers/` survives — `metadata.ts` and `sitemap.ts` are pipeline helpers (not domain reads), they keep their location.
+- The `page` reference in `link` schema still defaults to `[{ type: 'homepage' }]` only (extend with your own document types).
 
 Studio custom inputs (Ondata 2 of the BARR preset). Object inputs collapse into card previews when not focused; SEO and Settings get rich inline social previews + character counters; the live `useSettingsFallback` hook keeps page-level SEO defaults synced.
 
@@ -77,7 +117,8 @@ Baseline release dello starter come fonte versionata. Niente nuove feature: setu
 
 - `sanity-image@^1.0.0` da `frontend/package.json` (legacy, nessun import nel codice).
 
-[Unreleased]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.3.0...HEAD
+[Unreleased]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.4.0...HEAD
+[0.4.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/barr-digital/sanity-nextjs-starter/releases/tag/v0.1.0

@@ -1,6 +1,6 @@
 'use server'
 
-import { translateSlug, SlugTranslationResult } from '../helpers/slug-translation'
+import { translateSlug, SlugTranslationResult } from '@/lib/data/translations'
 
 /**
  * Server action to translate a slug from one language to another.
