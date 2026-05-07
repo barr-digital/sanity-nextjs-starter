@@ -7,7 +7,28 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.2.0] - 2026-05-07
+## [0.3.0] - 2026-05-07
+
+Studio custom inputs (Ondata 2 of the BARR preset). Object inputs collapse into card previews when not focused; SEO and Settings get rich inline social previews + character counters; the live `useSettingsFallback` hook keeps page-level SEO defaults synced.
+
+### Added
+
+- **`CollapsibleCardInput`** primitive (`studio/src/inputs/collapsible-card-input.tsx`) — every reusable object input (`link`, `img`, `seo`) now shows a card preview when collapsed and expands inline on click. Supports the `renderCard` prop and an opt-in `renderForm` for inputs that need to swap the form too.
+- **`CharCounterInput`** (`studio/src/inputs/char-counter-input.tsx`) — string/text input with soft-min/soft-max character feedback (used by `seo`).
+- **`LinkInput`** + **`link-helpers.ts`** — auto-detects URL vs `mailto:`/`tel:` as the editor types, strips stale fields when `linkType` changes, and resolves a Lucide icon based on the link kind.
+- **`ImgInput`** + **`img-helpers.ts`** — image upload UX with preview card.
+- **`SeoInput`** + `SeoTitleInput` + `SeoDescriptionInput` + **`seo-helpers.ts`** — collapsible SEO with SERP preview + Open Graph card preview + character counters. Resolves `seoTitle`/`seoDescription`/`seoImage` from the live `settings` singleton when empty (visible "Using Settings defaults" hint).
+- **`SettingsInput`** + **`settings-fallback.ts`** + **`social-preview-cards.tsx`** — the `settings` singleton now shows live SERP + OG previews above its form fields.
+- **New schema features**:
+  - `link`: added `page` (reference, defaults to `homepage` — extend with your own document types) and `file` (uploaded asset) link types. Added rich `preview.prepare` with icon resolution.
+  - `seo`: added per-field descriptions and `Meta title` / `Meta description` field titles.
+
+### Changed
+
+- **`link.ts`** — `components: { input: LinkInput }`, `icon: iconForSlot('link')`, validation rewritten with `isUncommitted` so empty CTAs publish silently when `linkType` is auto-set by `initialValue`. The `anchor` field is now also valid (optional) for `linkType === 'page'`.
+- **`image.ts`** — `components: { input: ImgInput }`. Removed the custom `validation` on `alt` (the `ImgInput` UX now communicates the requirement; explicit alt validation belongs at the consumer field, not the type).
+- **`seo.ts`** — `components: { input: SeoInput }`, per-field `components: { input: SeoTitleInput | SeoDescriptionInput }`. Removed `options.collapsible` (the `CollapsibleCardInput` handles collapse).
+- **`settings.ts`** — `components: { input: SettingsInput }`. Field descriptions rewritten to clarify their fallback role.
 
 Studio foundations: editor-driven icons + universal block previews + bug fix on singleton creation + `basePage` schema split. First substantial preset BARR import from the labochem pilot.
 
@@ -54,6 +75,7 @@ Baseline release dello starter come fonte versionata. Niente nuove feature: setu
 
 - `sanity-image@^1.0.0` da `frontend/package.json` (legacy, nessun import nel codice).
 
-[Unreleased]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.2.0...HEAD
+[Unreleased]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.3.0...HEAD
+[0.3.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.1.0...v0.2.0
 [0.1.0]: https://github.com/barr-digital/sanity-nextjs-starter/releases/tag/v0.1.0

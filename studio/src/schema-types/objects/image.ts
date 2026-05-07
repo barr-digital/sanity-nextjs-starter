@@ -1,9 +1,11 @@
 import { defineType } from 'sanity'
+import { ImgInput } from '../../inputs/img-input'
 
 export const image = defineType({
   name: 'img',
   title: 'Image',
   type: 'image',
+  components: { input: ImgInput },
   options: {
     hotspot: true,
   },
@@ -12,15 +14,7 @@ export const image = defineType({
       name: 'alt',
       type: 'string',
       title: 'Alternative text',
-      description: 'Important for SEO and accessibility.',
-      validation: (rule) => {
-        return rule.custom((alt, context) => {
-          if ((context.document?.img as any)?.asset?._ref && !alt) {
-            return 'Required'
-          }
-          return true
-        })
-      },
+      description: 'Important for SEO and accessibility. Leave empty for purely decorative images.',
     },
   ],
   preview: {

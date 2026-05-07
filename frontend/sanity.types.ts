@@ -45,13 +45,33 @@ export type Img = {
   alt?: string
 }
 
+export type HomepageReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'homepage'
+}
+
+export type SanityFileAssetReference = {
+  _ref: string
+  _type: 'reference'
+  _weak?: boolean
+  [internalGroqTypeReferenceTo]?: 'sanity.fileAsset'
+}
+
 export type Link = {
   _type: 'link'
   label?: string
-  linkType?: 'href' | 'custom' | 'anchor'
+  linkType?: 'href' | 'custom' | 'anchor' | 'page' | 'file'
   href?: string
   custom?: string
   anchor?: string
+  page?: HomepageReference
+  file?: {
+    asset?: SanityFileAssetReference
+    media?: unknown
+    _type: 'file'
+  }
   openInNewTab?: boolean
 }
 
@@ -103,13 +123,6 @@ export type InternationalizedArrayReference = Array<
     _key: string
   } & InternationalizedArrayReferenceValue
 >
-
-export type HomepageReference = {
-  _ref: string
-  _type: 'reference'
-  _weak?: boolean
-  [internalGroqTypeReferenceTo]?: 'homepage'
-}
 
 export type HeaderReference = {
   _ref: string
@@ -304,6 +317,8 @@ export type AllSanitySchemaTypes =
   | Seo
   | SanityImageAssetReference
   | Img
+  | HomepageReference
+  | SanityFileAssetReference
   | Link
   | StudioIcons
   | LucideIcon
@@ -311,7 +326,6 @@ export type AllSanitySchemaTypes =
   | Slug
   | TranslationMetadata
   | InternationalizedArrayReference
-  | HomepageReference
   | HeaderReference
   | FooterReference
   | SettingsReference
