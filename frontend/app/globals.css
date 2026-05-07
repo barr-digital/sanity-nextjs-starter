@@ -1,4 +1,5 @@
 @import 'tailwindcss';
+@import 'tw-animate-css';
 @import './styles/typography.css';
 @import './styles/colors.css';
 
