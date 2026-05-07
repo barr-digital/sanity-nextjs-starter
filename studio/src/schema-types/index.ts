@@ -3,6 +3,7 @@ import { settings } from './documents/singletons/settings'
 import { homepage } from './documents/singletons/homepage'
 import { header } from './documents/singletons/header'
 import { footer } from './documents/singletons/footer'
+import { studioIcons } from './documents/singletons/studio-icons'
 
 // Objects
 import { link } from './objects/link'
@@ -30,6 +31,7 @@ export const schemaTypes = [
   header,
   footer,
   settings,
+  studioIcons,
 
   // Objects (reusable types)
   link,
@@ -44,6 +46,9 @@ export const schemaTypes = [
 
 /**
  * Singleton document types
- * These are document types that should only have one instance per language
+ * These are document types that should only have one instance per language.
+ * `studioIcons` is also a singleton but is NOT translated — icons are a design
+ * system concern, shared across all languages. It is excluded from the sidebar
+ * (see EXCLUDED_TYPES in structure/index.ts) and edited via right-click menu.
  */
-export const SINGLETON_TYPES = ['homepage', 'header', 'footer', 'settings'] as const
+export const SINGLETON_TYPES = ['homepage', 'header', 'footer', 'settings', 'studioIcons'] as const

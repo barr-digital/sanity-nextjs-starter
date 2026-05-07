@@ -122,24 +122,38 @@ export function LanguageFilteredList(props: { filter?: string }) {
     return true
   }
 
-  const handleCreateDocument = () => {
+  const handleCreateDocument = async () => {
     if (!documentType) return
-
-    const isSingleton = SINGLETON_TYPES.includes(documentType as any)
 
     // Use the selected language or 'it' by default
     const language = selectedLanguage === 'all' ? 'it' : selectedLanguage
 
-    if (isSingleton) {
-      // For singletons, use the language template
-      router.navigateIntent('create', {
-        type: documentType,
-        template: `${documentType}-with-language`,
+    // Why not navigateIntent('create', { template, language }):
+    // The `documentInternationalization` plugin intercepts template-based
+    // creation and overwrites `language` with the configured default,
+    // ignoring the value passed via the intent. We bypass the template
+    // system by writing the document directly with the selected language,
+    // then navigating to the editor.
+    try {
+      const doc = await client.create({
+        _type: documentType,
         language,
       })
-    } else {
-      // For all other documents, pass the language
-      router.navigateIntent('create', { type: documentType, language })
+
+      router.navigateIntent('edit', { id: doc._id, type: documentType })
+
+      // Update local list optimistically so the new doc shows up immediately.
+      setDocuments((prev) => [
+        {
+          _id: doc._id,
+          _type: documentType,
+          language,
+          _updatedAt: new Date().toISOString(),
+        },
+        ...prev,
+      ])
+    } catch (error) {
+      console.error('Error creating document:', error)
     }
   }
 

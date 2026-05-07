@@ -1,7 +1,7 @@
-import { HomeIcon } from '@sanity/icons'
 import { defineType } from 'sanity'
 import { basePage } from '../base-page'
 import { pageBuilderBlocks, pageBuilderFieldOptions } from '../../blocks/config'
+import { iconForSlot } from '../../../icons'
 
 /**
  * Homepage Singleton
@@ -17,7 +17,7 @@ export const homepage = defineType({
   name: 'homepage',
   title: 'Homepage',
   type: 'document',
-  icon: HomeIcon,
+  icon: iconForSlot('homepage'),
   fields: [
     ...basePage.fields,
     {
@@ -29,13 +29,15 @@ export const homepage = defineType({
       options: pageBuilderFieldOptions,
     },
   ],
+  // Lingua nel `title` (non `subtitle`): Studio mostra il subtitle solo nelle
+  // liste, non nell'header del documento aperto. Mettendola nel title la lingua
+  // resta visibile ovunque (sidebar + breadcrumb Studio).
   preview: {
-    select: {
-      title: 'title',
-    },
-    prepare({ title }) {
+    select: { language: 'language' },
+    prepare({ language }) {
+      const lang = language === 'en' ? 'English' : language === 'it' ? 'Italian' : null
       return {
-        title: title || 'Homepage',
+        title: lang ? `Homepage · ${lang}` : 'Homepage',
       }
     },
   },

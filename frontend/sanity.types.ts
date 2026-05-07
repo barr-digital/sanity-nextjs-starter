@@ -55,6 +55,24 @@ export type Link = {
   openInNewTab?: boolean
 }
 
+export type StudioIcons = {
+  _id: string
+  _type: 'studioIcons'
+  _createdAt: string
+  _updatedAt: string
+  _rev: string
+  homepage?: LucideIcon
+  header?: LucideIcon
+  footer?: LucideIcon
+  settings?: LucideIcon
+  globalsAndSettings?: LucideIcon
+  exampleBlock?: LucideIcon
+  link?: LucideIcon
+  studioIcons?: LucideIcon
+}
+
+export type LucideIcon = string
+
 export type MediaTag = {
   _id: string
   _type: 'media.tag'
@@ -117,6 +135,7 @@ export type SettingsReference = {
 export type InternationalizedArrayReferenceValue = {
   _type: 'internationalizedArrayReferenceValue'
   value?: HomepageReference | HeaderReference | FooterReference | SettingsReference
+  language: string
 }
 
 export type Settings = {
@@ -157,6 +176,7 @@ export type Homepage = {
   _rev: string
   language: string
   title?: string
+  breadcrumbLabel?: string
   slug: Slug
   seo?: Seo
   pageBuilder?: Array<
@@ -215,6 +235,7 @@ export type SanityImageMetadata = {
   palette?: SanityImagePalette
   lqip?: string
   blurHash?: string
+  thumbHash?: string
   hasAlpha?: boolean
   isOpaque?: boolean
 }
@@ -230,14 +251,14 @@ export type SanityFileAsset = {
   title?: string
   description?: string
   altText?: string
-  sha1hash?: string
-  extension?: string
-  mimeType?: string
-  size?: number
-  assetId?: string
+  sha1hash: string
+  extension: string
+  mimeType: string
+  size: number
+  assetId: string
   uploadId?: string
-  path?: string
-  url?: string
+  path: string
+  url: string
   source?: SanityAssetSourceData
 }
 
@@ -259,14 +280,14 @@ export type SanityImageAsset = {
   title?: string
   description?: string
   altText?: string
-  sha1hash?: string
-  extension?: string
-  mimeType?: string
-  size?: number
-  assetId?: string
+  sha1hash: string
+  extension: string
+  mimeType: string
+  size: number
+  assetId: string
   uploadId?: string
-  path?: string
-  url?: string
+  path: string
+  url: string
   metadata?: SanityImageMetadata
   source?: SanityAssetSourceData
 }
@@ -284,6 +305,8 @@ export type AllSanitySchemaTypes =
   | SanityImageAssetReference
   | Img
   | Link
+  | StudioIcons
+  | LucideIcon
   | MediaTag
   | Slug
   | TranslationMetadata
@@ -340,7 +363,7 @@ export type FooterQueryResult = {
 
 // Source: sanity/lib/queries.ts
 // Variable: homepageQuery
-// Query: *[_type == "homepage" && language == $lang][0]{    _id,    _type,    title,    seo{      seoTitle,      seoDescription,      seoImage{  asset,  hotspot,  crop,  alt},    },    "pageBuilder": pageBuilder[]{  ...,  _type == 'exampleBlock' => {    ...,    title,    text  }}  }
+// Query: *[_type == "homepage" && language == $lang][0]{    _id,    _type,    "title": coalesce(breadcrumbLabel, title),    seo{      seoTitle,      seoDescription,      seoImage{  asset,  hotspot,  crop,  alt},    },    "pageBuilder": pageBuilder[]{  ...,  _type == 'exampleBlock' => {    ...,    title,    text  }}  }
 export type HomepageQueryResult = {
   _id: string
   _type: 'homepage'
@@ -379,7 +402,7 @@ declare module '@sanity/client' {
     '\n  *[_type == "settings" && language == $lang][0]{\n    title,\n    description,\n    ogImage{\n  asset,\n  hotspot,\n  crop,\n  alt\n}\n  }\n': SettingsQueryResult
     '\n  *[_type == "header" && language == $lang][0]{\n    _id,\n    _type,\n  }\n': HeaderQueryResult
     '\n  *[_type == "footer" && language == $lang][0]{\n    _id,\n    _type,\n  }\n': FooterQueryResult
-    '\n  *[_type == "homepage" && language == $lang][0]{\n    _id,\n    _type,\n    title,\n    seo{\n      seoTitle,\n      seoDescription,\n      seoImage{\n  asset,\n  hotspot,\n  crop,\n  alt\n},\n    },\n    "pageBuilder": pageBuilder[]{\n  ...,\n  _type == \'exampleBlock\' => {\n    ...,\n    title,\n    text\n  }\n}\n  }\n': HomepageQueryResult
+    '\n  *[_type == "homepage" && language == $lang][0]{\n    _id,\n    _type,\n    "title": coalesce(breadcrumbLabel, title),\n    seo{\n      seoTitle,\n      seoDescription,\n      seoImage{\n  asset,\n  hotspot,\n  crop,\n  alt\n},\n    },\n    "pageBuilder": pageBuilder[]{\n  ...,\n  _type == \'exampleBlock\' => {\n    ...,\n    title,\n    text\n  }\n}\n  }\n': HomepageQueryResult
     '\n  *[defined(slug.current) && language == $lang]{\n    "slug": slug.current,\n    _type,\n    _updatedAt\n  }\n': SitemapDataQueryResult
   }
 }
