@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { useLocale } from 'next-intl'
 import { usePathname, useRouter } from '@/i18n/routing'
-import { translateSlugAction } from '@/lib/actions/translate-slug'
+import { translateSlugAction } from '@/actions/translate-slug'
 
 /**
  * Custom hook for handling language changes with slug translation.
