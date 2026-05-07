@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [0.5.0] - 2026-05-07
+
+SEO suite — every starter-derived site gets production-grade hreflang, robots.txt, JSON-LD helpers, and a Vercel-aware `metadataBase`.
+
+### Added
+
+- **`buildAlternateLanguages({ currentSlug, currentLocale })`** in `frontend/lib/data/metadata.ts` — resolves translated slugs for every other locale via `@sanity/document-internationalization` (`translation.metadata`), omits locales without a translation (Google prefers a missing hreflang over a wrong one), duplicates the default locale entry as `x-default`. Wired into `generateMetadata` for the homepage; downstream page types inherit by calling the same helper.
+- **`app/robots.ts`** — generates `/robots.txt` at the canonical origin. Includes the sitemap reference and a commented-out `disallow: ['/admin', '/api/private']` template (uncomment when you add an admin area or auth-walled routes).
+- **`frontend/lib/data/json-ld.ts`** — two helpers for schema.org structured data:
+  - `buildOrganizationJsonLd({ name, description, logoUrl, ogImageUrl }, baseUrl)` — universal "this site represents X" signal. Address/contactPoint intentionally omitted (varies by country/project; extend inline at the call site if needed).
+  - `buildBreadcrumbJsonLd(items, baseUrl)` — `BreadcrumbList` JSON-LD object, ready to embed via `<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(...) }} />`. No UI component shipped — the visual representation varies too much per design.
+
+### Changed
+
+- **Moved + marker added**: `frontend/lib/helpers/metadata.ts` → `frontend/lib/data/metadata.ts` with `import 'server-only'` as the first line. `getMetadataBase` and `buildCanonicalPath` are now co-located with `buildAlternateLanguages`. Updated consumers: `app/[locale]/[[...slug]]/page.tsx` and `app/sitemap.ts`.
+- **`getMetadataBase` resolution order rewritten** (Vercel-first):
+  1. `VERCEL_PROJECT_PRODUCTION_URL` — auto-injected by Vercel, always points at the production domain even on preview deploys.
+  2. Request `headers()` (`host` + `x-forwarded-proto`) — fallback for local dev or non-Vercel hosts.
+  3. `NEXT_PUBLIC_SITE_URL` — last-resort static fallback for build contexts outside a request.
+- **`generateMetadata` for the homepage** now passes `alternates.languages` (built via `buildAlternateLanguages`) alongside `alternates.canonical`. Existing fallback path (when the homepage document is missing) also includes the languages map.
+
+### Notes
+
+- `frontend/lib/helpers/sitemap.ts` stays in `helpers/` (pipeline helper, not a domain read).
+- `metadataBase` is now reliable across preview deploys: Vercel preview URLs no longer leak into OG images / canonical URLs.
+
 ## [0.4.0] - 2026-05-07
 
 **Breaking** — naming refactor of frontend folders + form stack landing + Guideline BARR aligned.
@@ -119,7 +145,8 @@ Baseline release dello starter come fonte versionata. Niente nuove feature: setu
 
 - `sanity-image@^1.0.0` da `frontend/package.json` (legacy, nessun import nel codice).
 
-[Unreleased]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.4.0...HEAD
+[Unreleased]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.5.0...HEAD
+[0.5.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.3.0...v0.4.0
 [0.3.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.2.0...v0.3.0
 [0.2.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.1.0...v0.2.0

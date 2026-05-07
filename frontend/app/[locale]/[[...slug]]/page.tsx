@@ -5,7 +5,7 @@ import { homepageQuery } from '@/sanity/lib/queries'
 import { PageBuilder } from '@/components/layout/page-builder'
 import { HomePage } from '@/app/_pages/home-page'
 import { resolveOpenGraphImage } from '@/sanity/lib/utils'
-import { getMetadataBase, buildCanonicalPath } from '@/lib/helpers/metadata'
+import { getMetadataBase, buildCanonicalPath, buildAlternateLanguages } from '@/lib/data/metadata'
 import { generateStaticParamsForLocale } from '@/lib/helpers/sitemap'
 import { routing } from '@/i18n/routing'
 import type { HomepageQueryResult } from '@/sanity.types'
@@ -34,7 +34,10 @@ type Props = {
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { locale, slug } = await params
 
-  const metadataBase = await getMetadataBase()
+  const [metadataBase, languages] = await Promise.all([
+    getMetadataBase(),
+    buildAlternateLanguages({ currentSlug: slug, currentLocale: locale }),
+  ])
   const canonicalPath = buildCanonicalPath(locale, slug, routing.defaultLocale)
 
   // 1. Homepage (no slug)
@@ -49,6 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
         metadataBase,
         alternates: {
           canonical: canonicalPath,
+          languages,
         },
       }
     }
@@ -68,6 +72,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       }),
       alternates: {
         canonical: canonicalPath,
+        languages,
       },
     }
   }
@@ -77,6 +82,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     metadataBase,
     alternates: {
       canonical: canonicalPath,
+      languages,
     },
   }
 }
