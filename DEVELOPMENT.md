@@ -726,17 +726,20 @@ Deploy your Sanity Studio to a hosted `*.sanity.studio` URL for production use.
 
 #### First Time Deployment
 
-1. **Build and deploy the studio:**
+The Studio deploys to two separate environments: a dev Studio (pointing at the `development` dataset) and a production Studio (pointing at `production`). Per-environment config (dataset + hostname) lives in `studio/.env.development` and `studio/.env.production` — see `studio/.env.example`.
+
+1. **Build and deploy each studio:**
 
    ```bash
-   npm run deploy --workspace=studio
+   npm run deploy:dev --workspace=studio # dev Studio → development dataset
+   npm run deploy:prod --workspace=studio # production Studio → production dataset
    ```
 
 2. **Choose a hostname:**
 
-   When prompted, enter a unique hostname for your studio (e.g., `my-project`).
+   Set the hostnames via `SANITY_STUDIO_STUDIO_HOST` in the two env files (e.g., `my-project-dev` and `my-project`); the CLI asks for one on first deploy if unset.
 
-   Your studio will be available at: `https://my-project.sanity.studio`
+   Your studios will be available at: `https://my-project-dev.sanity.studio` and `https://my-project.sanity.studio`
 
    **Important notes about hostnames:**
    - Studio hostnames are **globally unique** across all Sanity projects worldwide
@@ -764,15 +767,18 @@ Deploy your Sanity Studio to a hosted `*.sanity.studio` URL for production use.
 
    This prevents the CLI from prompting for the application ID on future deploys.
 
+   **Note:** the `appId` identifies a single deployed Studio app, so with two environments don't hardcode one in `sanity.cli.ts` — set it per environment (e.g., `SANITY_STUDIO_APP_ID` in the two env files) or leave it unset.
+
 #### Subsequent Deployments
 
-Once the `appId` is configured, simply run:
+Simply run the deploy script for the environment you want to update:
 
 ```bash
-npm run deploy --workspace=studio
+npm run deploy:dev --workspace=studio # from a feature branch, to try schema changes
+npm run deploy:prod --workspace=studio # from main, once the changes are merged
 ```
 
-The CLI will use the saved `appId` and deploy to the same hostname automatically.
+Deploying one Studio never affects the other.
 
 #### Troubleshooting
 
@@ -827,25 +833,22 @@ The CLI will use the saved `appId` and deploy to the same hostname automatically
 
 ### Environment-Specific Deployments
 
-For staging/production environments, use environment variables in `studio/sanity.cli.ts`:
+`studio/sanity.cli.ts` and `studio/sanity.config.tsx` already read `SANITY_STUDIO_DATASET` and `SANITY_STUDIO_STUDIO_HOST` from the environment. The deploy scripts select which env file gets loaded:
 
-```typescript
-export default defineCliConfig({
-  api: {
-    projectId: process.env.SANITY_STUDIO_PROJECT_ID,
-    dataset: process.env.SANITY_STUDIO_DATASET,
-  },
-  ...(process.env.SANITY_STUDIO_HOSTNAME && {
-    studioHost: process.env.SANITY_STUDIO_HOSTNAME,
-  }),
-})
-```
+- `npm run deploy:dev` sets `SANITY_ACTIVE_ENV=development`, so the CLI loads `studio/.env.development`
+- `npm run deploy:prod` runs in the default `production` mode, so the CLI loads `studio/.env.production`
 
-Then deploy with:
+`sanity dev` also runs in `development` mode, so the local Studio points at the `development` dataset out of the box. Values shared across environments (project ID, preview URL) stay in `studio/.env`.
+
+Create the `development` dataset once per project:
 
 ```bash
-SANITY_STUDIO_HOSTNAME=staging npm run deploy --workspace=studio
+npx sanity dataset create development
+# Optionally seed it with production content:
+npx sanity dataset export production prod.tar.gz && npx sanity dataset import prod.tar.gz development
 ```
+
+On Vercel, set `NEXT_PUBLIC_SANITY_DATASET=development` for the Preview environment and `production` for Production, so preview deploys of feature branches run end-to-end against the dev dataset and the new schema.
 
 ---
 

@@ -218,31 +218,40 @@ Six universal DOM/UI hooks live in `frontend/hooks/`, dependency-free:
 
 ## Available Commands
 
-| Command                       | Description                                  |
-| ----------------------------- | -------------------------------------------- |
-| `npm run dev`                 | Start frontend + studio in parallel          |
-| `npm run format`              | Format all files with Prettier               |
-| `npm run lint`                | Lint frontend with ESLint                    |
-| `npm run type-check`          | TypeScript check across all workspaces       |
-| `npm run build -w frontend`   | Build the frontend for production            |
-| `npm run typegen -w frontend` | Generate TypeScript types from Sanity schema |
-| `npm run deploy -w studio`    | Deploy Studio to `*.sanity.studio`           |
+| Command                         | Description                                  |
+| ------------------------------- | -------------------------------------------- |
+| `npm run dev`                   | Start frontend + studio in parallel          |
+| `npm run format`                | Format all files with Prettier               |
+| `npm run lint`                  | Lint frontend with ESLint                    |
+| `npm run type-check`            | TypeScript check across all workspaces       |
+| `npm run build -w frontend`     | Build the frontend for production            |
+| `npm run typegen -w frontend`   | Generate TypeScript types from Sanity schema |
+| `npm run deploy:dev -w studio`  | Deploy dev Studio (`development` dataset)    |
+| `npm run deploy:prod -w studio` | Deploy production Studio                     |
 
 ## Deployment
 
 ### Studio
 
+The Studio supports two separate environments, each with its own dataset, hostname, and schema version. Environment config lives in `studio/.env.development` and `studio/.env.production` (see `studio/.env.example`); shared values stay in `studio/.env`.
+
 ```bash
-npm run deploy -w studio
+# From a feature branch — deploys the dev Studio against the `development` dataset
+npm run deploy:dev -w studio
+
+# From main — deploys the production Studio against the `production` dataset
+npm run deploy:prod -w studio
 ```
 
-First deploy prompts for a unique hostname (e.g., `my-project.sanity.studio`).
+The first deploy of each hostname prompts for confirmation (e.g., `my-project-dev.sanity.studio`, `my-project.sanity.studio`). Deploying one Studio never affects the other: schema changes can be tried on the dev Studio + dataset first and reach production only when the branch is merged and `deploy:prod` runs.
+
+Create the `development` dataset once with `npx sanity dataset create development` (optionally seed it via `sanity dataset export production` + `import`).
 
 ### Frontend (Vercel)
 
 1. Push to GitHub
 2. Import in Vercel with **Root Directory** set to `frontend`
-3. Set environment variables listed above
+3. Set environment variables listed above — set `NEXT_PUBLIC_SANITY_DATASET` per environment (`development` on Preview, `production` on Production) so preview deploys run against the dev dataset
 
 ## Documentation
 
