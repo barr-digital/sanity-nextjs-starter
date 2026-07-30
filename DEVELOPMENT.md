@@ -1,722 +1,127 @@
 # Development Guide
 
-This guide provides detailed instructions for extending and customizing your Sanity + Next.js starter template.
+Human-oriented guide to set up, run and extend a project built from this starter. It stays deliberately short: **the operational truth for conventions and patterns lives in [`CLAUDE.md`](CLAUDE.md) and [`docs/`](docs/)** — this file tells you where things are and in which order to do them.
 
 ## Table of Contents
 
-- [Adding New Page Types](#adding-new-page-types)
-- [Creating Custom PageBuilder Blocks](#creating-custom-pagebuilder-blocks)
-- [Setting Up Collection Pages](#setting-up-collection-pages)
-- [Configuring SEO and Metadata](#configuring-seo-and-metadata)
-- [Working with Images](#working-with-images)
-- [Internationalization](#internationalization)
-- [TypeScript and Type Safety](#typescript-and-type-safety)
+- [Getting Started](#getting-started)
+- [Project Structure](#project-structure)
+- [Common Workflows](#common-workflows)
+- [Code Standards](#code-standards)
+- [Deployment](#deployment)
+- [Need Help?](#need-help)
 
 ---
 
-## Adding New Page Types
+## Getting Started
 
-Follow these steps to add a new page type (e.g., "About Page"):
+1. **Install** (npm workspaces, from the repo root):
 
-### 1. Create the Schema (Studio)
+   ```bash
+   npm install
+   ```
 
-Create a new file in `studio/src/schemaTypes/documents/singletons/`:
+2. **Environment variables** — copy the examples and fill in the real values (from the Tech Lead):
 
-```typescript
-// studio/src/schemaTypes/documents/singletons/aboutPage.ts
-import { defineType } from 'sanity'
-import { basePage } from './basePage'
+   ```bash
+   cp frontend/.env.example frontend/.env.local
+   cp studio/.env.example studio/.env          # shared: project ID, preview URL
+   # per-environment (dataset + studio hostname):
+   # studio/.env.development and studio/.env.production — see studio/.env.example
+   ```
 
-export const aboutPage = defineType({
-  name: 'aboutPage',
-  title: 'About Page',
-  type: 'document',
-  fields: [
-    ...basePage.fields, // Includes title, slug, SEO fields
-    {
-      name: 'pageBuilder',
-      title: 'Page Builder',
-      type: 'array',
-      of: pageBuilderBlocks, // Import from blocks/config.ts
-      options: pageBuilderFieldOptions,
-    },
-  ],
-})
-```
+3. **Run** — frontend (`:3000`) and Studio (`:3333`) in parallel:
 
-**Register the schema** in `studio/src/schemaTypes/index.ts`:
+   ```bash
+   npm run dev            # both
+   npm run dev:next       # frontend only
+   npm run dev:studio     # studio only
+   ```
 
-```typescript
-import { aboutPage } from './documents/aboutPage'
+   The local Studio runs in `development` mode and points at the `development` dataset out of the box.
 
-export const schemaTypes = [
-  // ... existing types
-  aboutPage,
-]
-```
+## Project Structure
 
-### 2. Create the Query (Frontend)
+npm-workspaces monorepo with two workspaces:
 
-Add a query in `frontend/sanity/lib/queries.ts`:
+- **`studio/`** — Sanity Studio: schema (`src/schema-types/`), sidebar structure, block previews.
+- **`frontend/`** — Next.js App Router: localized routes (`app/[locale]/`), page-builder rendering, GROQ queries with generated types.
 
-```typescript
-export const aboutPageQuery = defineQuery(`
-  *[_type == "aboutPage" && language == $lang][0]{
-    _id,
-    _type,
-    title,
-    seo{
-      seoTitle,
-      seoDescription,
-      seoImage${imageFragment},
-    },
-    "pageBuilder": pageBuilder[]${pageBuilderFragment}
-  }
-`)
-```
+Pages are assembled by editors with a **page builder** (an array of blocks) and rendered in order by the frontend. The full annotated folder tree lives in [`CLAUDE.md`](CLAUDE.md#project).
 
-### 3. Create the Page Component (Frontend)
+## Common Workflows
 
-Create a component in `frontend/app/_pages/`:
+### Add a page-builder block
 
-```typescript
-// frontend/app/_pages/AboutPage.tsx
-import { PageBuilder } from "@/components/Layout";
-import { AboutPageQueryResult } from "@/sanity.types";
+The most frequent task. It's an ordered chain across both workspaces — skipping a step causes a silent bug:
 
-interface AboutPageProps {
-  page: AboutPageQueryResult;
-}
+schema (`studio/src/schema-types/blocks/<block-name>.ts`) → register in `schema-types/index.ts` + `blocks/config.ts` → `npm run extract-types -w studio` → GROQ fragment in `frontend/sanity/lib/queries.ts` (if needed) → `npm run typegen -w frontend` → component in `frontend/components/blocks/<block-name>.tsx` → register in `components/layout/block-renderer.tsx` → verify.
 
-export function AboutPage({ page }: AboutPageProps) {
-  return (
-    <div>
-      <h1>{page.title}</h1>
-      {page.pageBuilder && <PageBuilder page={page} />}
-    </div>
-  );
-}
-```
+→ Full step-by-step with snippets: [`docs/page-builder-blocks.md`](docs/page-builder-blocks.md)
 
-### 4. Update the Main Page Handler
+### Add a new page type
 
-Update `frontend/app/[locale]/[[...slug]]/page.tsx`:
+1. **Schema** — new document in `studio/src/schema-types/documents/` (`singletons/` for one-off pages, `collections/` for multi-instance). Spread the shared base page (`base-page.ts`): title, slug, language and `seo` come for free. Add the `pageBuilder` field from `blocks/config.ts`.
+2. **Register** — add it to the registry in `schema-types/index.ts`; singletons also go in `SINGLETON_TYPES` and the sidebar (`src/structure/`). i18n types must be registered in **both** plugin configs in `sanity.config.tsx`.
+3. **Types** — `npm run extract-types -w studio` then `npm run typegen -w frontend`.
+4. **Query** — add `<entity>Query` in `frontend/sanity/lib/queries.ts` with `defineQuery`, reusing the shared fragments (including the `seo` fragment).
+5. **Page component** — one file in `frontend/app/_pages/` (e.g. `about-page.tsx`) rendering the PageBuilder.
+6. **Route wiring** — the catch-all `app/[locale]/[[...slug]]/page.tsx` resolves every page: add the fetch + case in its `generateMetadata` and render switch.
+7. **Static params & sitemap** — add the type to `frontend/lib/data/sitemap.ts` (single source of truth for routes; `app/sitemap.ts` follows it automatically).
 
-**In `generateMetadata`:**
+### Collection pages (listing + items)
 
-```typescript
-// Add metadata handling for about page
-const slugPath = slug.join('/')
+Same flow as a page type, with documents in `documents/collections/` and item routes as `<listing-slug>/<item-slug>`. Slugs are **per-locale**; the language switcher resolves sibling documents via `translateSlug` (`frontend/lib/data/translations.ts`) — see the i18n pitfalls in [`docs/conventions-and-pitfalls.md`](docs/conventions-and-pitfalls.md).
 
-if (slugPath === 'about') {
-  const { data: aboutPage } = await sanityFetch({
-    query: aboutPageQuery,
-    params: { lang: locale },
-  })
+### SEO & metadata
 
-  // Return metadata (see existing homepage example)
-}
-```
+Every page type inherits the `seo` object from the base page schema; routes build metadata through the shared helpers in `frontend/lib/data/metadata.ts`. Key rule: **omit keys to inherit the global defaults** — never return `undefined`.
 
-**In the Page component:**
+→ [`docs/seo-and-metadata.md`](docs/seo-and-metadata.md)
 
-```typescript
-// Add page fetching logic
-if (slugPath === 'about') {
-  const { data: aboutPage } = await sanityFetch({
-    query: aboutPageQuery,
-    params: { lang: locale },
-  })
+### Images
 
-  if (!aboutPage) notFound()
-  return renderPageComponent(aboutPage)
-}
-```
+Content images use the `img` object type in schemas and the shared `Picture` component (`frontend/components/ui/picture.tsx`) in the frontend — always through the Sanity CDN, never raw asset URLs.
 
-**In `renderPageComponent`:**
+→ [`docs/conventions-and-pitfalls.md`](docs/conventions-and-pitfalls.md)
 
-```typescript
-function renderPageComponent(content: any, items?: any) {
-  switch (content._type) {
-    case "homepage":
-      return <HomePage page={content} />;
-    case "aboutPage":
-      return <AboutPage page={content} />;
-    // ...
-  }
-}
-```
+### Internationalization
 
-### 5. Update Static Params Generation
+Adding a locale touches three places: `frontend/i18n/routing.ts` (`locales`), the matcher in `frontend/proxy.ts`, and both i18n plugin configs in `studio/sanity.config.tsx`. Navigation always goes through the wrappers exported by `i18n/routing.ts` — never `next/navigation`.
 
-Update `frontend/lib/helpers/sitemap.ts`:
+→ i18n pitfalls (per-locale slugs, language switcher): [`docs/conventions-and-pitfalls.md`](docs/conventions-and-pitfalls.md)
 
-```typescript
-export async function generateStaticParamsForLocale(locale: string) {
-  const result: StaticParam[] = []
+### TypeScript & generated types
 
-  // Homepage
-  result.push({ locale, slug: undefined })
-
-  // About page
-  const aboutPage = await client.fetch(
-    `*[_type == "aboutPage" && language == $lang][0]{ "slug": slug.current }`,
-    { lang: locale },
-  )
-
-  if (aboutPage?.slug) {
-    result.push({ locale, slug: [aboutPage.slug] })
-  }
-
-  return result
-}
-```
-
----
-
-## Creating Custom PageBuilder Blocks
-
-### 1. Create the Schema (Studio)
-
-Create a block schema in `studio/src/schemaTypes/blocks/`:
-
-```typescript
-// studio/src/schemaTypes/blocks/heroBlock.ts
-import { defineType } from 'sanity'
-
-export const heroBlock = defineType({
-  name: 'heroBlock',
-  title: 'Hero Block',
-  type: 'object',
-  fields: [
-    {
-      name: 'heading',
-      title: 'Heading',
-      type: 'string',
-      validation: (Rule) => Rule.required(),
-    },
-    {
-      name: 'subheading',
-      title: 'Subheading',
-      type: 'text',
-      rows: 3,
-    },
-    {
-      name: 'image',
-      title: 'Background Image',
-      type: 'image',
-      options: { hotspot: true },
-      fields: [
-        {
-          name: 'alt',
-          title: 'Alt Text',
-          type: 'string',
-        },
-      ],
-    },
-    {
-      name: 'cta',
-      title: 'Call to Action',
-      type: 'link', // Using the link object
-    },
-  ],
-  preview: {
-    select: {
-      title: 'heading',
-      subtitle: 'subheading',
-      media: 'image',
-    },
-  },
-})
-```
-
-### 2. Register the Block
-
-Update `studio/src/schemaTypes/blocks/config.ts`:
-
-```typescript
-export const pageBuilderBlocks = [
-  { type: 'exampleBlock' },
-  { type: 'heroBlock' }, // Add your block
-]
-```
-
-Also export it from `studio/src/schemaTypes/blocks/index.ts`:
-
-```typescript
-export { heroBlock } from './heroBlock'
-```
-
-### 3. Add to Query Fragment (Frontend)
-
-Update `frontend/sanity/lib/queries.ts`:
-
-```typescript
-const pageBuilderFragment = /* groq */ `{
-  ...,
-  _type == 'exampleBlock' => {
-    ...,
-    title,
-    text
-  },
-  _type == 'heroBlock' => {
-    ...,
-    heading,
-    subheading,
-    image${imageFragment},
-    cta${linkFragment}
-  }
-}`
-```
-
-### 4. Create the Component (Frontend)
-
-Create the React component in `frontend/components/Blocks/`:
-
-```typescript
-// frontend/components/Blocks/HeroBlock.tsx
-import { Picture } from "@/components/Ui/Picture";
-import { Link } from "@/components/Ui/Link";
-import { ExtractPageBuilderType } from "@/sanity/lib/types";
-
-type HeroBlockProps = {
-  block: ExtractPageBuilderType<"heroBlock">;
-  index: number;
-};
-
-export function HeroBlock({ block }: HeroBlockProps) {
-  return (
-    <section className="relative h-screen">
-      {block.image && (
-        <Picture
-          image={block.image}
-          fill
-          objectFit="cover"
-          priority={true}
-        />
-      )}
-      <div className="relative z-10 flex h-full items-center justify-center">
-        <div className="text-center text-white">
-          <h1 className="text-6xl font-bold">{block.heading}</h1>
-          {block.subheading && (
-            <p className="mt-4 text-xl">{block.subheading}</p>
-          )}
-          {block.cta && (
-            <Link link={block.cta} className="mt-8">
-              {block.cta.label}
-            </Link>
-          )}
-        </div>
-      </div>
-    </section>
-  );
-}
-```
-
-### 5. Register the Component
-
-Update `frontend/components/Layout/BlockRenderer.tsx`:
-
-```typescript
-import { HeroBlock } from '@/components/Blocks/HeroBlock'
-
-const getBlocks = () => ({
-  exampleBlock: ExampleBlock,
-  heroBlock: HeroBlock, // Add your block
-})
-```
-
----
-
-## Setting Up Collection Pages
-
-Example: Creating a blog with posts listing and detail pages.
-
-### 1. Create Collection Item Schema (Studio)
-
-```typescript
-// studio/src/schemaTypes/documents/post.ts
-import { defineType } from 'sanity'
-
-export const post = defineType({
-  name: 'post',
-  title: 'Post',
-  type: 'document',
-  fields: [
-    {
-      name: 'title',
-      title: 'Title',
-      type: 'string',
-      validation: (Rule) => Rule.required(),
-    },
-    {
-      name: 'slug',
-      title: 'Slug',
-      type: 'slug',
-      options: { source: 'title' },
-      validation: (Rule) => Rule.required(),
-    },
-    {
-      name: 'language',
-      title: 'Language',
-      type: 'string',
-      options: {
-        list: [{ title: 'Italian', value: 'it' }],
-      },
-    },
-    {
-      name: 'excerpt',
-      title: 'Excerpt',
-      type: 'text',
-      rows: 3,
-    },
-    {
-      name: 'featuredImage',
-      title: 'Featured Image',
-      type: 'image',
-      options: { hotspot: true },
-      fields: [{ name: 'alt', type: 'string' }],
-    },
-    {
-      name: 'content',
-      title: 'Content',
-      type: 'array',
-      of: [{ type: 'block' }],
-    },
-  ],
-})
-```
-
-### 2. Create Listing Page Schema
-
-```typescript
-// studio/src/schemaTypes/documents/singletons/blogListing.ts
-import { defineType } from 'sanity'
-import { basePage } from '../basePage'
-
-export const blogListing = defineType({
-  name: 'blogListing',
-  title: 'Blog Listing',
-  type: 'document',
-  fields: [...basePage.fields],
-})
-```
-
-### 3. Create Queries (Frontend)
-
-```typescript
-// Get all posts for listing
-export const allPostsQuery = defineQuery(`
-  *[_type == "post" && language == $lang] | order(publishedAt desc) {
-    _id,
-    title,
-    "slug": slug.current,
-    excerpt,
-    featuredImage${imageFragment},
-    publishedAt
-  }
-`)
-
-// Get single post by slug
-export const postBySlugQuery = defineQuery(`
-  *[_type == "post" && slug.current == $slug && language == $lang][0]{
-    _id,
-    _type,
-    title,
-    excerpt,
-    featuredImage${imageFragment},
-    content[]${portableTextFragment},
-    publishedAt
-  }
-`)
-
-// Get blog listing page
-export const blogListingQuery = defineQuery(`
-  *[_type == "blogListing" && language == $lang][0]{
-    _id,
-    _type,
-    title,
-    "slug": slug.current,
-    seo{...}
-  }
-`)
-```
-
-### 4. Update Page Handler
-
-```typescript
-// In page.tsx
-export default async function Page({ params }: Props) {
-  const { locale, slug } = await params
-
-  // Homepage
-  if (!slug || slug.length === 0) {
-    // ... homepage logic
-  }
-
-  const slugPath = slug.join('/')
-
-  // Blog listing
-  if (slugPath === 'blog') {
-    const { data: blogPage } = await sanityFetch({
-      query: blogListingQuery,
-      params: { lang: locale },
-    })
-
-    const { data: posts } = await sanityFetch({
-      query: allPostsQuery,
-      params: { lang: locale },
-    })
-
-    if (!blogPage) notFound()
-    return renderPageComponent(blogPage, posts)
-  }
-
-  // Blog post detail
-  if (slug.length === 2 && slug[0] === 'blog') {
-    const postSlug = slug[1]
-    const { data: post } = await sanityFetch({
-      query: postBySlugQuery,
-      params: { lang: locale, slug: postSlug },
-    })
-
-    if (!post) notFound()
-    return renderPageComponent(post)
-  }
-
-  notFound()
-}
-```
-
-### 5. Update Static Params
-
-```typescript
-// In lib/helpers/sitemap.ts
-const blogPage = await client.fetch(
-  `*[_type == "blogListing" && language == $lang][0]{ "slug": slug.current }`,
-  { lang: locale },
-)
-
-if (blogPage?.slug) {
-  // Add blog listing page
-  result.push({ locale, slug: [blogPage.slug] })
-
-  // Add all blog posts
-  const posts = await client.fetch(
-    `*[_type == "post" && language == $lang]{ "slug": slug.current }`,
-    { lang: locale },
-  )
-
-  posts?.forEach((post: { slug: string }) => {
-    if (post.slug) {
-      result.push({ locale, slug: [blogPage.slug, post.slug] })
-    }
-  })
-}
-```
-
----
-
-## Configuring SEO and Metadata
-
-The template includes complete SEO support with:
-
-- Dynamic metadata generation
-- Open Graph images
-- Canonical URLs
-- Automatic sitemap
-
-### Metadata Helper Functions
-
-Located in `frontend/lib/helpers/metadata.ts`:
-
-- `getMetadataBase()` - Gets the base URL from headers or env
-- `buildCanonicalPath()` - Builds canonical URLs with locale handling
-
-### Adding Metadata to a Page
-
-The `generateMetadata` function in `page.tsx` shows the pattern:
-
-```typescript
-export async function generateMetadata({ params }: Props): Promise<Metadata> {
-  const { locale, slug } = await params
-  const metadataBase = await getMetadataBase()
-  const canonicalPath = buildCanonicalPath(locale, slug, routing.defaultLocale)
-
-  // Fetch your page data
-  const { data: page } = await sanityFetch({
-    query: yourPageQuery,
-    params: { lang: locale },
-  })
-
-  // Generate Open Graph image
-  const ogImage = resolveOpenGraphImage(page?.seo?.seoImage)
-
-  return {
-    metadataBase,
-    ...(page?.seo?.seoTitle && { title: page.seo.seoTitle }),
-    ...(page?.seo?.seoDescription && {
-      description: page.seo.seoDescription,
-    }),
-    ...(ogImage && {
-      openGraph: {
-        images: [ogImage],
-      },
-    }),
-    alternates: {
-      canonical: canonicalPath,
-    },
-  }
-}
-```
-
-### Sitemap Configuration
-
-The sitemap is auto-generated from your static params. Update `lib/helpers/sitemap.ts` to include your pages.
-
-Priority and change frequency can be customized in `app/sitemap.ts`:
-
-```typescript
-// Customize based on content type
-if (!slug || slug.length === 0) {
-  priority = 1 // Homepage
-} else if (slug[0] === 'blog' && slug.length === 2) {
-  priority = 0.6 // Blog posts
-  changeFrequency = 'weekly'
-} else {
-  priority = 0.8 // Other pages
-}
-```
-
----
-
-## Working with Images
-
-### Using the Picture Component
-
-```typescript
-import { Picture } from "@/components/Ui/Picture";
-
-<Picture
-  image={sanityImageObject}
-  width={800}
-  height={600}
-  alt="Description"
-  objectFit="cover"
-/>
-```
-
-### Image with Crop and Hotspot
-
-The `urlForImage` utility automatically handles crop and hotspot:
-
-```typescript
-import { urlForImage } from '@/sanity/lib/utils'
-
-const imageUrl = urlForImage(sanityImageObject)?.width(1200).height(630).url()
-```
-
-### Open Graph Images
-
-```typescript
-import { resolveOpenGraphImage } from '@/sanity/lib/utils'
-
-const ogImage = resolveOpenGraphImage(sanityImageObject)
-// Returns: { url, alt, width, height }
-```
-
----
-
-## Internationalization
-
-### Adding a New Language
-
-1. **Update routing** (`frontend/i18n/routing.ts`):
-
-```typescript
-export const routing = defineRouting({
-  locales: ['it', 'en'], // Add language
-  defaultLocale: 'it',
-})
-```
-
-2. **Update Studio config** (`studio/sanity.config.ts`):
-
-```typescript
-;(documentInternationalization({
-  supportedLanguages: [
-    { id: 'it', title: 'Italian' },
-    { id: 'en', title: 'English' }, // Add language
-  ],
-  schemaTypes: ['homepage', 'header', 'footer', 'settings'],
-}),
-  languageFilter({
-    supportedLanguages: [
-      { id: 'it', title: 'Italian' },
-      { id: 'en', title: 'English' }, // Add language
-    ],
-    defaultLanguages: ['it'],
-    documentTypes: ['homepage', 'header', 'footer', 'settings'],
-  }))
-```
-
-3. **Create message files**:
+`frontend/sanity.types.ts` is **generated — never edit it by hand**. After any schema or query change:
 
 ```bash
-cp frontend/messages/it.json frontend/messages/en.json
+npm run extract-types --workspace=studio   # schema → studio/schema.json
+npm run typegen --workspace=frontend       # schema.json + queries → sanity.types.ts
 ```
 
-### Translation Files
+Block components are typed with `ExtractPageBuilderType<'blockName'>` from `frontend/types/sanity.ts`.
 
-Located in `frontend/messages/[locale].json`:
+→ [`docs/sanity-schema-and-types.md`](docs/sanity-schema-and-types.md)
 
-```json
-{
-  "languageSwitcher": {
-    "label": "Language",
-    "it": "Italiano",
-    "en": "English"
-  }
-}
-```
+## Code Standards
 
----
+Naming, component categories, data layer, Server Actions and TypeScript rules are documented once and enforced in review:
 
-## TypeScript and Type Safety
+- [`docs/conventions.md`](docs/conventions.md) — shared BARR conventions (kebab-case files, no barrel files, component structure)
+- [`docs/conventions-and-pitfalls.md`](docs/conventions-and-pitfalls.md) — the three component categories, Sanity conventions, production cautions, starter-leftover checklist
+- [`docs/data-layer.md`](docs/data-layer.md) / [`docs/server-actions.md`](docs/server-actions.md) — `lib/data/` reads (`server-only`) vs `actions/` mutations (`"use server"`)
+- [`docs/styling-and-design-tokens.md`](docs/styling-and-design-tokens.md) — Tailwind v4 CSS-first, `t-*` typography utilities, color tokens
+- [`docs/groq-queries.md`](docs/groq-queries.md) — query and fragment conventions
 
-### Generated Types
-
-Types are automatically generated from your Sanity schema:
+Before declaring anything done:
 
 ```bash
-npm run typegen --workspace=frontend
+npm run type-check   # both workspaces
+npm run lint
 ```
 
-This creates `frontend/sanity.types.ts` with all your schema types.
-
-### Using Generated Types
-
-```typescript
-import { HomepageQueryResult } from '@/sanity.types'
-
-function HomePage({ page }: { page: HomepageQueryResult }) {
-  // page is fully typed
-}
-```
-
-### Custom Type Helpers
-
-Located in `frontend/sanity/lib/types.ts`:
-
-```typescript
-// Extract a specific block type
-type HeroBlockType = ExtractPageBuilderType<'heroBlock'>
-
-// Get all PageBuilder blocks
-type AllBlocks = PageBuilderBlock
-```
-
----
+plus regenerated types if schema/queries changed, and a grep for leftover usages of anything renamed.
 
 ## Deployment
 
@@ -872,305 +277,8 @@ Rules of thumb:
 
 ---
 
-## Best Practices & Coding Standards
-
-### 📁 File Organization
-
-#### Component Structure
-
-All components go in the `frontend/components/` directory following these rules:
-
-1. **Single Component** → Direct file in appropriate folder
-
-   ```
-   components/Ui/Button.tsx
-   components/Ui/Picture.tsx
-   ```
-
-2. **Multiple Related Components** → Group in named folder
-
-   ```
-   components/HomePage/
-   ├── Hero.tsx
-   ├── Features.tsx
-   └── Testimonials.tsx
-   ```
-
-3. **Page Templates** → Always in `_pages` folder
-   ```
-   app/_pages/
-   ├── HomePage.tsx
-   ├── AboutPage.tsx
-   └── BlogListingPage.tsx
-   ```
-
-#### Component Folders
-
-- **`components/Blocks/`** - PageBuilder blocks only (e.g., HeroBlock, TextBlock)
-- **`components/Layout/`** - Layout components (Header, Footer, PageBuilder, BlockRenderer)
-- **`components/Ui/`** - Reusable UI components (Button, Picture, Link)
-- **`components/[FeatureName]/`** - Feature-specific component groups
-
-**Example:**
-
-```
-components/
-├── Blocks/
-│   ├── HeroBlock.tsx
-│   └── TextBlock.tsx
-├── Layout/
-│   ├── Header.tsx
-│   └── Footer.tsx
-├── Ui/
-│   ├── Button.tsx
-│   └── Picture.tsx
-└── ProjectsPage/          # Feature group
-    ├── ProjectCard.tsx
-    ├── ProjectGrid.tsx
-    └── ProjectFilters.tsx
-```
-
-### 🔄 Development Workflow
-
-#### Before Committing
-
-**ALWAYS run these commands from the project root:**
-
-```bash
-# 1. Format all code
-npm run format
-
-# 2. Run type checking
-npm run type-check
-
-# 3. Verify builds pass
-npm run build --workspace=frontend
-npm run build --workspace=studio
-```
-
-#### After Schema Changes (Studio)
-
-When you modify schemas in `studio/src/schemaTypes/`:
-
-```bash
-# 1. Extract schema types (generates schema.json)
-npm run extract-types --workspace=studio
-
-# 2. Generate TypeScript types for frontend
-npm run typegen --workspace=frontend
-```
-
-#### After Query Changes (Frontend)
-
-When you modify queries in `frontend/sanity/lib/queries.ts`:
-
-```bash
-# Generate updated query result types
-npm run typegen --workspace=frontend
-```
-
-### 📝 Naming Conventions
-
-#### Schema Types (Studio)
-
-- **Blocks**: `heroBlock`, `textBlock`, `imageGalleryBlock`
-- **Pages**: `homepage`, `aboutPage`, `blogListing`
-- **Objects**: `seo`, `link`, `customImage`
-- **Documents**: `post`, `project`, `author`
-
-#### Components (Frontend)
-
-- **Blocks**: `HeroBlock`, `TextBlock`, `ImageGalleryBlock`
-- **Pages**: `HomePage`, `AboutPage`, `BlogListingPage`
-- **UI Components**: `Button`, `Picture`, `Link`
-
-#### Files
-
-- **Components**: PascalCase - `HeroBlock.tsx`, `ProjectCard.tsx`
-- **Utilities**: camelCase - `helpers.ts`, `utils.ts`
-- **Config**: kebab-case - `sanity.config.ts`, `i18n-config.ts`
-
-### 🎯 Code Quality Standards
-
-#### TypeScript
-
-**DO:**
-
-```typescript
-// ✅ Use generated types
-import { HomepageQueryResult } from '@/sanity.types'
-
-// ✅ Extract specific block types
-type HeroBlockType = ExtractPageBuilderType<'heroBlock'>
-
-// ✅ Type component props properly
-interface HeroBlockProps {
-  block: HeroBlockType
-  index: number
-}
-```
-
-**DON'T:**
-
-```typescript
-// ❌ Use 'any' types
-function MyComponent({ block }: { block: any }) {}
-
-// ❌ Skip type annotations
-function MyComponent({ block }) {}
-```
-
-#### GROQ Queries
-
-**DO:**
-
-```typescript
-// ✅ Use fragments for reusability
-const imageFragment = /* groq */ `{
-  asset,
-  hotspot,
-  crop,
-  alt
-}`
-
-export const pageQuery = defineQuery(`
-  *[_type == "page"][0]{
-    image${imageFragment}
-  }
-`)
-
-// ✅ Wrap field names in quotes for projections
-export const query = defineQuery(`
-  *[_type == "post"]{
-    _id,
-    "slug": slug.current,
-    "authorName": author->name
-  }
-`)
-```
-
-**DON'T:**
-
-```typescript
-// ❌ Duplicate image fields across queries
-export const pageQuery = defineQuery(`
-  *[_type == "page"][0]{
-    image{
-      asset,
-      hotspot,
-      crop,
-      alt
-    }
-  }
-`)
-
-// ❌ Forget quotes on aliased fields
-export const query = defineQuery(`
-  *[_type == "post"]{
-    slug: slug.current  // ❌ Will error
-  }
-`)
-```
-
-#### Component Structure
-
-**DO:**
-
-```typescript
-// ✅ Proper component structure
-import { ExtractPageBuilderType } from "@/sanity/lib/types";
-
-type HeroBlockProps = {
-  block: ExtractPageBuilderType<"heroBlock">;
-  index: number;
-};
-
-export function HeroBlock({ block, index }: HeroBlockProps) {
-  return (
-    <section>
-      <h1>{block.heading}</h1>
-    </section>
-  );
-}
-```
-
-**DON'T:**
-
-```typescript
-// ❌ Missing types and exports
-function HeroBlock({ block }) {
-  return <section>{block.heading}</section>;
-}
-```
-
-### 🔍 Testing Checklist
-
-Before pushing to production:
-
-- [ ] Frontend build passes (`npm run build --workspace=frontend`)
-- [ ] Studio build passes (`npm run build --workspace=studio`)
-- [ ] TypeScript has no errors (`npm run type-check`)
-- [ ] Code is formatted (`npm run format`)
-- [ ] Test in Studio: Create/edit content
-- [ ] Test in Frontend: Verify content displays correctly
-- [ ] Test on mobile viewport
-- [ ] Verify SEO metadata in browser inspector
-- [ ] Check sitemap.xml is generating correctly
-
-### 📚 Additional Best Practices
-
-#### Schema Design
-
-1. **Always include language field** for internationalized content
-2. **Use validation rules** to ensure data quality
-3. **Provide preview configurations** for better Studio UX
-4. **Group related fields** with fieldsets for complex schemas
-
-#### Performance
-
-1. **Use `priority` prop** on above-the-fold images
-2. **Implement proper image sizing** with `width` and `height`
-3. **Lazy load** below-the-fold content
-4. **Keep queries focused** - only fetch needed fields
-
-#### SEO
-
-1. **Always provide alt text** for images
-2. **Include SEO fields** on all page types
-3. **Use semantic HTML** (`<article>`, `<section>`, `<nav>`)
-4. **Implement structured data** where appropriate
-
-#### Accessibility
-
-1. **Use semantic HTML elements**
-2. **Provide proper ARIA labels** when needed
-3. **Ensure keyboard navigation** works
-4. **Test with screen readers**
-
-### 🚨 Common Pitfalls to Avoid
-
-1. **Don't commit `.env` files** - Use `.env.example` instead
-2. **Don't skip type generation** - Always run typegen after schema changes
-3. **Don't hardcode content** - Use Sanity for all content
-4. **Don't forget to update static params** when adding new routes
-5. **Don't use `any` types** - Leverage TypeScript's type safety
-6. **Don't duplicate GROQ fragments** - Reuse existing fragments
-7. **Don't skip the format command** - Keep code style consistent
-
-### 📦 Recommended VS Code Extensions
-
-For the best development experience:
-
-- **Sanity.io** - Syntax highlighting for GROQ
-- **ESLint** - Code linting
-- **Prettier** - Code formatting
-- **Tailwind CSS IntelliSense** - Tailwind class autocomplete
-
----
-
 ## Need Help?
 
-- Check the inline comments and TODOs in the codebase
-- [Sanity Documentation](https://www.sanity.io/docs)
-- [Next.js Documentation](https://nextjs.org/docs)
-- [Join Sanity Community](https://slack.sanity.io)
+- [`CLAUDE.md`](CLAUDE.md) + [`docs/`](docs/) — conventions and patterns for this codebase (source of truth)
+- [Sanity documentation](https://www.sanity.io/docs) · [Next.js documentation](https://nextjs.org/docs) · [next-intl documentation](https://next-intl.dev)
+- BARR: Development Guideline in the knowledge vault (`operativo/guideline.md`)
