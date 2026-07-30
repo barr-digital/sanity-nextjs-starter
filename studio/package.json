@@ -10,7 +10,8 @@
   "scripts": {
     "prebuild": "npm run extract-types",
     "build": "sanity build",
-    "deploy": "sanity deploy",
+    "deploy:dev": "SANITY_ACTIVE_ENV=development sanity deploy",
+    "deploy:prod": "sanity deploy",
     "dev": "sanity dev",
     "extract-types": "sanity schema extract --enforce-required-fields",
     "start": "sanity start",
