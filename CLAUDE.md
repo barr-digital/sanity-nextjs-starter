@@ -80,11 +80,11 @@ Page documents expose a `pageBuilder` array of block objects. Adding or changing
 7. **Register in the renderer** — blocks map in `frontend/components/layout/block-renderer.tsx` (key = schema `name`)
 8. **Verify** — block renders in dev/preview; `type-check` green
 
-→ Full step-by-step with snippets: **[page-builder-blocks.md](.claude/docs/page-builder-blocks.md)**
+→ Full step-by-step with snippets: **[page-builder-blocks.md](docs/page-builder-blocks.md)**
 
 ## Golden rules
 
-1. **Production datasets are live.** Prefer additive changes; removing/renaming schema fields hides live data — do it deliberately and flag it. Schema experiments go through the `development` dataset first (see [deploy-and-env.md](.claude/docs/deploy-and-env.md)).
+1. **Production datasets are live.** Prefer additive changes; removing/renaming schema fields hides live data — do it deliberately and flag it. Schema experiments go through the `development` dataset first (see [deploy-and-env.md](docs/deploy-and-env.md)).
 2. **Never edit `frontend/sanity.types.ts` by hand** — it's generated. Change schema/queries → regenerate.
 3. **Schema first, typegen second.** After any schema change: `extract-types` (studio) → `typegen` (frontend), in that order. Claude decides when — the user shouldn't have to ask.
 4. **Targeted edits**, not whole-file rewrites.
@@ -97,7 +97,7 @@ Page documents expose a `pageBuilder` array of block objects. Adding or changing
 
 ## Key conventions
 
-- **Every component is one of three categories** — page-builder block, layout component (singleton-driven), or UI primitive — each with its own creation flow: see [conventions-and-pitfalls.md](.claude/docs/conventions-and-pitfalls.md).
+- **Every component is one of three categories** — page-builder block, layout component (singleton-driven), or UI primitive — each with its own creation flow: see [conventions-and-pitfalls.md](docs/conventions-and-pitfalls.md).
 - **Files and folders: kebab-case** (`example-block.tsx`, `block-renderer.tsx`).
 - **Schema/block `name`: camelCase** (`exampleBlock`) — it's the key linking schema → query → renderer; must match everywhere.
 - Block components are typed with `ExtractPageBuilderType<'blockName'>` (from `types/sanity.ts`) and receive `{ block, index }` from the renderer — **no data fetching inside blocks**.
@@ -144,13 +144,13 @@ Figma links are not stored in docs — paste the **node-id of the block/page** i
 
 ## Document index
 
-- [page-builder-blocks.md](.claude/docs/page-builder-blocks.md) — create/modify a page-builder block: the full touchpoint chain with snippets
-- [sanity-schema-and-types.md](.claude/docs/sanity-schema-and-types.md) — schema conventions, extract-types → typegen pipeline, Studio deploy
-- [groq-queries.md](.claude/docs/groq-queries.md) — GROQ conventions: explicit projections, reusable fragments, references, i18n coalesce
-- [seo-and-metadata.md](.claude/docs/seo-and-metadata.md) — per-page metadata, canonical, OG, sitemap, robots
-- [styling-and-design-tokens.md](.claude/docs/styling-and-design-tokens.md) — design tokens, Tailwind v4 CSS-first, typography utilities
-- [deploy-and-env.md](.claude/docs/deploy-and-env.md) — env vars, dual-environment deploy (dev/production Studio + datasets), Vercel
-- [conventions-and-pitfalls.md](.claude/docs/conventions-and-pitfalls.md) — the three component categories, code conventions, i18n pitfalls, production cautions, starter-leftover checklist
-- [conventions.md](.claude/docs/conventions.md), [data-layer.md](.claude/docs/data-layer.md), [server-actions.md](.claude/docs/server-actions.md) — shared BARR conventions (naming, data layer, Server Actions)
+- [page-builder-blocks.md](docs/page-builder-blocks.md) — create/modify a page-builder block: the full touchpoint chain with snippets
+- [sanity-schema-and-types.md](docs/sanity-schema-and-types.md) — schema conventions, extract-types → typegen pipeline, Studio deploy
+- [groq-queries.md](docs/groq-queries.md) — GROQ conventions: explicit projections, reusable fragments, references, i18n coalesce
+- [seo-and-metadata.md](docs/seo-and-metadata.md) — per-page metadata, canonical, OG, sitemap, robots
+- [styling-and-design-tokens.md](docs/styling-and-design-tokens.md) — design tokens, Tailwind v4 CSS-first, typography utilities
+- [deploy-and-env.md](docs/deploy-and-env.md) — env vars, dual-environment deploy (dev/production Studio + datasets), Vercel
+- [conventions-and-pitfalls.md](docs/conventions-and-pitfalls.md) — the three component categories, code conventions, i18n pitfalls, production cautions, starter-leftover checklist
+- [conventions.md](docs/conventions.md), [data-layer.md](docs/data-layer.md), [server-actions.md](docs/server-actions.md) — shared BARR conventions (naming, data layer, Server Actions)
 
-Setup/extension guides for humans live in `README.md` and `DEVELOPMENT.md`; this file + `.claude/docs/` are the operational truth for Claude.
+Setup/extension guides for humans live in `README.md` and `DEVELOPMENT.md`; this file + `docs/` are the operational truth for Claude.

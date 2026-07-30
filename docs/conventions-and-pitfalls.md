@@ -80,7 +80,7 @@ The `production` dataset is live for editors and the site; schema experiments be
 
 - [ ] **Root `package.json`**: `name`, `description`, `keywords`, `homepage`/`bugs` repo URLs → project values. Same for any starter name in `frontend/package.json` / `studio/package.json`.
 - [ ] **`sanity-template.json`** (starter-marketplace manifest): delete.
-- [ ] **README / CHANGELOG / DEVELOPMENT.md**: replace or delete the starter versions — a project's docs live in `CLAUDE.md` + `.claude/docs/`.
+- [ ] **README / CHANGELOG / DEVELOPMENT.md**: replace or delete the starter versions — a project's docs live in `CLAUDE.md` + `docs/`.
 - [ ] **Sanity project ID**: real project ID in `frontend/.env` and `studio/.env` (from `.env.example`) and any fallback in `studio/sanity.cli.ts` / `sanity.config.tsx` (`<your project ID>` placeholders).
 - [ ] **Locales**: `frontend/i18n/routing.ts` (`locales`, `defaultLocale`) and the Studio i18n plugin config match the project's languages.
 - [ ] **Global metadata**: default title/description/OG image in the locale `layout.tsx` and the `settings` singleton → project values, the project's site URL as canonical base.
