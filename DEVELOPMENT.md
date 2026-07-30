@@ -850,6 +850,26 @@ npx sanity dataset export production prod.tar.gz && npx sanity dataset import pr
 
 On Vercel, set `NEXT_PUBLIC_SANITY_DATASET=development` for the Preview environment and `production` for Production, so preview deploys of feature branches run end-to-end against the dev dataset and the new schema.
 
+### Schema Change Workflow
+
+There is only **one** schema, and it lives in the code (`studio/src/schema-types/`). The two environments are just two snapshots of it at different points in the git flow: the production Studio runs the schema as it is on `main`, the dev Studio runs it as it is on your feature branch. Datasets have no structure of their own — they are plain document stores. The structure travels via git merge + deploy, never between datasets.
+
+Lifecycle of a schema change:
+
+1. **Feature branch** — edit the schemas in `studio/src/schema-types/`.
+2. **Test locally** — `npm run dev`: the local Studio loads `.env.development` and points at the `development` dataset. Try the new structure, create test content, check the frontend queries.
+3. **Test online (optional)** — `npm run deploy:dev -w studio` updates the dev Studio so editors/clients can try the new structure. The Vercel preview deploy of the branch points at the same dataset, so the change is testable end-to-end.
+4. **Merge to `main`** — then `npm run deploy:prod -w studio`: the production Studio gets the new structure. Existing documents in the `production` dataset are untouched; editors see the new fields empty and fill them in.
+5. **Breaking changes only** (renamed field, changed type, restructured object) — existing production documents still have the old shape. Write a [content migration](https://www.sanity.io/docs/content-migration) (`npx sanity migration create`) and run it against `production` at release time, coordinated with the frontend deploy that reads the new shape.
+
+Rules of thumb:
+
+- `deploy:dev` runs from feature branches, `deploy:prod` only from `main`
+- Never change production directly: everything goes dev → merge → prod
+- Additive changes (new fields, new types) are painless; renames and type changes need a migration
+- The `development` dataset is disposable: when it accumulates stale test content, wipe it and re-clone it from production (`sanity dataset export` + `import`)
+- Frontend-only work doesn't touch this flow at all — no Studio deploy needed
+
 ---
 
 ## Best Practices & Coding Standards
