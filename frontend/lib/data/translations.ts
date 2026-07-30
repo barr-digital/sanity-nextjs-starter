@@ -51,9 +51,6 @@ export async function translateSlug(
     return { slug: '', found: true }
   }
 
-  // Split slug into parts for collection items
-  const slugParts = slugPath.split('/').filter((s) => s.trim() !== '')
-
   try {
     // Case 1: Try to find as a regular page or collection page (full slug match)
     // This uses the @sanity/document-internationalization plugin's translation.metadata

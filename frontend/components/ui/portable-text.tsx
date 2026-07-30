@@ -1,4 +1,8 @@
-import { PortableText as SanityPortableText, PortableTextComponents } from 'next-sanity'
+import {
+  PortableText as SanityPortableText,
+  PortableTextComponents,
+  type PortableTextBlock,
+} from 'next-sanity'
 import { Link } from './link'
 
 /**
@@ -40,7 +44,7 @@ const components: PortableTextComponents = {
 }
 
 interface PortableTextProps {
-  value: any
+  value: PortableTextBlock[] | null | undefined
   className?: string
 }
 

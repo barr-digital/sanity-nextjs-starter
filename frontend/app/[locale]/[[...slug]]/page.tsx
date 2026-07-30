@@ -6,7 +6,7 @@ import { PageBuilder } from '@/components/layout/page-builder'
 import { HomePage } from '@/app/_pages/home-page'
 import { resolveOpenGraphImage } from '@/sanity/lib/utils'
 import { getMetadataBase, buildCanonicalPath, buildAlternateLanguages } from '@/lib/data/metadata'
-import { generateStaticParamsForLocale } from '@/lib/helpers/sitemap'
+import { generateStaticParamsForLocale } from '@/lib/data/sitemap'
 import { routing } from '@/i18n/routing'
 import type { HomepageQueryResult } from '@/sanity.types'
 

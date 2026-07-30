@@ -41,7 +41,7 @@ const getBlocks = () => ({
 
 type BlocksMap = ReturnType<typeof getBlocks>
 
-export const BlockRenderer = ({ block, index, pageId, pageType }: BlockProps) => {
+export const BlockRenderer = ({ block, index }: BlockProps) => {
   const Blocks = getBlocks()
 
   // Check if a component exists for this block type

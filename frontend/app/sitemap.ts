@@ -3,7 +3,7 @@ import { sanityFetch } from '@/sanity/lib/live'
 import { sitemapDataQuery } from '@/sanity/lib/queries'
 import { routing } from '@/i18n/routing'
 import { getMetadataBase, buildCanonicalPath } from '@/lib/data/metadata'
-import { generateAllStaticParams } from '@/lib/helpers/sitemap'
+import { generateAllStaticParams } from '@/lib/data/sitemap'
 
 /**
  * This file creates a sitemap (sitemap.xml) for the application.
@@ -58,14 +58,15 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Determine priority and lastModified
     let priority = 0.8
-    let changeFrequency: 'monthly' | 'weekly' = 'monthly'
-    let lastModified = new Date()
+    const changeFrequency: 'monthly' | 'weekly' = 'monthly'
+    const lastModified = new Date()
 
     if (!slug || slug.length === 0) {
       // Homepage
       priority = 1
     }
     // TODO: Add more specific priority/changeFrequency logic when you add collection pages
+    // (turn changeFrequency/lastModified back into `let` when they get reassigned)
     // Example:
     // else if (slug.length === 2) {
     //   // Collection items (e.g., projects/project-name)

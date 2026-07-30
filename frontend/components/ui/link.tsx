@@ -1,8 +1,9 @@
 import { Link as I18nLink } from '@/i18n/routing'
 import { linkResolver } from '@/sanity/lib/utils'
+import { DereferencedLink } from '@/types/sanity'
 
 interface LinkProps {
-  link: any
+  link: DereferencedLink | null | undefined
   children: React.ReactNode
   className?: string
   onMouseEnter?: () => void
@@ -22,7 +23,7 @@ interface LinkProps {
  */
 export const Link = ({ link, children, className = '', onMouseEnter, onMouseLeave }: LinkProps) => {
   // Resolve the link URL
-  const resolvedLink = linkResolver(link)
+  const resolvedLink = linkResolver(link ?? undefined)
 
   if (!resolvedLink) {
     // No valid link, just render children

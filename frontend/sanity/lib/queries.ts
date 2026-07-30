@@ -14,7 +14,8 @@ const imageFragment = /* groq */ `{
 }`
 
 // Link fragment with dereferenced page slug
-const linkFragment = /* groq */ `{
+// Exported for reuse in project queries (unused until blocks with links are added)
+export const linkFragment = /* groq */ `{
   _type,
   label,
   linkType,
@@ -27,7 +28,8 @@ const linkFragment = /* groq */ `{
 }`
 
 // PortableText fragment with link annotations
-const portableTextFragment = /* groq */ `{
+// Exported for reuse in project queries (unused until rich-text blocks are added)
+export const portableTextFragment = /* groq */ `{
   ...,
   markDefs[]{
     ...,
