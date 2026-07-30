@@ -3,7 +3,11 @@ import type { PreviewProps } from 'sanity'
 import { useClient } from 'sanity'
 import imageUrlBuilder from '@sanity/image-url'
 import { Badge, Card, Stack, Text } from '@sanity/ui'
-import { SearchMock, CtaMock, ParagraphMock, VideoMock, CardGridMock } from './mocks'
+import { SearchMock } from './mocks/search-mock'
+import { CtaMock } from './mocks/cta-mock'
+import { ParagraphMock } from './mocks/paragraph-mock'
+import { VideoMock } from './mocks/video-mock'
+import { CardGridMock } from './mocks/card-grid-mock'
 
 /**
  * SmartBlockPreview

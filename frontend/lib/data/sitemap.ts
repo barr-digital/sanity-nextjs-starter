@@ -1,4 +1,5 @@
-import { client } from '@/sanity/lib/client'
+import 'server-only'
+
 import { routing } from '@/i18n/routing'
 
 export type StaticParam = {
@@ -19,6 +20,7 @@ export async function generateStaticParamsForLocale(locale: string): Promise<Sta
   result.push({ locale, slug: undefined })
 
   // TODO: Add regular pages when you create them
+  // (re-add `import { client } from '@/sanity/lib/client'` at the top)
   // Example for fetching pages with slugs:
   // const pages = await client.fetch(
   //   `*[_type in ["aboutPage", "contactPage"] && language == $lang]{ "slug": slug.current, _type }`,

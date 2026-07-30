@@ -1,6 +1,0 @@
-export { SearchMock } from './search-mock'
-export { CtaMock } from './cta-mock'
-export { FormMock } from './form-mock'
-export { CardGridMock } from './card-grid-mock'
-export { ParagraphMock } from './paragraph-mock'
-export { VideoMock } from './video-mock'

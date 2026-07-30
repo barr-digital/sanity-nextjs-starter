@@ -11,7 +11,7 @@ import { settingsQuery } from '@/sanity/lib/queries'
 import { resolveOpenGraphImage } from '@/sanity/lib/utils'
 import { routing } from '@/i18n/routing'
 import { handleError } from '@/sanity/lib/live-error'
-import { NextIntlClientProvider } from 'next-intl'
+import { hasLocale, NextIntlClientProvider } from 'next-intl'
 
 const inter = Inter({
   variable: '--font-inter',
@@ -68,7 +68,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   const { locale } = await params
 
   // Ensure that the incoming `locale` is valid
-  if (!routing.locales.includes(locale as any)) {
+  if (!hasLocale(routing.locales, locale)) {
     notFound()
   }
 
