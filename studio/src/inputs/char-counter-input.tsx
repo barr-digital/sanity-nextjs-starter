@@ -16,7 +16,7 @@ export function CharCounterInput(props: CharCounterInputProps) {
   const color = tone === 'ok' ? '#3fa94a' : tone === 'warning' ? '#e07b00' : undefined
 
   return (
-    <Stack space={2}>
+    <Stack gap={2}>
       <Box>{rest.renderDefault(rest)}</Box>
       <Flex justify="flex-end">
         <Text size={0} muted={tone === 'muted'} style={{ color }}>

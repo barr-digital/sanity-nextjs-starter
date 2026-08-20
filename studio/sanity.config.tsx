@@ -12,7 +12,6 @@ import { languageTemplates, resolveInitialValue } from './src/templates'
 import { documentInternationalization } from '@sanity/document-internationalization'
 import { languageFilter } from '@sanity/language-filter'
 import { media } from 'sanity-plugin-media'
-import { lucideIconPicker } from 'sanity-plugin-lucide-icon-picker'
 import { IconConfigProvider } from './src/icons'
 
 const StudioLayout = (props: LayoutProps) => (
@@ -63,8 +62,6 @@ export default defineConfig({
     }),
     // Media library plugin for better asset management
     media(),
-    // Lucide icon picker for editor-selectable icons in schemas (type: 'lucide-icon')
-    lucideIconPicker(),
     // Vision plugin for testing GROQ queries
     visionTool(),
   ],

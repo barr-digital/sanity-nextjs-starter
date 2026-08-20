@@ -39,7 +39,7 @@ export function SettingsInput(props: ObjectInputProps) {
   const description = value?.description || 'No site description provided.'
 
   return (
-    <Stack space={4}>
+    <Stack gap={4}>
       <SerpPreview
         title={title}
         description={description}

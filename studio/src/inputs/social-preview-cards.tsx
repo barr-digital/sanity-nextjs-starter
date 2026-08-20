@@ -51,7 +51,7 @@ export function SerpPreview({
 
   return (
     <Card padding={4} radius={2} shadow={1}>
-      <Stack space={3}>
+      <Stack gap={3}>
         <Flex align="center" justify="space-between" gap={3}>
           <Text size={0} muted weight="medium">
             {label}
@@ -62,7 +62,7 @@ export function SerpPreview({
             </Text>
           )}
         </Flex>
-        <Stack space={2}>
+        <Stack gap={2}>
           <Text size={0} style={{ color: '#202124' }}>
             {host}
           </Text>
@@ -100,7 +100,7 @@ export function OgPreview({
 
   return (
     <Card padding={4} radius={2} shadow={1}>
-      <Stack space={3}>
+      <Stack gap={3}>
         <Flex align="center" justify="space-between" gap={3}>
           <Text size={0} muted weight="medium">
             {label}
