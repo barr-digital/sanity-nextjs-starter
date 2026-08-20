@@ -21,6 +21,9 @@
     "studio",
     "frontend"
   ],
+  "overrides": {
+    "@sanity/client": "7.26.2"
+  },
   "scripts": {
     "dev": "npm-run-all --parallel --print-label dev:*",
     "dev:next": "npm run dev --workspace=frontend",
@@ -29,6 +32,9 @@
     "lint": "npm run lint --workspace=frontend",
     "type-check": "npm run type-check --workspaces",
     "prepare": "husky"
+  },
+  "dependencies": {
+    "@sanity/icons": "^5.2.1"
   },
   "devDependencies": {
     "husky": "^9.0.0",

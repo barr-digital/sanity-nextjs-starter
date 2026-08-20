@@ -175,7 +175,7 @@ export function SeoInput(props: ObjectInputProps) {
     titleActuallyFallback || descriptionActuallyFallback || imageActuallyFallback
 
   const renderForm = (renderDefault: () => ReactNode) => (
-    <Stack space={4}>
+    <Stack gap={4}>
       <SerpPreview
         title={resolvedTitle}
         description={resolvedDescription || 'No meta description provided.'}

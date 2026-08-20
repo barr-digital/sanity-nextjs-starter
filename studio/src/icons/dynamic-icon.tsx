@@ -6,14 +6,14 @@ import {
   Card,
   Flex,
   Grid,
-  Popover,
   Spinner,
   Stack,
   Text,
   TextInput,
   useClickOutsideEvent,
-  useToast,
 } from '@sanity/ui'
+import { Popover } from '@sanity/ui/popover'
+import { useToast } from '@sanity/ui/toast'
 import type { IconSlotName } from './slots'
 import { getSlotDefault } from './slots'
 import { resolveIcon } from './icon-resolver'
@@ -150,7 +150,7 @@ export function DynamicIcon({ slot, size = 16 }: DynamicIconProps) {
       onContextMenu={stop}
       style={{ width: 360, maxHeight: 480, overflow: 'hidden' }}
     >
-      <Stack space={3}>
+      <Stack gap={3}>
         <Flex align="center" justify="space-between">
           <Text size={1} weight="semibold">
             Change icon
@@ -172,7 +172,7 @@ export function DynamicIcon({ slot, size = 16 }: DynamicIconProps) {
           </Flex>
         ) : (
           <Box style={{ maxHeight: 340, overflowY: 'auto' }}>
-            <Grid columns={3} gap={1} style={{ gridAutoRows: 'auto' }}>
+            <Grid gap={1} style={{ gridTemplateColumns: 'repeat(3, 1fr)', gridAutoRows: 'auto' }}>
               {filteredIcons.map((name) => {
                 const Candidate = resolveIcon(name)
                 const isActive = name === selectedName

@@ -9,6 +9,7 @@ import { studioIcons } from './documents/singletons/studio-icons'
 import { link } from './objects/link'
 import { image } from './objects/image'
 import { seo } from './objects/seo'
+import { lucideIcon } from './objects/lucide-icon'
 
 // Base Documents
 import { basePage } from './documents/base-page'
@@ -37,6 +38,7 @@ export const schemaTypes = [
   link,
   image,
   seo,
+  lucideIcon,
 
   // Blocks (PageBuilder blocks)
   exampleBlock,

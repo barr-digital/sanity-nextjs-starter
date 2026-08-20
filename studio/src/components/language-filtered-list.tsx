@@ -1,7 +1,7 @@
 import React, { useState, useMemo } from 'react'
 import { useClient } from 'sanity'
 import { Stack, Card, Text, Select, Box, Flex, Button } from '@sanity/ui'
-import { EditIcon, AddIcon } from '@sanity/icons'
+import { Pencil as EditIcon, Plus as AddIcon } from 'lucide-react'
 import { useRouter } from 'sanity/router'
 import { useStructureContext } from '../contexts/structure-context'
 import { StructureWrapper } from './structure-wrapper'
@@ -165,7 +165,7 @@ export function LanguageFilteredList(props: { filter?: string }) {
     )
 
   return (
-    <Stack space={4} padding={4}>
+    <Stack gap={4} padding={4}>
       <Flex justify="space-between" align="center">
         <Text size={3} weight="semibold">
           {title}
@@ -195,7 +195,7 @@ export function LanguageFilteredList(props: { filter?: string }) {
         </Flex>
       </Flex>
 
-      <Stack space={2}>
+      <Stack gap={2}>
         {filteredDocuments.length === 0 ? (
           <Card padding={4} radius={2} shadow={1}>
             <Text align="center" muted>
@@ -214,7 +214,7 @@ export function LanguageFilteredList(props: { filter?: string }) {
             >
               <Flex align="center" gap={3}>
                 <Box flex={1}>
-                  <Stack space={4}>
+                  <Stack gap={4}>
                     <Text weight="semibold">
                       {getDocumentTitle(doc)} - {doc.language?.toUpperCase()}
                     </Text>

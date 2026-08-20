@@ -201,8 +201,7 @@ export function SmartBlockPreview(props: PreviewProps) {
   const urlFor = useMemo(() => imageUrlBuilder(client), [client])
 
   const schema = (props as any).schemaType as
-    | { title?: string; name?: string; fields?: SanityField[] }
-    | undefined
+    { title?: string; name?: string; fields?: SanityField[] } | undefined
   const fields = schema?.fields ?? []
   const blockLabel = schema?.title ?? schema?.name ?? 'Block'
 
@@ -342,9 +341,9 @@ export function SmartBlockPreview(props: PreviewProps) {
       )}
 
       <div style={{ position: 'relative', padding: 16 }}>
-        <Stack space={3}>
+        <Stack gap={3}>
           <div>
-            <Badge tone="primary" fontSize={0} mode="outline">
+            <Badge tone="primary" fontSize={0}>
               {blockLabel}
             </Badge>
           </div>
