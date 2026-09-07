@@ -60,7 +60,7 @@ npm run deploy:prod --workspace=studio   # production Studio → production data
 - Vercel is connected to the GitHub repo; framework preset: Next.js.
 - **Branch push → automatic preview deploy** (preview URL on the PR). Set `NEXT_PUBLIC_SANITY_DATASET=development` on the Preview environment so previews run against the dev dataset end-to-end.
 - **Production** updates when the Vercel-configured Production branch is merged (typically `main`), with `NEXT_PUBLIC_SANITY_DATASET=production`. Verify in the Vercel dashboard which branch is Production before assuming.
-- All `frontend/.env` variables must exist in the Vercel project settings (with `NEXT_PUBLIC_SITE_URL` set to the real domain in Production).
+- All `frontend/.env` variables must exist in the Vercel project settings (`NEXT_PUBLIC_SITE_URL` only if the project needs the canonical override — Production only).
 - `prebuild` runs `typegen`: the build fails if schema/queries and types are inconsistent — a safety net, not a substitute for local `type-check`.
 
 ## Git flow (operational)
