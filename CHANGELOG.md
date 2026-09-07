@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.1] - 2026-09-07
+
+### Fixed
+
+- **Per-environment Studio env files are NOT committable** — `studio/.env.example` and `deploy-and-env.md` claimed `.env.development`/`.env.production` "can be committed" (no secrets), but the BARR guard hook blocks staging any `.env*` file: two BARR standards in conflict, surfaced by the first project init (phygitalab). The hook wins — safer default (a token landing in those files would ship). Files stay gitignored (`.gitignore` now actually covers them: `.env.*` was not matched by `.env*.local`); values are documented in `studio/.env.example`.
+
 ## [1.0.0] - 2026-09-07
 
 Stabilization release, as planned in 0.6.0: lands after the second BARR project round-trip (barr-website-v3). Dual-environment deploy, Sanity v6, BARR governance layer, SEO hardening backported from the pilot.
@@ -201,7 +207,8 @@ Baseline release dello starter come fonte versionata. Niente nuove feature: setu
 
 - `sanity-image@^1.0.0` da `frontend/package.json` (legacy, nessun import nel codice).
 
-[Unreleased]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v1.0.1...HEAD
+[1.0.1]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v1.0.0...v1.0.1
 [1.0.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.6.0...v1.0.0
 [0.6.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.4.0...v0.5.0

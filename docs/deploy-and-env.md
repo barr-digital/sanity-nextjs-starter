@@ -27,7 +27,7 @@ The Studio uses mode-based env files (loaded by the Sanity CLI per command mode)
 .env.production     # SANITY_STUDIO_DATASET=production,  SANITY_STUDIO_STUDIO_HOST=<project>
 ```
 
-`sanity dev` and `npm run deploy:dev` load `.env.development`; `npm run deploy:prod` (production mode) loads `.env.production`. The per-mode files hold no secrets, so projects may commit them.
+`sanity dev` and `npm run deploy:dev` load `.env.development`; `npm run deploy:prod` (production mode) loads `.env.production`. The per-mode files hold no secrets, but they stay **gitignored** like every `.env*` (the BARR guard hook blocks staging them); the per-environment values are documented in `studio/.env.example`.
 
 > `SANITY_API_READ_TOKEN` is a secret: never print, commit, or paste it in chat. Same for any other token.
 

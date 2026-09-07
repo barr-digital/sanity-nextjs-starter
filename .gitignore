@@ -26,8 +26,9 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
-# local env files
+# local env files — every .env* stays out (BARR guard hook enforces this too)
 .env
+.env.*
 .env*.local
 !.env.example
 
