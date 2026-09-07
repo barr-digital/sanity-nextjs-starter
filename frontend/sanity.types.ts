@@ -21,12 +21,15 @@ export type ExampleBlock = {
   text?: string
 }
 
+export type LucideIcon = string
+
 export type Seo = {
   _type: 'seo'
   seoTitle?: string
   seoDescription?: string
   seoKeywords?: Array<string>
   seoImage?: Img
+  noIndex?: boolean
 }
 
 export type SanityImageAssetReference = {
@@ -90,8 +93,6 @@ export type StudioIcons = {
   link?: LucideIcon
   studioIcons?: LucideIcon
 }
-
-export type LucideIcon = string
 
 export type MediaFolderReference = {
   _ref: string
@@ -331,6 +332,7 @@ export type Geopoint = {
 
 export type AllSanitySchemaTypes =
   | ExampleBlock
+  | LucideIcon
   | Seo
   | SanityImageAssetReference
   | Img
@@ -338,7 +340,6 @@ export type AllSanitySchemaTypes =
   | SanityFileAssetReference
   | Link
   | StudioIcons
-  | LucideIcon
   | MediaFolderReference
   | MediaFolder
   | MediaTag
@@ -396,7 +397,7 @@ export type FooterQueryResult = {
 
 // Source: sanity/lib/queries.ts
 // Variable: homepageQuery
-// Query: *[_type == "homepage" && language == $lang][0]{    _id,    _type,    "title": coalesce(breadcrumbLabel, title),    seo{      seoTitle,      seoDescription,      seoImage{  asset,  hotspot,  crop,  alt},    },    "pageBuilder": pageBuilder[]{  ...,  _type == 'exampleBlock' => {    ...,    title,    text  }}  }
+// Query: *[_type == "homepage" && language == $lang][0]{    _id,    _type,    "title": coalesce(breadcrumbLabel, title),    seo{      seoTitle,      seoDescription,      seoImage{  asset,  hotspot,  crop,  alt},      noIndex,    },    "pageBuilder": pageBuilder[]{  ...,  _type == 'exampleBlock' => {    ...,    title,    text  }}  }
 export type HomepageQueryResult = {
   _id: string
   _type: 'homepage'
@@ -410,6 +411,7 @@ export type HomepageQueryResult = {
       crop: SanityImageCrop | null
       alt: string | null
     } | null
+    noIndex: boolean | null
   } | null
   pageBuilder: Array<{
     _key: string
@@ -421,11 +423,12 @@ export type HomepageQueryResult = {
 
 // Source: sanity/lib/queries.ts
 // Variable: sitemapDataQuery
-// Query: *[defined(slug.current) && language == $lang]{    "slug": slug.current,    _type,    _updatedAt  }
+// Query: *[defined(slug.current) && language == $lang]{    "slug": slug.current,    _type,    _updatedAt,    "noIndex": seo.noIndex == true  }
 export type SitemapDataQueryResult = Array<{
   slug: string
   _type: 'homepage'
   _updatedAt: string
+  noIndex: boolean | false
 }>
 
 // Query TypeMap
@@ -435,7 +438,7 @@ declare module '@sanity/client' {
     '\n  *[_type == "settings" && language == $lang][0]{\n    title,\n    description,\n    ogImage{\n  asset,\n  hotspot,\n  crop,\n  alt\n}\n  }\n': SettingsQueryResult
     '\n  *[_type == "header" && language == $lang][0]{\n    _id,\n    _type,\n  }\n': HeaderQueryResult
     '\n  *[_type == "footer" && language == $lang][0]{\n    _id,\n    _type,\n  }\n': FooterQueryResult
-    '\n  *[_type == "homepage" && language == $lang][0]{\n    _id,\n    _type,\n    "title": coalesce(breadcrumbLabel, title),\n    seo{\n      seoTitle,\n      seoDescription,\n      seoImage{\n  asset,\n  hotspot,\n  crop,\n  alt\n},\n    },\n    "pageBuilder": pageBuilder[]{\n  ...,\n  _type == \'exampleBlock\' => {\n    ...,\n    title,\n    text\n  }\n}\n  }\n': HomepageQueryResult
-    '\n  *[defined(slug.current) && language == $lang]{\n    "slug": slug.current,\n    _type,\n    _updatedAt\n  }\n': SitemapDataQueryResult
+    '\n  *[_type == "homepage" && language == $lang][0]{\n    _id,\n    _type,\n    "title": coalesce(breadcrumbLabel, title),\n    seo{\n      seoTitle,\n      seoDescription,\n      seoImage{\n  asset,\n  hotspot,\n  crop,\n  alt\n},\n      noIndex,\n    },\n    "pageBuilder": pageBuilder[]{\n  ...,\n  _type == \'exampleBlock\' => {\n    ...,\n    title,\n    text\n  }\n}\n  }\n': HomepageQueryResult
+    '\n  *[defined(slug.current) && language == $lang]{\n    "slug": slug.current,\n    _type,\n    _updatedAt,\n    "noIndex": seo.noIndex == true\n  }\n': SitemapDataQueryResult
   }
 }

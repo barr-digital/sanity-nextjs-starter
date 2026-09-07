@@ -125,9 +125,7 @@ export const myBlock = defineType({
   icon: makeBlockAddItemPreview('myBlock'),
   components: { preview: SmartBlockPreview },
   preview: autoSelect(['title', 'image', 'cta' /* ...all field names */]),
-  fields: [
-    /* ... */
-  ],
+  fields: [/* ... */],
 })
 ```
 
@@ -172,7 +170,7 @@ The form stack is wired up: `zod`, `react-hook-form`, `@hookform/resolvers`, `cl
 
 Production-grade SEO out of the box. Three pieces, all in `frontend/lib/data/`:
 
-- **`getMetadataBase()`** — Vercel-first resolution: `VERCEL_PROJECT_PRODUCTION_URL` → request `headers()` → `NEXT_PUBLIC_SITE_URL`. Preview deploys never leak into canonical / OG image URLs.
+- **`getMetadataBase()`** — override-first resolution: `NEXT_PUBLIC_SITE_URL` (optional, Production only — for canonicals Vercel can't auto-pick, e.g. www + apex redirect) → `VERCEL_PROJECT_PRODUCTION_URL` → request `headers()`. Preview deploys never leak into canonical / OG image URLs.
 - **`buildAlternateLanguages({ currentSlug, currentLocale })`** — resolves translated slugs via Sanity's `translation.metadata`, omits locales without a translation (Google prefers a missing hreflang over a wrong one), duplicates the default locale entry as `x-default`. Pass it directly to `alternates.languages` in `generateMetadata`.
 - **`buildOrganizationJsonLd(data, baseUrl)`** + **`buildBreadcrumbJsonLd(items, baseUrl)`** in `lib/data/json-ld.ts` — schema.org structured data helpers. Embed the returned object via `<script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />`. Helpers only — no UI component shipped (visual representation varies per design).
 
@@ -202,12 +200,12 @@ Six universal DOM/UI hooks live in `frontend/hooks/`, dependency-free:
 
 ### Frontend (`frontend/.env.local`)
 
-| Variable                        | Description                                   |
-| ------------------------------- | --------------------------------------------- |
-| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Sanity project ID                             |
-| `NEXT_PUBLIC_SANITY_DATASET`    | Dataset name (e.g., `production`)             |
-| `SANITY_API_READ_TOKEN`         | API token with read access (for live preview) |
-| `NEXT_PUBLIC_SITE_URL`          | Production URL (for SEO/sitemap)              |
+| Variable                        | Description                                    |
+| ------------------------------- | ---------------------------------------------- |
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Sanity project ID                              |
+| `NEXT_PUBLIC_SANITY_DATASET`    | Dataset name (e.g., `production`)              |
+| `SANITY_API_READ_TOKEN`         | API token with read access (for live preview)  |
+| `NEXT_PUBLIC_SITE_URL`          | Optional — canonical override, Production only |
 
 ### Studio (`studio/.env`)
 

@@ -26,8 +26,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Generate all static params (single source of truth)
   const allParams = await generateAllStaticParams()
 
-  // Get lastModified dates for documents with slugs
+  // Get lastModified dates for documents with slugs; noIndex documents are
+  // kept out of the sitemap entirely (their robots meta already opts out —
+  // listing them too would get flagged as inconsistent in Search Console)
   const lastModifiedMap = new Map<string, Date>()
+  const noIndexKeys = new Set<string>()
   for (const locale of routing.locales) {
     const { data } = await sanityFetch({
       query: sitemapDataQuery,
@@ -37,6 +40,9 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       for (const item of data) {
         const key = `${locale}:${item.slug}`
         lastModifiedMap.set(key, new Date(item._updatedAt))
+        if (item.noIndex) {
+          noIndexKeys.add(key)
+        }
       }
     }
   }
@@ -58,26 +64,33 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
     // Determine priority and lastModified
     let priority = 0.8
-    const changeFrequency: 'monthly' | 'weekly' = 'monthly'
-    const lastModified = new Date()
+    let changeFrequency: 'monthly' | 'weekly' = 'monthly'
+    let lastModified = new Date()
 
     if (!slug || slug.length === 0) {
       // Homepage
       priority = 1
+    } else if (slug.length === 2) {
+      // Collection items (e.g. project/post under their listing base path):
+      // lastModified keyed by the item's own slug
+      if (noIndexKeys.has(`${locale}:${slug[1]}`)) {
+        continue
+      }
+      priority = 0.6
+      changeFrequency = 'weekly'
+      const itemLastModified = lastModifiedMap.get(`${locale}:${slug[1]}`)
+      if (itemLastModified) {
+        lastModified = itemLastModified
+      }
+    } else {
+      if (noIndexKeys.has(`${locale}:${slug.join('/')}`)) {
+        continue
+      }
+      const pageLastModified = lastModifiedMap.get(`${locale}:${slug.join('/')}`)
+      if (pageLastModified) {
+        lastModified = pageLastModified
+      }
     }
-    // TODO: Add more specific priority/changeFrequency logic when you add collection pages
-    // (turn changeFrequency/lastModified back into `let` when they get reassigned)
-    // Example:
-    // else if (slug.length === 2) {
-    //   // Collection items (e.g., projects/project-name)
-    //   priority = 0.6;
-    //   changeFrequency = "weekly";
-    //   const key = `${locale}:${slug[1]}`;
-    //   const itemLastModified = lastModifiedMap.get(key);
-    //   if (itemLastModified) {
-    //     lastModified = itemLastModified;
-    //   }
-    // }
 
     sitemapEntries.push({
       url,

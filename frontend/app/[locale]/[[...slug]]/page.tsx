@@ -70,6 +70,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
           images: [ogImage],
         },
       }),
+      // Editor opt-out from the SEO tab: noindex but keep following links.
+      // The page is also dropped from the sitemap (app/sitemap.ts).
+      ...(homepage?.seo?.noIndex && { robots: { index: false } }),
       alternates: {
         canonical: canonicalPath,
         languages,
@@ -77,7 +80,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
   }
 
-  // TODO: Add metadata for other page types (fetch by slug, extract seo fields)
+  // TODO: Add metadata for other page types (fetch by slug, extract seo fields
+  // — including the `robots` noindex opt-out above)
   return {
     metadataBase,
     alternates: {

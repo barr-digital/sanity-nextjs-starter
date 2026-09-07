@@ -9,18 +9,22 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [1.0.0] - 2026-09-07
 
-Stabilization release, as planned in 0.6.0: lands after the second BARR project round-trip (barr-website-v3). Dual-environment deploy, Sanity v6, BARR governance layer.
+Stabilization release, as planned in 0.6.0: lands after the second BARR project round-trip (barr-website-v3). Dual-environment deploy, Sanity v6, BARR governance layer, SEO hardening backported from the pilot.
 
 ### Added
 
 - **Dual-environment Studio deploy** — `deploy:dev` / `deploy:prod` scripts replace the single `deploy`. `deploy:dev` runs with `SANITY_ACTIVE_ENV=development` and loads `studio/.env.development` (dataset `development`, `<project>-dev` host); `deploy:prod` loads `studio/.env.production`. Per-mode env files hold no secrets (dataset + hostname), so projects may commit them. One-time per project: `npx sanity dataset create development`. Deployment sections in README and DEVELOPMENT.md updated, including the Vercel note for per-environment `NEXT_PUBLIC_SANITY_DATASET`.
+- **`noIndex` boolean in the `seo` object** — editor opt-out per page, wired end-to-end: `robots: { index: false }` in `generateMetadata` (links still followed), exclusion from the sitemap (a noIndex page listed in the sitemap gets flagged as inconsistent in Search Console), projected in the seo fragment and in `sitemapDataQuery`. Inherited by every page type via the base page schema.
 - **BARR governance layer** (barr-init retrofit) — `CLAUDE.md`, `docs/` (starter docs plus shared BARR conventions: `conventions.md`, `data-layer.md`, `server-actions.md`), `.claude/settings.json`.
 - **"Schema Change Workflow" section in DEVELOPMENT.md** — full lifecycle of a schema change across the two datasets.
 - **Custom `lucide-icon` Studio input** — replaces the unmaintained `sanity-plugin-lucide-icon-picker` (Sanity v3 only, incompatible with @sanity/ui v4). Same type name and kebab-case value format, so existing `studioIcons` data is unchanged.
+- **`NEXT_PUBLIC_SITE_URL` documented in `frontend/.env.example`** (optional override, previously documented but missing from the example file).
 
 ### Changed
 
 - **Sanity ecosystem upgraded to v6** — `sanity` 5→6, `@sanity/vision` 5→6, `@sanity/icons` 3→5 (declared as root dependency to hoist over sanity's internal ui5 alpha), `@sanity/ui` 3→4 (space→gap, Grid `columns`→`style`, Popover/useToast subpath imports), `next-sanity` 12→13; `@sanity/client` pinned to `^7.26.2` via root override.
+- **`app/sitemap.ts` completed** — the TODO placeholder for collection items is now real code (ported from barr-website-v3): collection items (`slug.length === 2`) get `priority 0.6`, `changeFrequency weekly` and their own `lastModified`; regular pages get their document `lastModified`; noIndex documents are skipped. Generic — activates as soon as a project adds routed collections.
+- **`getMetadataBase()` resolution order** — `NEXT_PUBLIC_SITE_URL` moved from last-resort fallback to explicit override (first), then `VERCEL_PROJECT_PRODUCTION_URL`, then request headers. Reverses the 0.5.0 Vercel-first order: inert for standard projects (the variable stays unset and Vercel auto-resolution applies), but gives www-canonical projects an escape hatch — Vercel exposes the _shortest_ custom domain, so a `www` canonical with the apex on the same project would emit 307-ing canonical/OG/sitemap URLs (hit on barr-website-v3 at cutover).
 - `extract-types` now passes `--force` (Sanity v6 no longer overwrites `schema.json` by default).
 - **DEVELOPMENT.md rewritten** aligned with the real codebase.
 - Governance docs moved to `docs/` (BARR standard location).

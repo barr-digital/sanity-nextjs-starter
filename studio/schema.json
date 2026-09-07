@@ -30,6 +30,13 @@
     }
   },
   {
+    "name": "lucide-icon",
+    "type": "type",
+    "value": {
+      "type": "string"
+    }
+  },
+  {
     "name": "seo",
     "type": "type",
     "value": {
@@ -71,6 +78,13 @@
           "value": {
             "type": "inline",
             "name": "img"
+          },
+          "optional": true
+        },
+        "noIndex": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "boolean"
           },
           "optional": true
         }
@@ -439,13 +453,6 @@
         },
         "optional": true
       }
-    }
-  },
-  {
-    "name": "lucide-icon",
-    "type": "type",
-    "value": {
-      "type": "string"
     }
   },
   {
