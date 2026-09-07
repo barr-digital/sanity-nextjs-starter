@@ -17,17 +17,15 @@ NEXT_PUBLIC_SITE_URL            # canonical site URL — optional override (Prod
 SANITY_API_READ_TOKEN           # read token for draft/preview (Required) — SECRET
 ```
 
-### `studio/.env*` — split per environment
+### Studio environments — the map lives in committed code
 
-The Studio uses mode-based env files (loaded by the Sanity CLI per command mode):
+The environment → dataset/host map does NOT live in env files: it is committed, because `.env*` files are gitignored (BARR guard hook) and a fresh clone must still resolve the right Studio. Three pieces:
 
-```
-.env                # shared: SANITY_STUDIO_PROJECT_ID, SANITY_STUDIO_PREVIEW_URL
-.env.development    # SANITY_STUDIO_DATASET=development, SANITY_STUDIO_STUDIO_HOST=<project>-dev
-.env.production     # SANITY_STUDIO_DATASET=production,  SANITY_STUDIO_STUDIO_HOST=<project>
-```
+- **`studio/package.json` scripts** set `SANITY_ACTIVE_ENV` and `SANITY_STUDIO_DATASET` explicitly per command (`dev` and `deploy:dev` → development, `deploy:prod` → production).
+- **`studio/sanity.cli.ts`** hardcodes the per-environment fallbacks (projectId, studioHost, appId — public identifiers, not secrets; filled by /barr-init). **Every default is development**: production must be asked for by name. Without the appId fallbacks, a clone without env files would create a _third_ Sanity application on deploy instead of updating one of ours.
+- **`studio/sanity.config.tsx`** defaults the dataset to `development` for the same reason.
 
-`sanity dev` and `npm run deploy:dev` load `.env.development`; `npm run deploy:prod` (production mode) loads `.env.production`. The per-mode files hold no secrets, but they stay **gitignored** like every `.env*` (the BARR guard hook blocks staging them); the per-environment values are documented in `studio/.env.example`.
+Env vars still win everywhere: `.env` holds the shared values (see `studio/.env.example`), and optional gitignored `.env.development`/`.env.production` files can override per mode (`sanity dev`/`deploy:dev` load `.env.development`; `deploy:prod` loads `.env.production`).
 
 > `SANITY_API_READ_TOKEN` is a secret: never print, commit, or paste it in chat. Same for any other token.
 
