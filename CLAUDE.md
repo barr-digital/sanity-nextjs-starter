@@ -53,7 +53,7 @@ frontend/
 
 - **Next.js 16** App Router, **React 19**, **TypeScript**
 - **Tailwind CSS v4**, CSS-first config (`@theme` in CSS files, no `tailwind.config`)
-- **Sanity 5** + **next-sanity** (typed queries, live content)
+- **Sanity 6** + **next-sanity** (typed queries, live content)
 - **next-intl** for i18n — locale(s): `it` (default: `it`); routed via `app/[locale]/`
 - Icons via `lucide-react`; images via `@sanity/image-url` (Sanity CDN)
 - Forms: **react-hook-form + zod**; also available: `sonner` (toasts), `clsx` + `tailwind-merge` via `cn()`, `date-fns`

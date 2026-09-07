@@ -7,6 +7,32 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.0.0] - 2026-09-07
+
+Stabilization release, as planned in 0.6.0: lands after the second BARR project round-trip (barr-website-v3). Dual-environment deploy, Sanity v6, BARR governance layer.
+
+### Added
+
+- **Dual-environment Studio deploy** — `deploy:dev` / `deploy:prod` scripts replace the single `deploy`. `deploy:dev` runs with `SANITY_ACTIVE_ENV=development` and loads `studio/.env.development` (dataset `development`, `<project>-dev` host); `deploy:prod` loads `studio/.env.production`. Per-mode env files hold no secrets (dataset + hostname), so projects may commit them. One-time per project: `npx sanity dataset create development`. Deployment sections in README and DEVELOPMENT.md updated, including the Vercel note for per-environment `NEXT_PUBLIC_SANITY_DATASET`.
+- **BARR governance layer** (barr-init retrofit) — `CLAUDE.md`, `docs/` (starter docs plus shared BARR conventions: `conventions.md`, `data-layer.md`, `server-actions.md`), `.claude/settings.json`.
+- **"Schema Change Workflow" section in DEVELOPMENT.md** — full lifecycle of a schema change across the two datasets.
+- **Custom `lucide-icon` Studio input** — replaces the unmaintained `sanity-plugin-lucide-icon-picker` (Sanity v3 only, incompatible with @sanity/ui v4). Same type name and kebab-case value format, so existing `studioIcons` data is unchanged.
+
+### Changed
+
+- **Sanity ecosystem upgraded to v6** — `sanity` 5→6, `@sanity/vision` 5→6, `@sanity/icons` 3→5 (declared as root dependency to hoist over sanity's internal ui5 alpha), `@sanity/ui` 3→4 (space→gap, Grid `columns`→`style`, Popover/useToast subpath imports), `next-sanity` 12→13; `@sanity/client` pinned to `^7.26.2` via root override.
+- `extract-types` now passes `--force` (Sanity v6 no longer overwrites `schema.json` by default).
+- **DEVELOPMENT.md rewritten** aligned with the real codebase.
+- Governance docs moved to `docs/` (BARR standard location).
+
+### Fixed
+
+- barr-init audit follow-ups: lint clean, sitemap data moved to `lib/data`, previews mocks barrel removed.
+
+### Security
+
+- npm audit fixes: **38 → 8 advisories** (2 critical and 19 high resolved). Served runtime now `next ^16.3.1`, `next-intl ^4.13.7`; the 8 remaining advisories are dev-toolchain only, accepted.
+
 ## [0.6.0] - 2026-05-07
 
 Boundaries, skeleton primitive, six universal DOM/UI hooks. Last release before the `v1.0.0` stabilization tag (which lands after a second BARR project round-trip).
@@ -171,7 +197,8 @@ Baseline release dello starter come fonte versionata. Niente nuove feature: setu
 
 - `sanity-image@^1.0.0` da `frontend/package.json` (legacy, nessun import nel codice).
 
-[Unreleased]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.6.0...HEAD
+[Unreleased]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v1.0.0...HEAD
+[1.0.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.6.0...v1.0.0
 [0.6.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.4.0...v0.5.0
 [0.4.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.3.0...v0.4.0
