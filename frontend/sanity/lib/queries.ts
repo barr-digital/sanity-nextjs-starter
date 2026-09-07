@@ -107,6 +107,7 @@ export const homepageQuery = defineQuery(`
       seoTitle,
       seoDescription,
       seoImage${imageFragment},
+      noIndex,
     },
     "pageBuilder": pageBuilder[]${pageBuilderFragment}
   }
@@ -121,6 +122,7 @@ export const sitemapDataQuery = defineQuery(`
   *[defined(slug.current) && language == $lang]{
     "slug": slug.current,
     _type,
-    _updatedAt
+    _updatedAt,
+    "noIndex": seo.noIndex == true
   }
 `)

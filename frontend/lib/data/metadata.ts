@@ -8,17 +8,28 @@ import { translateSlug } from '@/lib/data/translations'
  * everywhere instead of reading any env variable or `headers()` directly.
  *
  * Resolution order:
- * 1. `VERCEL_PROJECT_PRODUCTION_URL` — auto-injected by Vercel at both build
- *    and runtime; always points to the production domain (custom domain or
- *    `*.vercel.app`) even on preview deploys, exactly as Vercel recommends
- *    for OG/canonical/sitemap URLs.
- * 2. Request headers (`host` + `x-forwarded-proto`) — fallback for local
+ * 1. `NEXT_PUBLIC_SITE_URL` — explicit override, full URL. Most projects
+ *    leave it unset everywhere and rely on (2). Set it — Production only —
+ *    when the canonical domain differs from the one Vercel would pick: with
+ *    a `www` canonical and the apex assigned to the same project as a
+ *    redirect, `VERCEL_PROJECT_PRODUCTION_URL` holds the *shortest* custom
+ *    domain — the apex — so every canonical/OG/sitemap URL would 307.
+ * 2. `VERCEL_PROJECT_PRODUCTION_URL` — auto-injected by Vercel at both build
+ *    and runtime; points to the production domain (custom domain or
+ *    `*.vercel.app`) even on preview deploys.
+ * 3. Request headers (`host` + `x-forwarded-proto`) — fallback for local
  *    dev or non-Vercel hosts. Note: calling `headers()` opts the calling
  *    Server Component / Route Handler into dynamic rendering.
- * 3. `NEXT_PUBLIC_SITE_URL` — last-resort static fallback (e.g. for build
- *    contexts outside a request, like `app/sitemap.ts` running at build).
  */
 export async function getMetadataBase(): Promise<URL | undefined> {
+  if (process.env.NEXT_PUBLIC_SITE_URL) {
+    try {
+      return new URL(process.env.NEXT_PUBLIC_SITE_URL)
+    } catch {
+      // ignore invalid URL
+    }
+  }
+
   if (process.env.VERCEL_PROJECT_PRODUCTION_URL) {
     try {
       return new URL(`https://${process.env.VERCEL_PROJECT_PRODUCTION_URL}`)
@@ -38,14 +49,6 @@ export async function getMetadataBase(): Promise<URL | undefined> {
     }
   } catch {
     // Headers not available (e.g., during static generation outside a request context)
-  }
-
-  if (process.env.NEXT_PUBLIC_SITE_URL) {
-    try {
-      return new URL(process.env.NEXT_PUBLIC_SITE_URL)
-    } catch {
-      // ignore invalid URL
-    }
   }
 
   return undefined

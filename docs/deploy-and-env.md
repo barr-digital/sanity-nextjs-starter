@@ -13,7 +13,7 @@ NEXT_PUBLIC_SANITY_PROJECT_ID   # project ID (Required)
 NEXT_PUBLIC_SANITY_DATASET      # "production" | "development" — per environment (Required)
 NEXT_PUBLIC_SANITY_API_VERSION  # e.g. 2025-09-25 (Optional)
 NEXT_PUBLIC_SANITY_STUDIO_URL   # Studio URL, default http://localhost:3333
-NEXT_PUBLIC_SITE_URL            # canonical site URL — fallback only: on Vercel, getMetadataBase() auto-resolves the production URL
+NEXT_PUBLIC_SITE_URL            # canonical site URL — optional override (Production only) when the canonical differs from Vercel's auto-pick (e.g. www canonical + apex redirect); otherwise leave unset, getMetadataBase() auto-resolves
 SANITY_API_READ_TOKEN           # read token for draft/preview (Required) — SECRET
 ```
 

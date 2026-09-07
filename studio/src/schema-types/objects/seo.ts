@@ -44,5 +44,13 @@ export const seo = defineType({
       description:
         'Shown when the page is shared on social media. If empty, the default social image from Settings is used. Recommended 1200×630px.',
     },
+    {
+      name: 'noIndex',
+      title: 'Hide from search engines (noindex)',
+      type: 'boolean',
+      initialValue: false,
+      description:
+        'When on, search engines are asked not to index this page and it is left out of the sitemap. Links on the page are still followed.',
+    },
   ],
 })

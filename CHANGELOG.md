@@ -7,6 +7,18 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+SEO hardening backported from barr-website-v3 (second pilot round-trip).
+
+### Added
+
+- **`noIndex` boolean in the `seo` object** — editor opt-out per page, wired end-to-end: `robots: { index: false }` in `generateMetadata` (links still followed), exclusion from the sitemap (a noIndex page listed in the sitemap gets flagged as inconsistent in Search Console), projected in the seo fragment and in `sitemapDataQuery`. Inherited by every page type via the base page schema.
+- **`NEXT_PUBLIC_SITE_URL` documented in `frontend/.env.example`** (optional override, previously documented but missing from the example file).
+
+### Changed
+
+- **`app/sitemap.ts` completed** — the TODO placeholder for collection items is now real code (ported from barr-website-v3): collection items (`slug.length === 2`) get `priority 0.6`, `changeFrequency weekly` and their own `lastModified`; regular pages get their document `lastModified`; noIndex documents are skipped. Generic — activates as soon as a project adds routed collections.
+- **`getMetadataBase()` resolution order** — `NEXT_PUBLIC_SITE_URL` moved from last-resort fallback to explicit override (first), then `VERCEL_PROJECT_PRODUCTION_URL`, then request headers. Reverses the 0.5.0 Vercel-first order: inert for standard projects (the variable stays unset and Vercel auto-resolution applies), but gives www-canonical projects an escape hatch — Vercel exposes the _shortest_ custom domain, so a `www` canonical with the apex on the same project would emit 307-ing canonical/OG/sitemap URLs (hit on barr-website-v3 at cutover).
+
 ## [0.6.0] - 2026-05-07
 
 Boundaries, skeleton primitive, six universal DOM/UI hooks. Last release before the `v1.0.0` stabilization tag (which lands after a second BARR project round-trip).
