@@ -20,7 +20,9 @@ const StudioLayout = (props: LayoutProps) => (
 
 // Environment variables for project configuration
 const projectId = process.env.SANITY_STUDIO_PROJECT_ID || 'your-projectID'
-const dataset = process.env.SANITY_STUDIO_DATASET || 'production'
+// Set explicitly by every npm script (studio/package.json). Defaults to
+// `development`: never fall back to the live dataset by accident.
+const dataset = process.env.SANITY_STUDIO_DATASET || 'development'
 
 // Main Sanity configuration
 export default defineConfig({

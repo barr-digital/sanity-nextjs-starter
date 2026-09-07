@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.1.0] - 2026-09-07
+
+Environment-handling hardening from the first project init (phygitalab-website): the env → dataset map moves into committed code, and every default points at development.
+
+### Changed
+
+- **The environment map lives in committed code** (ported from phygitalab PR #1) — `.env*` files are gitignored, so a fresh clone used to resolve NO map: `npm run dev:studio` silently connected the local Studio to the `production` dataset, and a deploy without env files would create a _third_ Sanity application (empty studioHost). Now: npm scripts set `SANITY_ACTIVE_ENV` + `SANITY_STUDIO_DATASET` explicitly per command; `sanity.cli.ts` hardcodes per-environment fallbacks (projectId, studioHost, appId — public identifiers, filled by /barr-init); `sanity.config.tsx` defaults the dataset to `development`. **Production must be asked for by name.** Env vars still override everything.
+- `studio/.env.example` reframed: per-mode files are optional local overrides, not the source of the map.
+
+### Fixed
+
+- **Per-environment Studio env files are NOT committable** — `studio/.env.example` and `deploy-and-env.md` claimed `.env.development`/`.env.production` "can be committed" (no secrets), but the BARR guard hook blocks staging any `.env*` file: two BARR standards in conflict, surfaced by the first project init (phygitalab). The hook wins — safer default (a token landing in those files would ship). Files stay gitignored (`.gitignore` now actually covers them: `.env.*` was not matched by `.env*.local`); values are documented in `studio/.env.example`.
+
 ## [1.0.0] - 2026-09-07
 
 Stabilization release, as planned in 0.6.0: lands after the second BARR project round-trip (barr-website-v3). Dual-environment deploy, Sanity v6, BARR governance layer, SEO hardening backported from the pilot.
@@ -201,7 +214,8 @@ Baseline release dello starter come fonte versionata. Niente nuove feature: setu
 
 - `sanity-image@^1.0.0` da `frontend/package.json` (legacy, nessun import nel codice).
 
-[Unreleased]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v1.0.0...HEAD
+[Unreleased]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v1.1.0...HEAD
+[1.1.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v1.0.0...v1.1.0
 [1.0.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.6.0...v1.0.0
 [0.6.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.5.0...v0.6.0
 [0.5.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.4.0...v0.5.0
