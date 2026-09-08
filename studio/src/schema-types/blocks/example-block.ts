@@ -1,27 +1,36 @@
 import { defineType } from 'sanity'
-import { SmartBlockPreview, autoSelect } from '../../previews/smart-block-preview'
+import { autoSelect } from '../../previews/smart-block-preview'
 import { makeBlockAddItemPreview } from '../../previews/block-add-item-preview'
+import { ExampleBlockPreview } from '../../previews/blocks/example-block-preview'
 
 /**
  * Example Block
  *
- * Reference block schema demonstrating the BARR PageBuilder block convention:
+ * Reference block schema demonstrating the BARR PageBuilder block convention
+ * (the barr-website-v3 pattern):
  *
  *   icon:       makeBlockAddItemPreview('<blockName>')   // rich preview in the "Add item" menu
- *   components: { preview: SmartBlockPreview }           // rich preview in the PageBuilder list
- *   preview:    autoSelect([...field names])             // auto-build preview.select
+ *   components: { preview: <Block>Preview }              // per-block MOCKUP preview in the PageBuilder list
+ *                                                        // (previews/blocks/<block-name>-preview.tsx, built on ./mockup.tsx)
+ *   preview:    autoSelect([...field names])             // auto-build preview.select — feeds the mockup's props
+ *
+ * While a block's mockup preview is not built yet, `SmartBlockPreview`
+ * (from previews/smart-block-preview) is the acceptable bootstrap fallback —
+ * replace it before the block ships.
  *
  * Do NOT define `preview.prepare()` on a block — it conflicts with
- * `components.preview` and overrides the SmartBlockPreview rendering.
+ * `components.preview` and overrides the custom rendering.
  *
  * To create a new block:
  * 1. Copy this file and rename it (e.g., textBlock.ts)
  * 2. Update the name, title, fields — keep the three preview hooks above
- * 3. Add the block name to `studio/src/icons/slots.ts` so editors can pick its icon
- * 4. Export it in schemaTypes/index.ts
- * 5. Add the block type to pageBuilderBlocks in blocks/config.ts
- * 6. Create the corresponding React component in frontend/components/blocks/
- * 7. Register it in frontend/components/layout/block-renderer.tsx
+ * 3. Create the mockup preview in `previews/blocks/<block-name>-preview.tsx`
+ *    (miniature of the real section layout — see example-block-preview.tsx)
+ * 4. Add the block name to `studio/src/icons/slots.ts` so editors can pick its icon
+ * 5. Export it in schemaTypes/index.ts
+ * 6. Add the block type to pageBuilderBlocks in blocks/config.ts
+ * 7. Create the corresponding React component in frontend/components/blocks/
+ * 8. Register it in frontend/components/layout/block-renderer.tsx
  */
 
 export const exampleBlock = defineType({
@@ -29,7 +38,7 @@ export const exampleBlock = defineType({
   title: 'Example Block',
   type: 'object',
   icon: makeBlockAddItemPreview('exampleBlock'),
-  components: { preview: SmartBlockPreview },
+  components: { preview: ExampleBlockPreview },
   fields: [
     {
       name: 'title',
