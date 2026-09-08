@@ -15,6 +15,7 @@ Environment-handling hardening from the first project init (phygitalab-website):
 
 - **The environment map lives in committed code** (ported from phygitalab PR #1) — `.env*` files are gitignored, so a fresh clone used to resolve NO map: `npm run dev:studio` silently connected the local Studio to the `production` dataset, and a deploy without env files would create a _third_ Sanity application (empty studioHost). Now: npm scripts set `SANITY_ACTIVE_ENV` + `SANITY_STUDIO_DATASET` explicitly per command; `sanity.cli.ts` hardcodes per-environment fallbacks (projectId, studioHost, appId — public identifiers, filled by /barr-init); `sanity.config.tsx` defaults the dataset to `development`. **Production must be asked for by name.** Env vars still override everything.
 - `studio/.env.example` reframed: per-mode files are optional local overrides, not the source of the map.
+- `page-builder-blocks.md`, "Modifying an existing block": added the **realign the Studio preview** step — field changes must be reflected in `autoSelect([...])` (and in the block's custom preview component when present), or the editor card silently shows stale fields.
 
 ### Fixed
 

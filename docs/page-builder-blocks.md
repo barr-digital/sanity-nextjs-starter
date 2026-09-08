@@ -118,4 +118,5 @@ Ask the user to run `npm run dev` and add the block in the Studio: it must rende
 
 - **Adding a field**: schema (1) → extract (3) → projection if reference/derived (4) → typegen (5) → use in component (6). Additive = safe in production.
 - **Renaming/removing a field**: existing data stays in the dataset but is no longer read — mind production. See [conventions-and-pitfalls.md](conventions-and-pitfalls.md).
+- **Realign the Studio preview**: any field change must be reflected in the block's preview — update the `preview: autoSelect([...])` list (new field in, renamed updated, removed out) and, if the block has a custom preview component (`components: { preview: <Block>Preview }`), update that component too. Otherwise the editor card silently keeps showing stale fields.
 - After any change: grep the field/block `name` across the repo for leftover usages.
