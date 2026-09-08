@@ -8,30 +8,33 @@ Step-by-step for adding or changing a page-builder block. Read this before any b
 
 ### 1. Block schema — `studio/src/schema-types/blocks/<block-name>.ts`
 
-One file per block, kebab-case filename, **camelCase `name`** — the key linking schema ↔ query ↔ renderer. Use `defineType`/`defineField` and the SmartBlockPreview convention (see the example block in the repo):
+One file per block, kebab-case filename, **camelCase `name`** — the key linking schema ↔ query ↔ renderer. Use `defineType`/`defineField` and the per-block mockup preview convention (the barr-website-v3 pattern — see the example block in the repo):
 
 ```ts
 import { defineType, defineField } from 'sanity'
-import { SmartBlockPreview, autoSelect } from '../../previews/smart-block-preview'
+import { autoSelect } from '../../previews/smart-block-preview'
 import { makeBlockAddItemPreview } from '../../previews/block-add-item-preview'
+import { TextBlockPreview } from '../../previews/blocks/text-block-preview'
 
 export const textBlock = defineType({
   name: 'textBlock', // ← unique block key, camelCase
   title: 'Text Block',
   type: 'object',
   icon: makeBlockAddItemPreview('textBlock'), // rich preview in the "Add item" menu
-  components: { preview: SmartBlockPreview }, // rich preview in the pageBuilder list
+  components: { preview: TextBlockPreview }, // per-block MOCKUP preview in the pageBuilder list
   fields: [
     defineField({ name: 'title', title: 'Title', type: 'string' }),
     defineField({ name: 'text', title: 'Text', type: 'text', rows: 3 }),
     defineField({ name: 'image', title: 'Image', type: 'img' }), // 'img', not 'image'
     defineField({ name: 'cta', title: 'CTA', type: 'link' }),
   ],
-  preview: autoSelect(['title', 'text', 'image', 'cta']), // generates preview.select
+  preview: autoSelect(['title', 'text', 'image', 'cta']), // generates preview.select — feeds the mockup's props
 })
 ```
 
-**No `preview.prepare()` on blocks** — it conflicts with `SmartBlockPreview`. Preview roles are inferred from field types; force one with `options: { previewRole: '…' }`. Also add the block's icon slot in `studio/src/icons/slots.ts`.
+**Every block gets its own mockup preview** in `studio/src/previews/blocks/<block-name>-preview.tsx`: a miniature of the block's real section layout, built from the primitives in `previews/blocks/mockup.tsx` (`MockupCanvas`, `MockText`, `MockThumb`, `MockEyebrow`, `MockTag`, `useImg`, `useRefDocs` for reference fields) — editors recognize blocks by shape, not by name. Only the fields listed in `autoSelect([...])` reach the preview component as props: keep the two in sync. See `example-block-preview.tsx` for the pattern. While the mockup is not built yet, `SmartBlockPreview` (generic card) is the acceptable bootstrap fallback — replace it before the block ships.
+
+**No `preview.prepare()` on blocks** — it conflicts with `components.preview`. Also add the block's icon slot in `studio/src/icons/slots.ts`.
 
 ### 2. Register + allow in the page builder
 
@@ -105,7 +108,7 @@ Ask the user to run `npm run dev` and add the block in the Studio: it must rende
 
 ## Quick checklist
 
-- [ ] 1. Schema in `blocks/<block-name>.ts` (camelCase `name`, SmartBlockPreview convention, icon slot in `icons/slots.ts`)
+- [ ] 1. Schema in `blocks/<block-name>.ts` (camelCase `name`, mockup preview in `previews/blocks/<block-name>-preview.tsx`, icon slot in `icons/slots.ts`)
 - [ ] 2. Registered in `schema-types/index.ts` + `pageBuilderBlocks` in `blocks/config.ts`
 - [ ] 3. `extract-types` run (studio)
 - [ ] 4. GROQ branch in the page-builder fragment (only if references/derived)
@@ -118,4 +121,5 @@ Ask the user to run `npm run dev` and add the block in the Studio: it must rende
 
 - **Adding a field**: schema (1) → extract (3) → projection if reference/derived (4) → typegen (5) → use in component (6). Additive = safe in production.
 - **Renaming/removing a field**: existing data stays in the dataset but is no longer read — mind production. See [conventions-and-pitfalls.md](conventions-and-pitfalls.md).
+- **Realign the Studio preview**: any field change must be reflected in the block's preview — update the `preview: autoSelect([...])` list (new field in, renamed updated, removed out) and, if the block has a custom preview component (`components: { preview: <Block>Preview }`), update that component too. Otherwise the editor card silently keeps showing stale fields.
 - After any change: grep the field/block `name` across the repo for leftover usages.
