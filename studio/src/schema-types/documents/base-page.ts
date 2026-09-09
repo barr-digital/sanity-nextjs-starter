@@ -4,17 +4,11 @@ import { validateUniqueLanguage } from '../validation/unique-language'
 /**
  * Base page schema with common fields that can be extended by other document types.
  *
- * Provides both `title` (page title / H1) and `breadcrumbLabel` (short label for
- * breadcrumbs) so projects can use whichever semantics fit: pages with a real
- * title reuse `title`, singletons that only need navigation labels can exclude
- * `title` from their own field mapping and use `breadcrumbLabel` only.
- *
- * The slug source falls back intelligently: it reads from `title` first, then
- * from `breadcrumbLabel`, so both patterns produce a valid slug suggestion.
- *
- * GROQ convention: when consuming pages downstream, alias the rendered label
- * with `"title": coalesce(breadcrumbLabel, title)` so legacy documents (only
- * `title`) and new documents (only `breadcrumbLabel`) both resolve.
+ * Note: `breadcrumbLabel` was removed on purpose (as barr-website-v3 did) —
+ * BARR designs have no breadcrumbs, and the field only confused editors
+ * (it showed up on every page, homepage included). If a project ever needs
+ * breadcrumbs, re-add the field here plus the GROQ convention
+ * `"title": coalesce(breadcrumbLabel, title)` in its queries.
  */
 export const basePage = defineType({
   name: 'basePage',
@@ -33,21 +27,11 @@ export const basePage = defineType({
       description: 'Page title — used as H1, default SEO title, and slug source.',
     },
     {
-      name: 'breadcrumbLabel',
-      title: 'Breadcrumb label',
-      type: 'string',
-      description:
-        'Short label shown on breadcrumbs across the site. Leave empty to use the page title.',
-    },
-    {
       name: 'slug',
       title: 'Slug',
       type: 'slug',
       options: {
-        source: (doc) =>
-          (doc as { title?: string; breadcrumbLabel?: string }).title ||
-          (doc as { title?: string; breadcrumbLabel?: string }).breadcrumbLabel ||
-          '',
+        source: (doc) => (doc as { title?: string }).title || '',
         maxLength: 96,
         // Custom isUnique function following Sanity's official documentation pattern
         // https://www.sanity.io/docs/slug-type

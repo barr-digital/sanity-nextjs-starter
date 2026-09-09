@@ -97,14 +97,11 @@ export const footerQuery = defineQuery(`
  */
 
 // Homepage query.
-// `title` resolves to `breadcrumbLabel` first, then falls back to `title` so
-// downstream code reads `.title` without caring which field is set on the
-// document. Same coalesce applies to any page that extends `basePage`.
 export const homepageQuery = defineQuery(`
   *[_type == "homepage" && language == $lang][0]{
     _id,
     _type,
-    "title": coalesce(breadcrumbLabel, title),
+    title,
     seo{
       seoTitle,
       seoDescription,

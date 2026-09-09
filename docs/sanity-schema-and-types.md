@@ -62,7 +62,7 @@ Conventions:
 - All schema strings (`title`, `description`, custom `validation` messages) in **English**.
 - `initialValue` only for **structural choices** (booleans, technical enums) — never for UI strings, which are content and vary per language.
 - Every block/document has a meaningful preview for the editor.
-- Page types share fields by spreading the base page schema (`documents/base-page.ts`: `language` with unique-language validation, `title`, `breadcrumbLabel`, `slug` with per-language uniqueness, `seo`) — new page types inherit `seo` (see [seo-and-metadata.md](seo-and-metadata.md)) instead of redefining it.
+- Page types share fields by spreading the base page schema (`documents/base-page.ts`: `language` with unique-language validation, `title`, `slug` with per-language uniqueness, `seo`) — new page types inherit `seo` (see [seo-and-metadata.md](seo-and-metadata.md)) instead of redefining it.
 - Adding `validation: Rule.required()` on a populated type marks existing documents invalid in the Studio — introduce `required` cautiously.
 
 ## Reusable objects (already defined)
