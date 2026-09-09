@@ -7,6 +7,12 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.3] - 2026-09-09
+
+### Removed
+
+- **`breadcrumbLabel` dropped from `basePage`** (as barr-website-v3 did, and for the same reason): BARR designs have no breadcrumbs, and the field showed up on every page type — homepage included — confusing editors. Slug source is `title` alone; the `coalesce(breadcrumbLabel, title)` GROQ convention is gone from queries and docs. Re-add the field (plus the coalesce) only if a project design actually has breadcrumbs.
+
 ## [1.2.2] - 2026-09-09
 
 Two more fixes surfaced by the phygitalab hero task (PR barr-digital/phygitalab-website#5).
@@ -246,7 +252,8 @@ Baseline release dello starter come fonte versionata. Niente nuove feature: setu
 
 - `sanity-image@^1.0.0` da `frontend/package.json` (legacy, nessun import nel codice).
 
-[Unreleased]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v1.2.2...HEAD
+[Unreleased]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v1.2.3...HEAD
+[1.2.3]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v1.2.2...v1.2.3
 [1.2.2]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v1.0.0...v1.2.0

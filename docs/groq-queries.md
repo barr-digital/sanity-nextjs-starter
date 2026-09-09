@@ -59,7 +59,7 @@ With document-level internationalization every page query filters by language, p
 ```ts
 export const homepageQuery = defineQuery(`
   *[_type == "homepage" && language == $lang][0]{
-    "title": coalesce(breadcrumbLabel, title),
+    title,
     "pageBuilder": pageBuilder[] ${pageBuilderFragment}
   }
 `)

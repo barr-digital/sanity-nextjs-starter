@@ -207,7 +207,6 @@ export type Homepage = {
   _rev: string
   language: string
   title?: string
-  breadcrumbLabel?: string
   slug: Slug
   seo?: Seo
   pageBuilder?: Array<
@@ -397,7 +396,7 @@ export type FooterQueryResult = {
 
 // Source: sanity/lib/queries.ts
 // Variable: homepageQuery
-// Query: *[_type == "homepage" && language == $lang][0]{    _id,    _type,    "title": coalesce(breadcrumbLabel, title),    seo{      seoTitle,      seoDescription,      seoImage{  asset,  hotspot,  crop,  alt},      noIndex,    },    "pageBuilder": pageBuilder[]{  ...,  _type == 'exampleBlock' => {    ...,    title,    text  }}  }
+// Query: *[_type == "homepage" && language == $lang][0]{    _id,    _type,    title,    seo{      seoTitle,      seoDescription,      seoImage{  asset,  hotspot,  crop,  alt},      noIndex,    },    "pageBuilder": pageBuilder[]{  ...,  _type == 'exampleBlock' => {    ...,    title,    text  }}  }
 export type HomepageQueryResult = {
   _id: string
   _type: 'homepage'
@@ -438,7 +437,7 @@ declare module '@sanity/client' {
     '\n  *[_type == "settings" && language == $lang][0]{\n    title,\n    description,\n    ogImage{\n  asset,\n  hotspot,\n  crop,\n  alt\n}\n  }\n': SettingsQueryResult
     '\n  *[_type == "header" && language == $lang][0]{\n    _id,\n    _type,\n  }\n': HeaderQueryResult
     '\n  *[_type == "footer" && language == $lang][0]{\n    _id,\n    _type,\n  }\n': FooterQueryResult
-    '\n  *[_type == "homepage" && language == $lang][0]{\n    _id,\n    _type,\n    "title": coalesce(breadcrumbLabel, title),\n    seo{\n      seoTitle,\n      seoDescription,\n      seoImage{\n  asset,\n  hotspot,\n  crop,\n  alt\n},\n      noIndex,\n    },\n    "pageBuilder": pageBuilder[]{\n  ...,\n  _type == \'exampleBlock\' => {\n    ...,\n    title,\n    text\n  }\n}\n  }\n': HomepageQueryResult
+    '\n  *[_type == "homepage" && language == $lang][0]{\n    _id,\n    _type,\n    title,\n    seo{\n      seoTitle,\n      seoDescription,\n      seoImage{\n  asset,\n  hotspot,\n  crop,\n  alt\n},\n      noIndex,\n    },\n    "pageBuilder": pageBuilder[]{\n  ...,\n  _type == \'exampleBlock\' => {\n    ...,\n    title,\n    text\n  }\n}\n  }\n': HomepageQueryResult
     '\n  *[defined(slug.current) && language == $lang]{\n    "slug": slug.current,\n    _type,\n    _updatedAt,\n    "noIndex": seo.noIndex == true\n  }\n': SitemapDataQueryResult
   }
 }
