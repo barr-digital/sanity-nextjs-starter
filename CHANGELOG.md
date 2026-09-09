@@ -7,6 +7,19 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.2] - 2026-09-09
+
+Two more fixes surfaced by the phygitalab hero task (PR barr-digital/phygitalab-website#5).
+
+### Fixed
+
+- **`<h1>Homepage</h1>` placeholder removed from `home-page.tsx`** — it rendered above the PageBuilder in every derived project, adding an invisible 24px gap between the header and the first block until someone hunted it down. The TODO comments stay; a note now warns that any markup above the PageBuilder shifts every block.
+- **Fetched-content types are stega-aware** — `PageContent` / `HomePageProps` were typed on the clean generated types, but `sanityFetch` returns stega-branded strings in dev/draft: the first literal-union field (a link's `linkType`) breaks the illusion. Widened to `StegaCleaned<T> | StegaBranded<T>` (the next-sanity pattern, from phygitalab).
+
+### Added
+
+- `page-builder-blocks.md`: blocks run on both server and client (`PageBuilder` is a Client Component) — no non-deterministic values at render, or hydration mismatches follow.
+
 ## [1.2.1] - 2026-09-09
 
 Link-object fixes surfaced by the phygitalab header task (PR barr-digital/phygitalab-website#4).
@@ -233,7 +246,8 @@ Baseline release dello starter come fonte versionata. Niente nuove feature: setu
 
 - `sanity-image@^1.0.0` da `frontend/package.json` (legacy, nessun import nel codice).
 
-[Unreleased]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v1.2.1...HEAD
+[Unreleased]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v1.2.2...HEAD
+[1.2.2]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v1.0.0...v1.2.0
 [1.0.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.6.0...v1.0.0
