@@ -24,6 +24,7 @@ export const linkFragment = /* groq */ `{
   anchor,
   "pageSlug": page->slug.current,
   "pageType": page->_type,
+  "fileUrl": file.asset->url,
   openInNewTab,
 }`
 
@@ -41,6 +42,7 @@ export const portableTextFragment = /* groq */ `{
       custom,
       "pageSlug": page->slug.current,
       "pageType": page->_type,
+      "fileUrl": file.asset->url,
       openInNewTab,
       tooltip
     }

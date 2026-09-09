@@ -1,0 +1,9 @@
+{
+  "errors": {
+    "unexpected": {
+      "title": "Qualcosa è andato storto",
+      "description": "Si è verificato un errore imprevisto. Riprova.",
+      "retry": "Riprova"
+    }
+  }
+}

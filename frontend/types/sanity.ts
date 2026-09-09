@@ -8,13 +8,16 @@ export type ExtractPageBuilderType<T extends PageBuilderBlock['_type']> = Extrac
 
 // Represents a Link after GROQ dereferencing (page becomes pageSlug string)
 export type DereferencedLink = {
+  _key?: string
   _type: 'link'
-  linkType?: 'href' | 'page' | 'custom' | 'anchor'
-  href?: string
+  label?: string | null
+  linkType?: 'href' | 'page' | 'custom' | 'anchor' | 'file' | null
+  href?: string | null
   custom?: string | null
   anchor?: string | null
   pageSlug?: string | null
   pageType?: string | null
-  openInNewTab?: boolean
+  fileUrl?: string | null
+  openInNewTab?: boolean | null
   tooltip?: string | null
 }
