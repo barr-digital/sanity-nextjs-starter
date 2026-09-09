@@ -1,4 +1,5 @@
 import { Link } from '@/sanity.types'
+import { stegaClean } from 'next-sanity'
 import { dataset, projectId } from '@/sanity/lib/api'
 import { createImageUrlBuilder } from '@sanity/image-url'
 import { DereferencedLink } from '@/types/sanity'
@@ -59,37 +60,55 @@ export function resolveOpenGraphImage(
  * - External URLs (href type)
  * - Internal page references (page type) - dereferenced in GROQ as pageSlug
  * - Custom links (custom type) - mailto:, tel:, etc.
+ * - Uploaded files (file type) - dereferenced in GROQ as fileUrl
+ *
+ * Every value used for matching or returned as a URL goes through
+ * `stegaClean`: the base client enables stega (`stega: { studioUrl }`), so in
+ * dev/draft contexts strings carry invisible markers — an encoded `linkType`
+ * never matches a case literal and an encoded href is a corrupt URL. Labels
+ * are NOT cleaned here (they belong to rendering, where the markers power
+ * click-to-edit overlays).
  */
 export function linkResolver(link: Link | DereferencedLink | undefined) {
   if (!link) return null
 
+  const clean = (value: unknown): string | undefined =>
+    typeof value === 'string' ? stegaClean(value) : undefined
+
+  const href = clean(link.href)
+
   // If linkType is not set but href is, infer "href" type
   // This happens when pasting links in the portable text editor
-  const linkType = !link.linkType && link.href ? 'href' : link.linkType
+  const linkType = clean(link.linkType) || (href ? 'href' : undefined)
 
   switch (linkType) {
     case 'href':
-      return link.href || null
+      return href || null
 
     case 'custom': {
-      const customUrl = 'custom' in link ? link.custom : undefined
+      const customUrl = 'custom' in link ? clean(link.custom) : undefined
       return customUrl || null
     }
 
     case 'page': {
-      const pageSlug = 'pageSlug' in link ? link.pageSlug : undefined
-      if (!pageSlug || typeof pageSlug !== 'string') {
+      const pageSlug = 'pageSlug' in link ? clean(link.pageSlug) : undefined
+      if (!pageSlug) {
         return null
       }
       return `/${pageSlug}`
     }
 
     case 'anchor': {
-      const anchorId = 'anchor' in link ? link.anchor : undefined
-      if (!anchorId || typeof anchorId !== 'string') {
+      const anchorId = 'anchor' in link ? clean(link.anchor) : undefined
+      if (!anchorId) {
         return null
       }
       return `#${anchorId}`
+    }
+
+    case 'file': {
+      const fileUrl = 'fileUrl' in link ? clean(link.fileUrl) : undefined
+      return fileUrl || null
     }
 
     default:

@@ -7,6 +7,20 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+## [1.2.1] - 2026-09-09
+
+Link-object fixes surfaced by the phygitalab header task (PR barr-digital/phygitalab-website#4).
+
+### Fixed
+
+- **`linkType: 'file'` resolved** — the link schema offers a File option with upload, but `linkResolver` had no `case 'file'`: editors uploaded a PDF and the link silently rendered as nothing. Ported from barr-website-v3: `"fileUrl": file.asset->url` in `linkFragment` (and in the portable-text link annotation) + the resolver case.
+- **`linkResolver` stega-safe** — the base client enables stega (`stega: { studioUrl }`), so in dev/draft contexts strings carry invisible markers: an encoded `linkType` never matched a `case` literal (every link resolved to `null`) and an encoded `href` is a corrupt URL. Every matching/URL value now goes through `stegaClean`; labels stay marked (they power click-to-edit overlays where Presentation is used).
+- **`DereferencedLink` aligned with `linkFragment`** — the manual type was missing `label`, the `file` linkType and the `null`s GROQ actually returns; consumers were typed against fiction (fix from phygitalab, `fileUrl` from v3).
+
+### Added
+
+- **next-intl message catalogs wired** — `frontend/messages/it.json` + `en.json` (seeded with the `errors.unexpected` namespace) loaded by `i18n/request.ts`, which previously returned an empty object with a TODO: every project had to wire the catalog from scratch before it could give icon-only buttons accessible names.
+
 ## [1.2.0] - 2026-09-07
 
 Two backports from the pilots, one release: the per-block mockup preview pattern from barr-website-v3, and the environment-handling hardening from the phygitalab init (env → dataset map in committed code, every default on development).
@@ -219,7 +233,8 @@ Baseline release dello starter come fonte versionata. Niente nuove feature: setu
 
 - `sanity-image@^1.0.0` da `frontend/package.json` (legacy, nessun import nel codice).
 
-[Unreleased]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v1.2.0...HEAD
+[Unreleased]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v1.2.1...HEAD
+[1.2.1]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v1.0.0...v1.2.0
 [1.0.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.6.0...v1.0.0
 [0.6.0]: https://github.com/barr-digital/sanity-nextjs-starter/compare/v0.5.0...v0.6.0
