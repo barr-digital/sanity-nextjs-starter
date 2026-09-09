@@ -1,11 +1,13 @@
 'use client'
 
+import type { StegaBranded, StegaCleaned } from 'next-sanity'
 import { PageBuilder } from '@/components/layout/page-builder'
-import { Text } from '@/components/ui/text'
 import { HomepageQueryResult } from '@/sanity.types'
 
+// Widened for stega — see the matching comment on PageContent in
+// app/[locale]/[[...slug]]/page.tsx, which is what actually passes `page` here.
 type HomePageProps = {
-  page: HomepageQueryResult | null
+  page: StegaCleaned<HomepageQueryResult> | StegaBranded<HomepageQueryResult> | null
 }
 
 /**
@@ -46,7 +48,8 @@ export const HomePage = ({ page }: HomePageProps) => {
     <>
       {/* TODO: Add custom homepage sections here if needed */}
       {/* Example: Hero, Featured Content, CTA, etc. */}
-      <Text tag="h1">Homepage</Text>
+      {/* No placeholder markup above the PageBuilder: anything rendered here
+          adds invisible spacing between the header and the first block. */}
 
       {/* Page Builder renders all sections from the homepage schema */}
       <PageBuilder page={pageData} />

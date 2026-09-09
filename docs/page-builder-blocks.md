@@ -74,7 +74,7 @@ Order matters: extract (step 3) before typegen. Details: [sanity-schema-and-type
 
 ### 6. Component — `frontend/components/blocks/<block-name>.tsx`
 
-Blocks receive `{ block, index }` from the renderer and **never fetch data themselves** (`PageBuilder` uses next-sanity's `useOptimistic`, so props-driven blocks stay live-preview-compatible). Type props with `ExtractPageBuilderType`; reuse `Picture`, the shared link/button component and typography tokens — see [styling-and-design-tokens.md](styling-and-design-tokens.md).
+Blocks run on **both server and client** (`PageBuilder` is a Client Component): no `Math.random()`, `Date.now()` or other non-deterministic values at render — the two passes diverge and you get a real hydration mismatch. Compute random-ish values once, deterministically. Blocks receive `{ block, index }` from the renderer and **never fetch data themselves** (`PageBuilder` uses next-sanity's `useOptimistic`, so props-driven blocks stay live-preview-compatible). Type props with `ExtractPageBuilderType`; reuse `Picture`, the shared link/button component and typography tokens — see [styling-and-design-tokens.md](styling-and-design-tokens.md).
 
 ```tsx
 import type { ExtractPageBuilderType } from '@/types/sanity'

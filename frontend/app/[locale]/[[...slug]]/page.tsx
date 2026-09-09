@@ -9,6 +9,7 @@ import { getMetadataBase, buildCanonicalPath, buildAlternateLanguages } from '@/
 import { generateStaticParamsForLocale } from '@/lib/data/sitemap'
 import { routing } from '@/i18n/routing'
 import type { HomepageQueryResult } from '@/sanity.types'
+import type { StegaBranded, StegaCleaned } from 'next-sanity'
 
 type Props = {
   params: Promise<{
@@ -104,7 +105,12 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
  *   return <ProjectsListingPage page={content} items={items} />;
  */
 // Add new page query result types to this union as you create them
-type PageContent = NonNullable<HomepageQueryResult>
+// sanityFetch returns stega-branded strings in dev/draft (the base client
+// enables stega), so the clean generated type alone is a lie — the first
+// literal-union field (a link's linkType) breaks it. Accept both shapes
+// rather than disabling stega, which would silently break click-to-edit.
+type PageContent =
+  StegaCleaned<NonNullable<HomepageQueryResult>> | StegaBranded<NonNullable<HomepageQueryResult>>
 
 function renderPageComponent(content: PageContent) {
   switch (content._type) {
