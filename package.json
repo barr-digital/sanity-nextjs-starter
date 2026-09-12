@@ -22,7 +22,7 @@
     "frontend"
   ],
   "overrides": {
-    "@sanity/client": "7.26.2"
+    "@sanity/client": "8.6.1"
   },
   "allowScripts": {
     "@parcel/watcher": true,
