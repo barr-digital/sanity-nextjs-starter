@@ -24,6 +24,12 @@
   "overrides": {
     "@sanity/client": "7.26.2"
   },
+  "allowScripts": {
+    "@parcel/watcher": true,
+    "@swc/core": true,
+    "esbuild": true,
+    "unrs-resolver": true
+  },
   "scripts": {
     "dev": "npm-run-all --parallel --print-label dev:*",
     "dev:next": "npm run dev --workspace=frontend",
@@ -31,7 +37,7 @@
     "format": "prettier --cache --write .",
     "lint": "npm run lint --workspace=frontend",
     "type-check": "npm run type-check --workspaces",
-    "prepare": "husky"
+    "prepare": "husky || true"
   },
   "dependencies": {
     "@sanity/icons": "^5.2.1"

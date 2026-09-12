@@ -4,12 +4,15 @@
  * Learn more: https://www.sanity.io/docs/cli
  */
 
-import { defineCliConfig } from 'sanity/cli'
+import type { CliConfig } from 'sanity/cli'
 
 const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID || ''
 const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET || 'production'
 
-export default defineCliConfig({
+// Type-only import above: a runtime `import { defineCliConfig } from 'sanity/cli'`
+// drags the whole CLI (vite → rolldown native binding) into the config loader,
+// which crashes on cache-less CI installs (Vercel).
+const config: CliConfig = {
   api: {
     projectId,
     dataset,
@@ -29,4 +32,6 @@ export default defineCliConfig({
     // Overload Sanity client methods with generated types
     overloadClientMethods: true,
   },
-})
+}
+
+export default config
