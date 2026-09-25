@@ -7,6 +7,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
+### Fixed
+
+- **"Create new" no longer writes an empty published document** (found on barr-website-v3): `LanguageFilteredList.handleCreateDocument` used `client.create()` with no `_id`, which creates a _published_ document — an empty shell live on the site (blank cards, epoch dates) until the editor's first Publish overwrites it. The document is now created as `drafts.<uuid>`, so nothing goes public before Publish. The list's status badge also becomes truthful for new documents (Draft, not Published).
+
 ## [1.2.3] - 2026-09-09
 
 ### Removed

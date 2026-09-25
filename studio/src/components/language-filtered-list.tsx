@@ -135,12 +135,18 @@ export function LanguageFilteredList(props: { filter?: string }) {
     // system by writing the document directly with the selected language,
     // then navigating to the editor.
     try {
+      // Create as a draft (`drafts.` prefix): a bare create() writes a
+      // published empty document, live on the site until the first Publish.
       const doc = await client.create({
+        _id: `drafts.${crypto.randomUUID()}`,
         _type: documentType,
         language,
       })
 
-      router.navigateIntent('edit', { id: doc._id, type: documentType })
+      router.navigateIntent('edit', {
+        id: doc._id.replace(/^drafts\./, ''),
+        type: documentType,
+      })
 
       // Update local list optimistically so the new doc shows up immediately.
       setDocuments((prev) => [
