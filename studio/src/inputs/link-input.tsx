@@ -54,6 +54,18 @@ function detectTarget(raw: string): DetectedTarget | null {
 
 const CHECKED_FIELDS = ['href', 'custom'] as const
 
+// Which fields auto-detection may inspect: only the one the editor is
+// actually typing into (the selected type's own field), or both while no
+// type is set yet (e.g. a link pasted into portable text). Never a hidden
+// field of another type — when the editor switches away from "URL", the
+// old `href` is still there until the stale cleanup below removes it, and
+// detecting on it would flip the type straight back to "URL", making a
+// filled link impossible to retype.
+function fieldsToCheck(linkType: LinkValue['linkType']) {
+  if (!linkType) return CHECKED_FIELDS
+  return CHECKED_FIELDS.filter((field) => field === linkType)
+}
+
 export function LinkInput(props: ObjectInputProps) {
   const value = props.value as LinkValue | undefined
   const { onChange } = props
@@ -61,7 +73,7 @@ export function LinkInput(props: ObjectInputProps) {
   useEffect(() => {
     if (!value) return
 
-    for (const field of CHECKED_FIELDS) {
+    for (const field of fieldsToCheck(value.linkType)) {
       const current = value[field]
       if (typeof current !== 'string') continue
       const target = detectTarget(current)
