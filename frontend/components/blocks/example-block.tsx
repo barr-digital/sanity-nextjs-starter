@@ -4,12 +4,10 @@
  * This is an example block to demonstrate how to create PageBuilder blocks.
  * You can use this as a template when creating your own block types.
  *
- * To create a new block:
- * 1. Copy this file and rename it (e.g., TextBlock.tsx)
- * 2. Update the component name and logic
- * 3. Create the corresponding Sanity schema in studio/src/schemaTypes/blocks/
- * 4. Add it to pageBuilderBlocks in studio/src/schemaTypes/blocks/config.ts
- * 5. Register it in BlockRenderer.tsx
+ * To create a new block, follow the full chain in docs/page-builder-blocks.md:
+ * schema in studio/src/schema-types/blocks/, register + allow it, extract-types,
+ * GROQ fragment (if needed), typegen, then a component like this one
+ * (e.g. text-block.tsx) registered in components/layout/block-renderer.tsx.
  *
  * Block Structure:
  * - Receives `block` prop with all data from Sanity
@@ -17,13 +15,10 @@
  * - Should handle null/undefined data gracefully
  */
 
+import type { ExtractPageBuilderType } from '@/types/sanity'
+
 type ExampleBlockProps = {
-  block: {
-    _key: string
-    _type: string
-    title?: string
-    text?: string
-  }
+  block: ExtractPageBuilderType<'exampleBlock'>
   index: number
 }
 

@@ -11,6 +11,11 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 - **"Create new" no longer writes an empty published document** (found on barr-website-v3): `LanguageFilteredList.handleCreateDocument` used `client.create()` with no `_id`, which creates a _published_ document — an empty shell live on the site (blank cards, epoch dates) until the editor's first Publish overwrites it. The document is now created as `drafts.<uuid>`, so nothing goes public before Publish. The list's status badge also becomes truthful for new documents (Draft, not Published).
 - **`BlockRenderer` no longer breaks `type-check` on the first real block**: indexing the blocks map by a runtime `_type` gave a union of components whose `block` props exclude each other, so `React.createElement` rejected every block once a component was typed with `ExtractPageBuilderType` over a projection with required (nullable) fields — any block with an `img` or `link` projection. The looked-up component is now cast to `ComponentType<{ block; index }>`: the map is keyed by `_type`, so each component still receives its own block shape. Found while scaffolding a mock-data preview on a fresh clone.
+- **`ExampleBlock` typed from the generated types**: its props were hand-written (`title?: string`) while the query returns `string | null`, so blocks copied from it inherited wrong types. It now uses `ExtractPageBuilderType<'exampleBlock'>`, as `docs/page-builder-blocks.md` prescribes. Stale paths in the `ExampleBlock`, `BlockRenderer` and `PageBuilder` comments (`components/Blocks/`, `schemaTypes/`, `BlockRenderer.tsx`) now match the kebab-case layout.
+
+### Changed
+
+- **The blocks map in `BlockRenderer` is checked against the page-builder types**: `getBlocks()` now `satisfies BlockComponents`, so a key that isn't a block `_type` (e.g. `textBlok`) or a component whose props don't match that block fails `type-check` instead of showing the "not implemented" placeholder at runtime. Blocks must be typed with `ExtractPageBuilderType` and exist in the typegen output before being registered.
 
 ## [1.2.3] - 2026-09-09
 
