@@ -46,7 +46,13 @@ export const BlockRenderer = ({ block, index }: BlockProps) => {
 
   // Check if a component exists for this block type
   if (block._type in Blocks) {
-    const BlockComponent = Blocks[block._type as keyof BlocksMap]
+    // Indexing the map by a runtime _type yields a union of components whose `block`
+    // props are mutually exclusive, which no single block value can satisfy. The map
+    // is keyed by _type, so each component does receive its own block shape.
+    const BlockComponent = Blocks[block._type as keyof BlocksMap] as React.ComponentType<{
+      block: BlockType
+      index: number
+    }>
     return (
       <div key={block._key}>
         {React.createElement(BlockComponent, {
