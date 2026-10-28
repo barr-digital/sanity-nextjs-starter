@@ -94,13 +94,14 @@ export const TextBlock = ({ block }: TextBlockProps) => (
 Import + entry in the blocks map. **The key must equal the schema `name`** (step 1):
 
 ```tsx
-const getBlocks = () => ({
-  exampleBlock: ExampleBlock,
-  textBlock: TextBlock, // key = schema name
-})
+const getBlocks = () =>
+  ({
+    exampleBlock: ExampleBlock,
+    textBlock: TextBlock, // key = schema name
+  }) satisfies BlockComponents
 ```
 
-A mismatch or missing entry shows the dashed _"Block type 'textBlock' has not been implemented"_ placeholder — the #1 symptom of a broken step 7. The blocks map and the schema registry must stay in sync.
+The map is checked with `satisfies BlockComponents`: a key that isn't a block `_type` from the typegen, or a component whose props don't match that block's `ExtractPageBuilderType`, fails `type-check` (so the block must exist in the generated types: steps 3 and 5 first). A missing entry shows the dashed _"Block type 'textBlock' has not been implemented"_ placeholder — the #1 symptom of a broken step 7. The blocks map and the schema registry must stay in sync.
 
 ### 8. Verify — preview
 

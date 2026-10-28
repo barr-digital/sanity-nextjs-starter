@@ -1,9 +1,19 @@
 import React from 'react'
 import { ExampleBlock } from '@/components/blocks/example-block'
+import type { ExtractPageBuilderType, PageBuilderBlock } from '@/types/sanity'
 
 type BlockType = {
   _type: string
   _key: string
+}
+
+// Each key must be a page-builder block _type, and its component must accept that
+// block's shape: a typo in a key or a mismatched component fails type-check.
+type BlockComponents = {
+  [K in PageBuilderBlock['_type']]?: React.ComponentType<{
+    block: ExtractPageBuilderType<K>
+    index: number
+  }>
 }
 
 type BlockProps = {
@@ -17,13 +27,14 @@ type BlockProps = {
  * BlockRenderer maps block types to their corresponding React components.
  *
  * How to add a new block type:
- * 1. Create a new block component in components/Blocks/ (e.g., TextBlock.tsx)
+ * 1. Create a new block component in components/blocks/ (e.g., text-block.tsx),
+ *    typed with ExtractPageBuilderType<'textBlock'>
  * 2. Import it in this file
  * 3. Add it to the getBlocks() map with the same key as your Sanity schema _type
  *
  * Example:
  * ```tsx
- * import { TextBlock } from "@/components/Blocks/TextBlock";
+ * import { TextBlock } from '@/components/blocks/text-block'
  *
  * const getBlocks = () => ({
  *   exampleBlock: ExampleBlock,
@@ -31,13 +42,14 @@ type BlockProps = {
  * });
  * ```
  */
-const getBlocks = () => ({
-  exampleBlock: ExampleBlock,
-  // TODO: Add your custom block types here
-  // textBlock: TextBlock,
-  // heroBlock: HeroBlock,
-  // etc.
-})
+const getBlocks = () =>
+  ({
+    exampleBlock: ExampleBlock,
+    // TODO: Add your custom block types here
+    // textBlock: TextBlock,
+    // heroBlock: HeroBlock,
+    // etc.
+  }) satisfies BlockComponents
 
 type BlocksMap = ReturnType<typeof getBlocks>
 
@@ -74,8 +86,7 @@ export const BlockRenderer = ({ block, index }: BlockProps) => {
         Block type &ldquo;{block._type}&rdquo; has not been implemented yet.
       </p>
       <p className="mt-2 text-xs text-gray-500">
-        Create a component in /components/Blocks/{block._type}.tsx and register it in
-        BlockRenderer.tsx
+        Create a component in /components/blocks/ and register it in block-renderer.tsx
       </p>
     </div>
   )

@@ -29,7 +29,7 @@ type PageBuilderProps = {
  * 1. Add a `pageBuilder` field to your Sanity document schema
  * 2. Define block types in your schema (e.g., textBlock, heroBlock, etc.)
  * 3. Create corresponding React components for each block type
- * 4. Register your block components in BlockRenderer.tsx
+ * 4. Register your block components in block-renderer.tsx
  */
 export const PageBuilder = ({ page }: PageBuilderProps) => {
   const pageBuilderBlocks = useOptimistic<PageBuilderBlock[] | undefined, SanityDocument<PageData>>(
