@@ -25,8 +25,9 @@ studio/src/
 │   ├── objects/              # reusable field types: link, img, seo
 │   └── blocks/               # page-builder BLOCKS + config.ts (allowed blocks)
 ├── inputs/ previews/ icons/  # custom Studio UI: card inputs, block previews, icon slots
-├── structure/                # Studio sidebar tree
-└── sanity.config.tsx         # Studio config, plugins (i18n type registration lives here)
+└── structure/                # Studio sidebar tree
+
+studio/sanity.config.tsx      # Studio config, plugins (i18n type registration lives here)
 
 frontend/
 ├── app/[locale]/             # localized routes (next-intl), layout + catch-all slug
@@ -64,6 +65,7 @@ frontend/
 - **Never push directly to `main`** — always a working branch + PR.
 - **Never deploy schema changes to a production dataset without explicit approval** (`sanity deploy` makes the schema live for editors immediately).
 - **Never run mutations/patch/delete on a dataset** (including via the Sanity MCP) without explicit confirmation.
+- **No commit, push, PR creation or deploy without explicit confirmation.**
 - **Secrets stay server-side**: never print, commit, or paste tokens (`SANITY_API_READ_TOKEN` etc.) in chat or code.
 - **Keep the starter project-agnostic**: no client-specific content; placeholders (`<your project ID>`, empty `SANITY_STUDIO_STUDIO_HOST`, `exampleBlock`, TODO markers) are features projects consume at init — they must survive every change.
 
@@ -92,8 +94,7 @@ Page documents expose a `pageBuilder` array of block objects. Adding or changing
 6. **Follow nearby conventions** — naming, component signature, Tailwind style. Don't introduce new patterns (routing, state, libraries) without discussion.
 7. **Reuse design tokens and existing helpers** — typography utilities, `Picture`/`Link` UI components, `urlFor` image helpers, color tokens. Don't hardcode sizes/colors when a token exists.
 8. **SEO by default**: every routed page gets per-page metadata through the shared metadata helper; leave keys out to inherit global defaults — never return `undefined`.
-9. **No irreversible actions without confirmation**: commit, push, deploy, dataset mutations.
-10. **If a task touches more than 3 files, list them and wait for confirmation** before proceeding.
+9. **If a task touches more than 3 files, list them and wait for confirmation** before proceeding.
 
 ## Key conventions
 
@@ -129,9 +130,9 @@ npm run deploy:prod --workspace=studio     # production Studio (approval require
 > **Long-running dev servers are run by the user.** Don't start `npm run dev` yourself — ask the user to run it and report what they see.
 > The frontend `predev`/`prebuild` run `typegen` automatically but do **not** re-extract the schema: after a schema change, extract first.
 
-## Figma workflow
+## Design workflow
 
-Figma links are not stored in docs — paste the **node-id of the block/page** in chat when opening a UI task. Claude reads the design with the **Figma MCP** (design context, screenshot, variables) to derive layout, editable fields, spacing and assets, mapping colors/typography onto the existing **design tokens** before writing schema or component. Design drives _which fields_ the schema needs and _how_ to render them.
+The design comes from **Figma or Claude Design**, on equal footing. Design links are not stored in docs — paste the **Figma node-id** or the **Claude Design file** of the block/page in chat when opening a UI task. Claude reads the design (Figma MCP: design context, screenshot, variables; Claude Design: the HTML file) to derive layout, editable fields, spacing and assets, mapping colors/typography onto the existing **design tokens** before writing schema or component. Design drives _which fields_ the schema needs and _how_ to render them. Measure the result against the design with the scripts in the barr-core plugin, `figma/scripts/` (`figma-spec-check.mjs`, `responsive-audit.mjs`) — never by eye.
 
 ## Git workflow
 
@@ -139,7 +140,6 @@ Figma links are not stored in docs — paste the **node-id of the block/page** i
 - **Commit messages in English**, imperative, scoped to the change.
 - Push the branch, open a PR **against `main`**.
 - **Merging is done only by the Tech Lead** after review — same for releases (`release/vX.Y.Z` branches, `CHANGELOG.md` in Keep a Changelog format) and Studio deploys.
-- Commit, push and PR creation happen **only with explicit confirmation**.
 - Task flows (framing, block creation, closing checks) are handled by the **BARR plugin skills** — use them when available.
 
 ## Document index
