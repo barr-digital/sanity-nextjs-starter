@@ -47,7 +47,7 @@ Rules:
 ### Studio → Sanity host (two environments)
 
 ```bash
-npm run deploy:dev --workspace=studio    # dev Studio → development dataset (from feature/dev branches)
+npm run deploy:dev --workspace=studio    # dev Studio → development dataset (from work branches)
 npm run deploy:prod --workspace=studio   # production Studio → production dataset (from main only)
 ```
 

@@ -23,7 +23,7 @@ All files and folders use **kebab-case**. Names in code follow the convention of
 | Constants               | UPPER_SNAKE_CASE          | `MAX_RETRIES`, `DEFAULT_PAGE_SIZE`     |
 | All files               | kebab-case                | `button.tsx`, `use-auth.ts`            |
 | Folders                 | kebab-case                | `user-settings/`, `dashboard/`         |
-| Git branches            | type/kebab-case           | `feature/login-form`, `fix/header-bug` |
+| Git branches            | type/kebab-case           | `feat/login-form`, `fix/header-bug`    |
 | Server actions          | verb + entity (camelCase) | `createProject`, `deleteInvoice`       |
 | Zod schemas             | entity + `Schema`         | `createProjectSchema`, `contactSchema` |
 
@@ -91,10 +91,10 @@ Rules that go with the tree:
 ## Git flow
 
 - Permanent branches: `main` (production, every commit deploys) and `development` (integration).
-- Work branches: `feature/short-name` or `fix/short-name` (kebab-case), created from an **up-to-date** `development`:
+- Work branches: `feat/short-name`, `fix/short-name` or `chore/short-name` (kebab-case), created from an **up-to-date** `development`:
   ```bash
   git checkout development && git pull --ff-only
-  git checkout -b feature/short-name
+  git checkout -b feat/short-name
   ```
 - Commit messages in **English**, descriptive, one coherent unit of change per commit ("Add login form with validation", not "fix" or "update").
 - PRs target `development`, description in Italian (Cosa / Riferimento / Note / Come testare). One PR per task — no giant PRs.
