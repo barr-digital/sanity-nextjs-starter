@@ -65,7 +65,6 @@ frontend/
 - **Never push directly to `main`** — always a working branch + PR.
 - **Never deploy schema changes to a production dataset without explicit approval** (`sanity deploy` makes the schema live for editors immediately).
 - **Never run mutations/patch/delete on a dataset** (including via the Sanity MCP) without explicit confirmation.
-- **No commit, push, PR creation or deploy without explicit confirmation.**
 - **Secrets stay server-side**: never print, commit, or paste tokens (`SANITY_API_READ_TOKEN` etc.) in chat or code.
 - **Keep the starter project-agnostic**: no client-specific content; placeholders (`<your project ID>`, empty `SANITY_STUDIO_STUDIO_HOST`, `exampleBlock`, TODO markers) are features projects consume at init — they must survive every change.
 
@@ -127,7 +126,6 @@ npm run deploy:dev --workspace=studio      # dev Studio → development dataset
 npm run deploy:prod --workspace=studio     # production Studio (approval required — Tech Lead)
 ```
 
-> **Long-running dev servers are run by the user.** Don't start `npm run dev` yourself — ask the user to run it and report what they see.
 > The frontend `predev`/`prebuild` run `typegen` automatically but do **not** re-extract the schema: after a schema change, extract first.
 
 ## Design workflow
