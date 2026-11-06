@@ -103,7 +103,7 @@ This starts both:
 
 ## Studio architecture
 
-The Studio ships with two reusable systems out-of-the-box. Both are conventions for any new project derived from this starter — see `convenzioni.md` in the BARR vault for the full rules.
+The Studio ships with two reusable systems out-of-the-box. Both are conventions for any new project derived from this starter — see [`docs/sanity-schema-and-types.md`](docs/sanity-schema-and-types.md) and [`docs/page-builder-blocks.md`](docs/page-builder-blocks.md) for the full rules.
 
 ### Editor-driven icons
 

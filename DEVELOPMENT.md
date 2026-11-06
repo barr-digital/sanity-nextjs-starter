@@ -281,4 +281,4 @@ Rules of thumb:
 
 - [`CLAUDE.md`](CLAUDE.md) + [`docs/`](docs/) — conventions and patterns for this codebase (source of truth)
 - [Sanity documentation](https://www.sanity.io/docs) · [Next.js documentation](https://nextjs.org/docs) · [next-intl documentation](https://next-intl.dev)
-- BARR: Development Guideline in the knowledge vault (`operativo/guideline.md`)
+- BARR shared conventions: [`docs/conventions.md`](docs/conventions.md), [`docs/data-layer.md`](docs/data-layer.md), [`docs/server-actions.md`](docs/server-actions.md)
