@@ -125,3 +125,20 @@ export const sitemapDataQuery = defineQuery(`
     "noIndex": seo.noIndex == true
   }
 `)
+
+/**
+ * i18n Queries
+ */
+
+// Slug translation via @sanity/document-internationalization's translation.metadata
+export const slugTranslationQuery = defineQuery(`
+  *[slug.current == $slug && language == $fromLang][0]{
+    _id,
+    _type,
+    "slug": slug.current,
+    "translatedDoc": *[_type == "translation.metadata" && ^._id in translations[].value._ref][0]
+      .translations[_key == $toLang][0].value->{
+        "slug": slug.current
+      }
+  }
+`)

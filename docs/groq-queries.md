@@ -4,6 +4,15 @@ Conventions for reading content from Sanity. Read this before writing or changin
 
 All queries live in **`frontend/sanity/lib/queries.ts`** and are written with `defineQuery` (required for typegen). The frontend runs them through the project's fetch helper (`sanity/lib/live.ts` / `client.ts`) — never with an ad-hoc client.
 
+## Fetching: always `sanityFetch` in per-request code
+
+In any code that runs per request — Server Components, `generateMetadata`, Route Handlers (`sitemap.ts`), Server Actions, `lib/data/*` helpers they call — fetch with **`sanityFetch`** from `@/sanity/lib/live`, **never `client.fetch`** directly.
+
+- `sanityFetch` goes through the Next.js Data Cache and is invalidated by `<SanityLive />` via tags; `client.fetch` hits the Sanity API on every call (the client has `useCdn: false`).
+- Real case: a slug-translation helper on `client.fetch`, called by `generateMetadata` for hreflang, produced ~126k API requests in a week on one BARR site and nearly exhausted the plan quota.
+- Non-content lookups (slug translation, sitemap, hreflang): pass `stega: false`. Code that can also run outside a request (`generateStaticParams`): add `perspective: 'published'`.
+- `client.fetch` stays fine where there is no Next.js cache to use: one-off scripts, `sanity exec` migrations, and the Studio itself (custom inputs, validation, which use the Studio client).
+
 ## Projection rules
 
 1. **`...` pulls all top-level fields.** string/text/image objects/arrays of primitives already arrive complete — don't re-project them.

@@ -1,6 +1,7 @@
 import 'server-only'
 
-import { client } from '@/sanity/lib/client'
+import { sanityFetch } from '@/sanity/lib/live'
+import { slugTranslationQuery } from '@/sanity/lib/queries'
 
 /**
  * Result of slug translation lookup
@@ -54,20 +55,13 @@ export async function translateSlug(
   try {
     // Case 1: Try to find as a regular page or collection page (full slug match)
     // This uses the @sanity/document-internationalization plugin's translation.metadata
-    const regularPageQuery = `*[slug.current == $slug && language == $fromLang][0]{
-      _id,
-      _type,
-      "slug": slug.current,
-      "translatedDoc": *[_type == "translation.metadata" && ^._id in translations[].value._ref][0]
-        .translations[_key == $toLang][0].value->{
-          "slug": slug.current
-        }
-    }`
-
-    const currentPage = await client.fetch(regularPageQuery, {
-      slug: slugPath,
-      fromLang: fromLocale,
-      toLang: toLocale,
+    // sanityFetch, not client.fetch: this runs on every request (hreflang in
+    // generateMetadata, language switcher Server Action). The raw client skips
+    // the Next.js Data Cache and burns the Sanity API quota.
+    const { data: currentPage } = await sanityFetch({
+      query: slugTranslationQuery,
+      params: { slug: slugPath, fromLang: fromLocale, toLang: toLocale },
+      stega: false,
     })
 
     // If we found a translation through the document-internationalization plugin
@@ -94,10 +88,10 @@ export async function translateSlug(
     //       }
     //   }`;
     //
-    //   const result = await client.fetch(itemQuery, {
-    //     itemSlug,
-    //     fromLang: fromLocale,
-    //     toLang: toLocale,
+    //   const { data: result } = await sanityFetch({
+    //     query: itemQuery,
+    //     params: { itemSlug, fromLang: fromLocale, toLang: toLocale },
+    //     stega: false,
     //   });
     //
     //   if (result?.translatedItem?.slug) {
@@ -107,9 +101,10 @@ export async function translateSlug(
     //       "slug": slug.current
     //     }`;
     //
-    //     const translatedParent = await client.fetch(parentQuery, {
-    //       parentType,
-    //       toLang: toLocale,
+    //     const { data: translatedParent } = await sanityFetch({
+    //       query: parentQuery,
+    //       params: { parentType, toLang: toLocale },
+    //       stega: false,
     //     });
     //
     //     if (translatedParent?.slug) {

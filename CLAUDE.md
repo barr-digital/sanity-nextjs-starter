@@ -107,6 +107,7 @@ Page documents expose a `pageBuilder` array of block objects. Adding or changing
 - **Images always through the Sanity CDN** (`@sanity/image-url` helpers + the shared `Picture` component) — never raw asset URLs or local content images.
 - **UI copy is Italian**; code, identifiers, comments and docs are English.
 - Sanity: always `defineType`/`defineField` in schemas, `defineQuery` in GROQ; every block has a meaningful preview.
+- **Per-request code always fetches with `sanityFetch`, never `client.fetch` directly** (Server Components, `generateMetadata`, Server Actions, route handlers): the raw client bypasses the Next.js cache and burns the Sanity API quota. `client.fetch` only in scripts and the Studio — see [groq-queries.md](docs/groq-queries.md).
 
 ## Commands
 

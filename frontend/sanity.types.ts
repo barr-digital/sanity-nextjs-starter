@@ -430,6 +430,142 @@ export type SitemapDataQueryResult = Array<{
   noIndex: boolean | false
 }>
 
+// Source: sanity/lib/queries.ts
+// Variable: slugTranslationQuery
+// Query: *[slug.current == $slug && language == $fromLang][0]{    _id,    _type,    "slug": slug.current,    "translatedDoc": *[_type == "translation.metadata" && ^._id in translations[].value._ref][0]      .translations[_key == $toLang][0].value->{        "slug": slug.current      }  }
+export type SlugTranslationQueryResult =
+  | {
+      _id: string
+      _type: 'footer'
+      slug: null
+      translatedDoc:
+        | {
+            slug: null
+          }
+        | {
+            slug: string
+          }
+        | null
+    }
+  | {
+      _id: string
+      _type: 'header'
+      slug: null
+      translatedDoc:
+        | {
+            slug: null
+          }
+        | {
+            slug: string
+          }
+        | null
+    }
+  | {
+      _id: string
+      _type: 'homepage'
+      slug: string
+      translatedDoc:
+        | {
+            slug: null
+          }
+        | {
+            slug: string
+          }
+        | null
+    }
+  | {
+      _id: string
+      _type: 'media.folder'
+      slug: null
+      translatedDoc:
+        | {
+            slug: null
+          }
+        | {
+            slug: string
+          }
+        | null
+    }
+  | {
+      _id: string
+      _type: 'media.tag'
+      slug: null
+      translatedDoc:
+        | {
+            slug: null
+          }
+        | {
+            slug: string
+          }
+        | null
+    }
+  | {
+      _id: string
+      _type: 'sanity.fileAsset'
+      slug: null
+      translatedDoc:
+        | {
+            slug: null
+          }
+        | {
+            slug: string
+          }
+        | null
+    }
+  | {
+      _id: string
+      _type: 'sanity.imageAsset'
+      slug: null
+      translatedDoc:
+        | {
+            slug: null
+          }
+        | {
+            slug: string
+          }
+        | null
+    }
+  | {
+      _id: string
+      _type: 'settings'
+      slug: null
+      translatedDoc:
+        | {
+            slug: null
+          }
+        | {
+            slug: string
+          }
+        | null
+    }
+  | {
+      _id: string
+      _type: 'studioIcons'
+      slug: null
+      translatedDoc:
+        | {
+            slug: null
+          }
+        | {
+            slug: string
+          }
+        | null
+    }
+  | {
+      _id: string
+      _type: 'translation.metadata'
+      slug: null
+      translatedDoc:
+        | {
+            slug: null
+          }
+        | {
+            slug: string
+          }
+        | null
+    }
+  | null
+
 // Query TypeMap
 import '@sanity/client'
 declare module '@sanity/client' {
@@ -439,5 +575,6 @@ declare module '@sanity/client' {
     '\n  *[_type == "footer" && language == $lang][0]{\n    _id,\n    _type,\n  }\n': FooterQueryResult
     '\n  *[_type == "homepage" && language == $lang][0]{\n    _id,\n    _type,\n    title,\n    seo{\n      seoTitle,\n      seoDescription,\n      seoImage{\n  asset,\n  hotspot,\n  crop,\n  alt\n},\n      noIndex,\n    },\n    "pageBuilder": pageBuilder[]{\n  ...,\n  _type == \'exampleBlock\' => {\n    ...,\n    title,\n    text\n  }\n}\n  }\n': HomepageQueryResult
     '\n  *[defined(slug.current) && language == $lang]{\n    "slug": slug.current,\n    _type,\n    _updatedAt,\n    "noIndex": seo.noIndex == true\n  }\n': SitemapDataQueryResult
+    '\n  *[slug.current == $slug && language == $fromLang][0]{\n    _id,\n    _type,\n    "slug": slug.current,\n    "translatedDoc": *[_type == "translation.metadata" && ^._id in translations[].value._ref][0]\n      .translations[_key == $toLang][0].value->{\n        "slug": slug.current\n      }\n  }\n': SlugTranslationQueryResult
   }
 }
