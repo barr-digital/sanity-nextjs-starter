@@ -20,12 +20,15 @@ export async function generateStaticParamsForLocale(locale: string): Promise<Sta
   result.push({ locale, slug: undefined })
 
   // TODO: Add regular pages when you create them
-  // (re-add `import { client } from '@/sanity/lib/client'` at the top)
+  // (add `import { sanityFetch } from '@/sanity/lib/live'` at the top — never the raw
+  // client: app/sitemap.ts calls this at request time, and client.fetch skips the cache)
   // Example for fetching pages with slugs:
-  // const pages = await client.fetch(
-  //   `*[_type in ["aboutPage", "contactPage"] && language == $lang]{ "slug": slug.current, _type }`,
-  //   { lang: locale }
-  // );
+  // const { data: pages } = await sanityFetch({
+  //   query: `*[_type in ["aboutPage", "contactPage"] && language == $lang]{ "slug": slug.current, _type }`,
+  //   params: { lang: locale },
+  //   perspective: 'published', // also called from generateStaticParams (no draft mode there)
+  //   stega: false,
+  // });
   //
   // if (pages && Array.isArray(pages)) {
   //   pages.forEach((page: { slug: string | null; _type: string }) => {
@@ -41,10 +44,12 @@ export async function generateStaticParamsForLocale(locale: string): Promise<Sta
 
   // TODO: Add collection items with their parent prefix
   // Example for projects:
-  // const projects = await client.fetch(
-  //   `*[_type == "project" && language == $lang]{ "slug": slug.current }`,
-  //   { lang: locale }
-  // );
+  // const { data: projects } = await sanityFetch({
+  //   query: `*[_type == "project" && language == $lang]{ "slug": slug.current }`,
+  //   params: { lang: locale },
+  //   perspective: 'published',
+  //   stega: false,
+  // });
   // const projectsPageSlug = "projects"; // or fetch from your projects listing page
   //
   // if (projects && Array.isArray(projects)) {
